@@ -33,19 +33,7 @@ We present an iterative flat clustering algorithm designed to operate on arbitra
 
 \section{Introduction}
 
-parler de kmedoids et d'implem rapide pour leur similarite de critere
 
-kkmeans.
-
-\ml{Proposition de plan:
-\begin{enumerate}
-\item kkmeans (critere et algo)
-\item kaverages (critere et algo)
-\item complexity analysis (cpu and memory access)
-\item differences qualitatives (critere)
-\item difference quantitatives (algo)
-\end{enumerate}
-}
 
 \section{Related Works}
 
@@ -442,13 +430,13 @@ The claimed features of the k-Average algorithm is now validated on controlled s
 
 In order to demonstrate the usefulness of the k-Averages algorithm for realistic data, the clustering of times series is selected as the evaluation task.
 
-Time series, even though represented as vectors and therefore suitable for any kinds of norm-based clustering, is better compared with elastic measures \cite{Ding:2008:QMT:1454159.1454226}. The Dynamic Time Warping (DTW) measure is a widely used elastic measure in many areas since its introduction for spoken word detection \cite{1163055} and has been hardly challenged for time series mining \cite{conf/kdd/BerndtC94, Rakthanmanon:2013:ABD:2513092.2500489}.
+Time series, even though represented as vectors and therefore suitable for any kinds of norm-based clustering, is better compared with elastic measures \cite{Ding:2008:QMT:1454159.1454226, Wang:2013:ECR:2429736.2429754}. The Dynamic Time Warping (DTW) measure is an elastic measure widely used in many areas since its introduction for spoken word detection \cite{1163055} and has been hardly challenged for time series mining \cite{conf/kdd/BerndtC94, Rakthanmanon:2013:ABD:2513092.2500489}.
 
-Effective clustering of time series using the DTW measure require similarity based algorithms such as the k-Average algorithm. With some acre, kernel based algorithm can also be considered provided that the resulting similarity matrix is converted into a kernel, \textit{i.e.} the matrix is a Gram matrix \cite{Lanckriet:2004:LKM:1005332.1005334}.
+Effective clustering of time series using the DTW measure require similarity based algorithms such as the k-Average algorithm. With some care, kernel based algorithm can also be considered provided that the resulting similarity matrix is converted into a kernel, \textit{i.e.} the matrix is forced to be semi definite positive to be a Gram matrix \cite{Lanckriet:2004:LKM:1005332.1005334}.
 
 \subsection{Datasets}
 
-A large collection of 43 time series datasets created by many laboratories all over the world and compiled by Prof. Keogh (\url{www.cs.ucr.edu/~eamonn/time_series_data}) is considered.
+To compare the proposed algorithm to the kernel k-Means one, a large collection of 43 time series datasets created by many laboratories all over the world and compiled by Prof. Keogh (\url{www.cs.ucr.edu/~eamonn/time_series_data}) is considered.  Statistics about the morphology of those datasets are summarized by Table \ref{tab:dbs}.
 
 \begin{table}
 \center
@@ -463,7 +451,7 @@ time series length & 24 & 372 $\pm$ 400 & 1882 \\
 \end{table}
 
 
-In order to ease comparison, the properties and the perofrmance of clustering algorithms under evaluation are broken into 3 tables. Table \ref{tab:2} lists the bi class datasets, \textit{i.e.} the datasets annotated in terms of presence or absence of a given property. Table \ref{tab:37} lists the datasets with a small number of classes (from 2 to 7) and Table \ref{tab:8} lists the datasets with a larger number of classes (from 8 to 50). 
+In order to ease comparison, the properties and the performance of clustering algorithms under evaluation are broken into 3 tables. Table \ref{tab:2} lists the bi class datasets, \textit{i.e.} the datasets annotated in terms of presence or absence of a given property. Table \ref{tab:37} lists the datasets with a small number of classes (from 2 to 7) and Table \ref{tab:8} lists the datasets with a larger number of classes (from 8 to 50). 
 
 
 \subsection{Evaluation Protocol}
@@ -471,6 +459,18 @@ In order to ease comparison, the properties and the perofrmance of clustering al
 For every datasets, the training and testing datasets are joined. If relevant, the DTW is computed using the implementation provided by Prof. Ellis (\url{http://www.ee.columbia.edu/~dpwe/resources/matlab/dtw}) with default parameters.
 
 Clustering is done by requesting a number of cluster equal to the actual number of classes in the dataset. Clustering is repeated 20 times with varying initial conditions, \textit{i.e.} the initial assignment of points to clusters is randomly determined. For fairness of comparison, those assignments are the same for each algorithm.
+
+Several metrics are available to evaluate the performance of a clustering algorithm. The one closest to the actual target application is the raw accuracy, that is the average number of items  labelled
+correctly after an alignment phase of the estimated labelling of the reference one \cite{Kuhn1955Hungarian}. 
+
+Another metric of choice, is the Normalized Mutual Information (NMI) criterion. Based on information theoretic principles, it measures the amount of statistical information shared by the random variables representing the predicted cluster distribution and the reference class distribution of the data points. If $P$ is the random variable denoting the cluster assignments of the points, and $C$ is the random variable denoting the underlying class labels on the points then the NMI measure is defined as:
+\begin{equation}
+\textbf{•}{NMI} = \frac{ 2\- I(C;K) }{H(C)+H(K)}
+\end{equation}
+
+where $I(X;Y)=H(X)−H(X|Y)$ is the mutual information between the random variables $X$ and $Y$, $H(X)$ is the Shannon entropy of $X$,and $H(X|Y)$ is the conditional entropy of $X$ given $Y$. Thanks to the normalization, the metric stays between $0$ and $1$, $1$ indicating perfect matching and can be used to compare clustering with different number of clusters. Random prediction gives an NMI close to $0$, whereas the accuracy of a random prediction on a balanced bi class problem is 50\%.
+
+For those reasons and ease of reading, only the NMI is considered. Though, it shall be noted that the most of statements that will be made in the following in terms of ranking of the different algorithms  still holds while considering the accuracy as reference, see \url{} for full results.
 
 \subsection{Results}
 
@@ -486,6 +486,9 @@ Clustering is done by requesting a number of cluster equal to the actual number 
 \section{Discussion}
 
 \section{Conclusion}
+
+\bibliographystyle{plain}
+\bibliography{bib}
 
 \appendix
 
