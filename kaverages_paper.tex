@@ -1,0 +1,494 @@
+\documentclass[a4paper,twoside]{article}
+\usepackage{amsmath,amsthm,amssymb}
+%\usepackage[T1]{fontenc}
+%\usepackage[latin1]{inputenc}
+\usepackage[dvipdf]{graphicx}
+\usepackage{color}
+\usepackage[linesnumbered]{algorithm2e}
+\usepackage[hidelinks, colorlinks=true, 
+linkcolor=black, citecolor=blue]{hyperref} 
+
+\newcommand{\cad}{---} % tiret cadratin
+\newcommand{\gl}[1]{``\,#1\,''} % Guillemets standard
+\newcommand{\ms}[1]{\texttt{#1}} %racccourci pour ``monospaced''
+\newcommand{\lat}{\emph} %pour les mots latins
+
+\newcommand{\ml}[1]{\textcolor{blue}{ML : #1}}
+\newcommand{\mr}[1]{\textcolor{magenta}{MR : #1}}
+
+\begin{document}
+
+\title{k-averages, a linear optimization alternative to kernel k-means}
+
+\author{Mathias Rossignol \and Mathieu Lagrange}
+
+\maketitle
+
+
+\begin{abstract}
+
+We present an iterative flat clustering algorithm designed to operate on arbitrary similarity matrices, provided, with the only constraint that these matrices be symmetrical. Although functionally very close to kernel k-means, our proposal performs an maximization of average intra-class similarity, instead of a squared distance minimization, in order to remain closer to the semantics of similarities. We show that this approach allows relaxing the conditions on usable matrices, as well as opening better optimization possibilities. Systematic evaluation on a variety of data sets shows that the proposed approach equals or outperforms kernel k-means in most cases.
+\end{abstract}
+
+
+\section{Introduction}
+
+parler de kmedoids et d'implem rapide pour leur similarite de critere
+
+kkmeans.
+
+\ml{Proposition de plan:
+\begin{enumerate}
+\item kkmeans (critere et algo)
+\item kaverages (critere et algo)
+\item complexity analysis (cpu and memory access)
+\item differences qualitatives (critere)
+\item difference quantitatives (algo)
+\end{enumerate}
+}
+
+\section{Related Works}
+
+Kernel k-means (cite Girolami) has been for the past few years an algorithm of choice for flat data clustering with known number of clusters (cite salient uses of kkmeans). It makes use of a mathematical technique known as the \gl{kernel trick} to extend the classical k-means clustering algorithm (cite original kmeans paper) to criteria beyond simple euclidean distance proximity. Since it constitutes the closest point of comparison with our own work, we will present it here in detail, before moving on to the description of our algorithm, before dedicating a section to the comparison of the two approaches.
+
+In the case of kernel k-means, the kernel trick consists in considering that the k-means algorithm is operating in an unspecified, possibly very high-dimensional Euclidian space; but instead of specifying the properties of that space, and the coordinates of objects in it, the equations governing the algorithm are modified so that everything can be computed knowing only the scalar products between points. The symmetrical matrix  containing those scalar products is known as a kernel, noted $\mathcal{K}$.
+
+\subsection{Kernel k-means objective function}
+
+
+In this section and the following, we shall adopt the following convention: $N$ is the number of objects to cluster and $C$ the number of clusters; $N_c$ is the number of objects in cluster $c$, and $\mu_c$ is the centroid of that cluster. $z_{cn}$ is the membership function, whose value is $1$ is object $o_n$ is in class $c$, $0$ otherwise.
+
+Starting from the objective function minimized by the k-means algorithm, expressing the sum of squared distances of points to the centroids of their respective clusters:
+
+\[
+S = \sum_{c=1}^{C} \sum_{n=1}^{N} z_{cn} \left(o_n-\mu_c\right)\left(o_n-\mu_c\right)^\top \label{eq:S}
+\]
+
+And using the definition of centroids as:
+
+\[
+\mu_c = \frac{1}{N_c}\sum_{n=1}^{N}z_{cn}o_n
+\]
+
+$S$ can be developed and rewritten in a way that does not explicitly refer to the centroid positions, since those cannot be computed:
+
+\[
+S = \sum_{c=1}^{C} \sum_{n=1}^{N} z_{cn} Y_{cn}
+\]
+
+where
+\begin{eqnarray}
+Y_{cn} & = & \left(o_n-\mu_c\right)\left(o_n-\mu_c\right)^\top \\
+       & = & o_n.o_n - 2 o_n.\mu_c + \mu_c.\mu_c \\
+       & = & o_n.o_n - 2 o_n.\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i +
+       	 \left(\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i\right).\left(\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i\right) \\
+       & = & o_n.o_n - \frac{2}{N_c} \sum_{i=1}^{N} z_{ci} o_n.o_i +
+       	 \frac{1}{N_c^2} \sum_{i=1}^{N} \sum_{j=1}^{N} z_{ki} z_{kj} o_i.o_j \\
+       & = & \mathcal{K}_{nn} - \frac{2}{N_c} \sum_{i=1}^{N} z_{ci} \mathcal{K}_{ni} +
+         \frac{1}{N_c^2} \sum_{i=1}^{N} \sum_{j=1}^{N} z_{ki} z_{kj} \mathcal{K}_{ij} \label{eq:yki}
+\end{eqnarray}
+
+Since the sum of $K_{nn}$ over all points remains constant, and the sum of squared centroid norms (third, quadratic, term of Equation~\ref{eq:yki}) is mostly bounded by the general geometry of the cloud of objects, we can see that minimizing this value implies maximizing the sum of the central terms, which are the average scalar products of points with other points belonging to the same class. Given a similarity matrix possessing the necessary properties to be considered as a kernel matrix (positive semidefinite), the kernel k-means algorithm can therefore be used to create clusters that somehow maximize the average intra-cluster similarity.
+
+\subsection{Algorithm}
+
+Finding the configuration that asbolutely minimizes S (eq~\ref{eq:S}) is an NP-hard problem; however several approaches allow finding a good approximate result. We shall only focus here on the fastest and most popular, an iterative assignment\,/\,update procedure commonly referred to as the "k-means algorithm", or as a discrete version of Lloyd's algorithm, detailed in Algorithm~\ref{algo:kkmeans}.
+
+\begin{algorithm}
+	\label{algo:kkmeans}
+	\SetAlgoLined
+	\KwData{number of objects $N$, number of classes $C$, kernel matrix $\mathcal{K}$}
+	\KwResult{label vector $L$ defining a partition of the objects into $C$ classes}
+	\BlankLine	
+	\textbf{Initialization:} fill L with random values in $[1..C]$\;
+	\BlankLine	
+	\While {$L$ is modified} {
+		\For {$n \leftarrow 1$ to $N$} {
+			\For {$c \leftarrow 1$ to $C$} {
+				Compute $Y_{cn}$ following eq~\ref{eq:yki} \label{algline:kkmeans_cplx1}
+				(note: $z_{cn} = (L_n == c)\,?\,1\;:\;0$)
+			}
+			$L_n = \textrm{argmin}_c (Y_{cn})$\;
+		}
+	}
+	\BlankLine
+	\caption{Lloyd's algorithm applied to minimizing the kernel k-means objective.}
+\end{algorithm}
+
+
+
+
+\section{Foundations of the k-averages algorithm}
+
+Our proposal with the k-averages algorithm is to adopt an alternative objective function that does not rely on a geometric interpretation, like kernel k-means, but on a more simple, direct understanding of a similarity matrix. The goal is to maximize the average intra-cluster similarity between points, a commonly used metric to evaluate clustering quality, and one whose computation is very simple\cad{}linear in time.
+
+Due to its simplicity, however, that objective function cannot simply be "plugged into" the standard kernel k-means algorithm: it lacks the geometric requisites to ensure convergence. We must therefore propose an adapted algorithmic framework to exploit it: first, we show here that it is possible to easily compute the impact on the global objective function of moving a single point from one class to another; we then introduce an algorithm intended to take advantage of that formula.
+
+
+\subsection{Conventions and possible objective functions}
+
+In addition to the notations already presented above, we index here the set of elements belonging to a given cluster $c_k$ as $c_k = \left\{o_{k1}, \ldots, o_{kN_k}\right\}$. To simplify below, when we're simply considering one class, no matter
+which, we shall omit the first index and write $c = \left\{o_1, \ldots, o_{N_c}\right\}$.
+
+The similarity between objects shall be written $s\left(o_i, o_j\right)$.
+Let us extend the notation $s$ to the \emph{similarity of an object to a
+  class}, which we define as the average similarity of that object
+with all objects of the class. $s(o,c)$ accepts two definitions,
+depending on whether or not $o$ is in $c$:
+
+If $o \notin c$,
+\begin{equation}
+  s\left(o,c\right) = \frac{1}{N_c} \sum_{i=1}^{n_c}s\left(o, o_i\right)
+   \label{eq:soc_notinclass}
+\end{equation}
+
+If $o \in c$, then necessarily $\exists i \mid o = o_i$
+\begin{equation}
+  s\left(o,c\right) = s\left(o_i, c\right) = \frac{1}{N_c-1} \sum_{j=1 \ldots n_c, j \neq i} s\left(o_i, o_j\right)
+  	 \label{eq:soc_inclass}
+\end{equation}
+
+Let's call \gl{quality} of a class the average intra-class object-to-object similarity, and write it $\mathcal{Q}$:
+\begin{equation}
+\mathcal{Q}\left(c\right) = \frac{1}{N_c} \sum_{i=1}^{n_c} s\left(o_i, c\right)
+\end{equation}
+
+We do not, in our work, explicitly refer to class centroids, preferring to directly consider averages of similarity values between individuals within clusters. Indeed, we never refer to a geometrical interpretation of the data. However, it should be noted that since in k-means (and kernel k-means) the centroid of a class is defined as an average of all points in that class, $\mathcal{Q}$ is strictly equivalent to the average point to centroid similarity.
+
+Using the notations above, we define our objective function as the average class quality, either normalized by class:
+
+\[
+O_1 = \frac{1}{C} \sum_{i=1}^{C} \mathcal{Q}(c_i)
+\]
+
+Or normalized by object:
+
+\[
+O_2 = \frac{1}{N} \sum_{i=1}^{C} N_i \mathcal{Q}(c_i)
+\]
+
+We will now compute, for both of those values, the impact on the global objective function of moving one object from one class to another. We will then show how, by using those formulas as a guide for the optimal reallocation of objects, and only moving objects that have a strictly positive impact on the function, we can guarantee the convergence of an iterative algorithm attempting to maximize those objective functions.
+
+\subsection{Naive k-averages}
+
+
+
+\subsection{Impact of object reallocation on class quality}
+
+Considering a class $c$, let us develop the expression of $\mathcal{Q}(c)$ into a more useful form. Since all objects are in $c$, we use the formula in (\ref{eq:soc_inclass}) to get:
+
+\begin{equation}
+  \begin{aligned}
+    \mathcal{Q}\left(c\right) & = \frac{1}{N_c} \sum_{i=1}^{N_c} \frac{1}{N_c-1} \sum_{\substack{j=1 \ldots N_c\\j \neq i}} s\left(o_i, o_j\right) \\
+                              & = \frac{1}{N_c(N_c-1)} \sum_{i=1}^{N_c} \sum_{\substack{j=1 \ldots N_c\\j \neq i}} s\left(o_i, o_j\right)
+  \end{aligned}
+\end{equation}
+
+Using the assumption that the similarity matrix is symmetrical, we can reach (this is an indispensable transformation for future calculations):
+\begin{equation}
+    \mathcal{Q}\left(c\right) = \frac{2}{N_c(N_c-1)} \sum_{i=2}^{N_c} \sum_{j=1}^{i-1} s\left(o_i, o_j\right)
+    \label{eq:classQuality}
+\end{equation}
+
+For future use, let us define the notation:
+\begin{equation}
+  \Sigma(c) = \sum_{i=2}^{N_c} \sum_{j=1}^{i-1} s\left(o_i, o_j\right)
+\end{equation}
+
+Thus:
+\begin{equation}
+    \mathcal{Q}\left(c\right) = \frac{2}{N_c(N_c-1)}\Sigma(c) \phantom{XX}\mathrm{and}\phantom{XX} \Sigma(c) = \frac{N_c(N_c-1)\mathcal{Q}\left(c\right)}{2}
+\end{equation}
+
+
+\subsubsection{Removing an object from a class}
+
+Assuming that $o \in c$, necessarily $\exists i \mid o=o_i$. Since the
+numbering of objects is arbitrary, we can assume that $o = o_{N_c}$
+then generalize from the result thus obtained.
+
+\begin{equation}
+  \begin{aligned}
+    \mathcal{Q}\left(c \smallsetminus o_{N_c}\right) & = \frac{2}{(N_c-1)(N_c-2)} \sum_{i=2}^{N_c-1} \sum_{j=1}^{i-1} s\left(o_i, o_j\right) \\
+                                                   & = \frac{2}{(N_c-1)(N_c-2)} \left[\Sigma(c) - \sum_{j=1}^{N_c-1} s\left(o_{N_c}, o_j\right) \right] \\
+                                                   & = \frac{2}{(N_c-1)(N_c-2)} \left[\Sigma(c) - (N_c-1)s\left(o_{N_c}, c\right) \right] \\
+                                                   & = \frac{2N_c(N_c-1)\mathcal{Q}(c)}{2(N_c-1)(N_c-2)} - \frac{2(N_c-1)s\left(o_{N_c}, c\right)}{(N_c-1)(N_c-2)}\\
+                                                   & = \frac{N_c \mathcal{Q}(c)  - 2s\left(o_{N_c}, c\right)}{N_c-2}
+  \end{aligned}
+\end{equation}
+
+The quality of a class after removal of an object is thus:
+
+\begin{equation}
+  \mathcal{Q}\left(c \smallsetminus o\right) = \frac{N_c \mathcal{Q}(c)  - 2s\left(o, c\right)}{N_c-2}
+  \label{eq:newQual_remove}
+\end{equation}
+
+And the change in quality from its previous value:
+
+\begin{equation} \label{deltaRemove}
+  \begin{aligned}
+    \mathcal{Q}\left(c \smallsetminus o\right) - \mathcal{Q}\left(c\right) & = \frac{N_c \mathcal{Q}(c)  - (N_c-2) \mathcal{Q}(c)  - 2s\left(o, c\right)}{N_c-2} \\
+                                                                           & = \frac{2\left( \mathcal{Q}(c) - s\left(o, c\right)\right)}{N_c-2}
+    \end{aligned}
+\end{equation}
+
+
+\subsubsection{Adding an object to a class}
+
+Assuming that $o \notin c$, we can similarly to what has been done previously (numbering is arbitrary) consider for the sake of simplicity that $o$ becomes $o_{N_c+1}$ in the modified class $c$. Following a path similar to above, we get:
+
+\begin{equation}
+  \begin{aligned}
+    \mathcal{Q}(c \cup o_{N_c+1}) & = \frac{2}{N_c(N_c+1)} \sum_{i=2}^{N_c+1} \sum_{j=1}^{i-1} s\left(o_i, o_j\right) \\
+                                & = \frac{2}{N_c(N_c+1)} \left[\Sigma(c) + N_c s\left(o_{N_c+1}, c\right)\right] \\
+                                & = \frac{(N_c-1) \mathcal{Q}(c)  + 2s\left(o_{N_c+1}, c\right)}{N_c+1}
+  \end{aligned}
+\end{equation}
+
+The quality of a class $c$ after adding an object $o$ is thus:
+
+\begin{equation}
+  \mathcal{Q}\left(c \cup o\right) = \frac{(N_c-1) \mathcal{Q}(c)  + 2s\left(o, c\right)}{N_c+1}
+  \label{eq:newQual_add}
+\end{equation}
+
+And the change in quality from its previous value:
+
+\begin{equation} \label{deltaAdd}
+  \begin{aligned}
+    \mathcal{Q}\left(c \cup o\right) - \mathcal{Q}\left(c\right) & = \frac{(N_c-1) \mathcal{Q}(c)  - (N_c+1) \mathcal{Q}(c)  + 2s\left(o, c\right)}{N_c+1} \\
+                                                                           & = \frac{2\left(s\left(o, c\right)-\mathcal{Q}(c)\right)}{N_c+1}
+    \end{aligned}
+\end{equation}
+
+
+\subsection{Impact of object reallocation on the global objective function}
+
+The influence these changes in class quality have on the global objective function depends upon what normalization we choose to adopt.
+
+\subsubsection{Class-normalized objective function}
+
+In that case, the calculation is direct: from (\ref{deltaRemove}) and
+(\ref{deltaAdd}), we can see that the impact on the objective function
+of moving an object $c$ from class $c_s$ (``source''), to whom it
+belongs, to a distinct class $c_t$ (``target'') is:
+
+\begin{equation}
+  \delta_o(c_s, c_t) = \frac{2\left(s\left(o, c_t\right)-\mathcal{Q}(c_t)\right)}{N_t+1} + \frac{2\left( \mathcal{Q}(c_s) - s\left(o, c_s\right)\right)}{N_s-2}
+  \label{eq:impact_objnorm}
+\end{equation}
+
+\subsubsection{Object-normalized objective function}
+
+This complicates the calculation a bit, but not much: when moving an
+object $o$ from class $c_s$ (``source''), to whom it belongs, to a
+distinct class $c_t$ (``target''), $(N_s-1)$ objects are affected
+by the variation in (\ref{deltaRemove}), and $N_t)$ are affected
+by that in (\ref{deltaAdd}), in addition to the variation in similarity
+of $o$ to the class it belongs to:
+
+\begin{equation}
+  \delta_o(c_s, c_t) = \frac{2N_t \left(s\left(o, c_t\right)-\mathcal{Q}(c_t)\right)}{N_t+1} + \frac{2(N_s-1)\left( \mathcal{Q}(c_s) - s\left(o, c_s\right)\right)}{N_s-2} + s(o,c_t) - s(o,c_s)
+  \label{eq:impact_classnorm}
+\end{equation}
+
+In both cases, computing that impact is a fixed-cost operation; we can therefore use those formulas as the basis for an efficient iterative algorithm.
+
+\section{K-averages algorithm}
+
+Our approach does not allow us to benefit, like kernel k-means, from the convergence guarantee brought by the geometric foundation of k-means. In consequence, we cannot apply a "batch" approach where at each iteration all elements are moved to their new class, and all distances (or similarities) are computed at once. Therefore, for each considered object, after finding its ideal new class, we must update the class properties for the two modified classes (source and destination), as well as recompute the average class-object similarities for them.
+
+Although this seems at first like systematically updating everything at each object re-allocation should have a huge performance impact, our reliance on simple averages without any quadratic terms makes it possible to have very simple update formulas: new class qualities are given by Equations~\ref{eq:newQual_remove} and \ref{eq:newQual_add}, and new object-class similarities can be computed by:
+
+\begin{equation}
+	\begin{aligned}
+    s(i, c_s(t+1)) &= \frac{N_s(t).s(i, c_s(t)) + s(i,n)}{N_s(t)+1} \\
+    s(i, c_t(t+1)) &= \frac{N_t(t).s(i, c_s(t)) - s(i,n)}{N_t(t)-1}
+   	\end{aligned}
+  \label{eq:newSimilNewC}
+\end{equation}
+
+where $i$ is any object index, $n$ is the recently reallocated object, $c_s$ the "source" class that object $i$ was removed from, and $c_t$ the "target" class that object $n$ was added to.
+
+The full description of k-averages is given in Algorithm~\ref{algo:kaverages}.
+
+\begin{algorithm}
+	\label{algo:kaverages}
+	\SetAlgoLined
+	\KwData{number of objects $N$, number of classes $C$, similarity matrix $\mathcal{S}$}
+	\KwResult{label vector $L$ defining a partition of the objects into $C$ classes}
+	\BlankLine	
+	\textbf{Initialization:}
+		Fill L with random values in $[1..C]$\;
+		Compute initial class qualities $\mathcal{Q}$ following eq~\ref{eq:classQuality}\;
+		Compute initial object-class similarities $S$ following eq~\ref{eq:soc_inclass} or eq~\ref{eq:soc_notinclass}\;
+	\BlankLine	
+	\While {$L$ is modified} {
+		\For {$i \leftarrow 1$ to $N$} {
+			previousClass $\leftarrow L_i$\;
+			nextClass $\leftarrow \mathrm{argmin}_k\,\delta_i(\mathrm{previousClass}, k)$ \label{algline:kaverages_search}
+			(following the definition of $\delta$ in eq~\ref{eq:impact_objnorm} or \ref{eq:impact_classnorm})\;
+			\If {nextClass $\ne$ previousClass} {
+				$L_i \leftarrow \mathrm{nextClass}$\;
+				Update $\mathcal{Q}_\mathrm{previousClass}$ following eq~\ref{eq:newQual_remove}\;
+				Update $\mathcal{Q}_\mathrm{nextClass}$ following eq~\ref{eq:newQual_add}\;
+				\For {$j \leftarrow 1$ to $N$}{
+					Update $S(j,nextClass)$ and $S(j,previousClass)$ \label{algline:kaverages_recompute} \\ following eq~\ref{eq:newSimilNewC}\;
+				}
+			}
+		}
+	}
+	\BlankLine
+	\caption{K-averages algorithm.}
+\end{algorithm}
+
+
+\section{Complexity analysis}
+
+We study in this section the complexity of the two approaches presented above, first form the point of view of raw complexity, then focusing on memory access.
+
+\subsection{Computational complexity}
+
+\subsubsection{Kernel k-means}
+
+As can be seen on Algorithm~\ref{algo:kkmeans}, the operation on line~\ref{algline:kkmeans_cplx1} is the most costly part of the algorithm: for each object $n$ and class $c$, at each iteration, it is necessary to compute $Y_{cn}$ from Equation~\ref{eq:yki}\cad{}an $O(N^2)$ operation in itself, per object. The impossibility of simply computing the distances to a know centroid as is done in simple k-means, gives kernel k-means a much higher complexity, globally $O(N^3)$ per iteration, independently of how many objects are moved for that iteration.
+
+It is, however, possible to improve the performance of kernel k-means by noting than in Equation~\ref{eq:yki}, the third term of the equation, which has the highest complexity, is only dependent on class definitions, and not on the considered object. We can therefore rewrite Equation~\ref{eq:yki} as:
+
+\begin{eqnarray}
+Y_{cn} & = & \mathcal{K}_{nn} - \frac{2}{N_c} \sum_{i=1}^{N} z_{ci} \mathcal{K}_{ni} + M_c \label{eq:yki_improved}
+\end{eqnarray}
+where
+\begin{eqnarray}
+M_c    & = & \frac{1}{N_c^2} \sum_{i=1}^{N} \sum_{j=1}^{N} z_{ki} z_{kj} \mathcal{K}_{ij} \label{eq:mc}
+\end{eqnarray}
+
+Algorithm~\ref{algo:kkmeans} thus becomes Algorithm~\ref{algo:kkmeans_optim}, where the values of $M_c$ are computed once at the beginning of each loop (line~\ref{algline:kkmeans_imp_mc}) then reused on line~\ref{algline:kkmeans_imp_cplx1}, thus reducing the overall complexity to $O(n^2)$ per iteration.
+
+\begin{algorithm}
+	\label{algo:kkmeans_optim}
+	\SetAlgoLined
+	\KwData{number of objects $N$, number of classes $C$, kernel matrix $\mathcal{K}$}
+	\KwResult{label vector $L$ defining a partition of the objects into $C$ classes}
+	\BlankLine	
+	\textbf{Initialization:}
+	fill L with random values in $[1..C]$\;
+	\BlankLine	
+	\While {$L$ is modified} {
+	    \For {$c \leftarrow 1$ to $C$} {
+	        Compute $M_c$ following eq~\ref{eq:mc} \label{algline:kkmeans_imp_mc}
+	    }
+		\For {$n \leftarrow 1$ to $N$} {
+			\For {$c \leftarrow 1$ to $C$} {
+				Compute $Y_{cn}$ following eq~\ref{eq:yki_improved} \label{algline:kkmeans_imp_cplx1}
+				(note: $z_{cn} = (L_n == c)\,?\,1\;:\;0$)
+			}
+			$L_n = \textrm{argmin}_c (Y_{cn})$\;
+		}
+	}
+	\BlankLine
+	\caption{Lloyd's algorithm applied to minimizing the kernel k-means objective, optimized version.}
+\end{algorithm}
+
+
+\subsubsection{K-averages}
+
+For the k-averages method presented as Algorithm~\ref{algo:kaverages}, the complexity of each iteration is
+\begin{itemize}
+\item $O(NC)$ corresponding to the best class search at line~\ref{algline:kaverages_search}
+\item  $O(NM)$ corresponding to the object-to-class similarity update at line~\ref{algline:kaverages_recompute}, where $M$ is the number of objects moved at a given iteration.
+\end{itemize}
+
+In the worst case scenario, $M = N$, and the complexity for one iteration of the algorithm remains the same as for the optimized kernel k-means algorithm, $O(n^2)$. In practice, however, as can be seen on Figure~\ref{fig:moved}, the number of objects moving from one class to another decreases sharply after the first iteration, meaning the the complexity of one iteration becomes quickly much lower than $O(n^2)$. Thus, while the first iteration of k-averages has a similar complexity with kernel k-means, the overall cost of a typical run of the algorithm (from 10 to 50 iterations) is much lower.
+
+\begin{figure}
+\label{fig:moved}
+\includegraphics[scale=0.6]{nbMoved.png} 
+\caption{Number of moved objects per iteration during a typical clustering of 5000 objects.}
+\end{figure}
+
+\subsection{Memory access}
+
+The lowered computational costs is also accompanied by a diminution in memory access: as can be seen from Equation~\ref{eq:newSimilNewC}, in order to compute the new object-to-class similarities after moving an object $n$, only line $n$ of the similarity matrix needs to be read. For the rest of the algorithm, only the (much smaller) object-to-class similarity matrix is used. By contrast, in the case of kernel k-means, the computation of $M_c$ values at each iteration require that the whole similarity matrix be read, which can be a serious performance bottleneck in the case of large object collections.
+
+Moreover, the similarity update function of k-averages, by reading one line of the matrix at a time, presents good data locality properties, which make it play well with standard memory paging strategies.
+
+\subsection{Actual running time}
+
+To further study the difference in execution speed between the two approaches, we have written simple C implementations of Algorithms~\ref{algo:kkmeans_optim} and~\ref{algo:kaverages}, with minimal operational overhead: both read the similarity matrix from a binary file where all matrix values are stored sequentially in standard reading order, line by line, and write out the result of the clustering as a label text file.
+
+
+
+\section{Comparison of approaches}
+
+(copy-pasted from the end of the former kkmeans section)
+
+
+However, it should be noted that this is an indirect result of a squared distance minimization objective, and that the impact of the third term of Eq~\ref{eq:yki} on the the minimized value is hard to quantify. This raises question as to the actual semantics of algorithms based on that objective function, and concerning the exact connection between the initial intent (similarity-based clustering) an the obtained result.
+
+Moreover, if a Euclidean geometric interpretation of the studied objects is not trivial\cad{}which is likely to be the case, otherwise the use of a simple k-means could be considered\cad{}then similarity values gathered into a matrix may not necessarily make a positive semi definite matrix, and thus not a proper kernel. To solve that problem, (Dhillon-Kulis) suggest, following (Roth-Laub), to offset all diagonal elements of the matrix by a constant value. Since directly computing the necessary offset to make the matrix positive definite is not feasible for such large matrices, the proposed solution consists in iteratively increasing the diagonal offset until the matrix tests positive. It appears clearly in Equation~ref{eq:yki} that this only adds a constant factor to the minimized objective function, and thus doesn't affect the optimal solution; however, as acknowledged by (Dhillon-Kulis), by affecting the spread of points and the weight distribution in the matrix, it does affect the operation of algorithms looking for that optimum in unforeseeable ways. \ml{too strong, for a well known problem, this impact can be studied in terms of convergence and quality of the solution and may be positive, so I guess that this unpredictability is only for new type of datasets.} \mr { toy example : point d'exclamation avec origin au bout du trait }
+
+Such is the price to pay to benefit from the solid geometric foundations and convergence guarantee of the k-means algorithm: a dissociation from immediate semantics, possibly made worse by the necessity of a clunky matrix conditioning procedure.
+
+Our purpose with the work presented in this paper is to propose an alternative algorithm that operates in a way very similar to kernel k-means, but is explicitly designed to process similarities, remains as close as possible to their semantics, and directly attempts to maximize a meaningful quantity: the average intra-class similarity.
+
+\section{Validation}
+
+The claimed features of the k-Average algorithm is now validated on controlled synthetic data.
+
+
+\section{Experiments}
+
+In order to demonstrate the usefulness of the k-Averages algorithm for realistic data, the clustering of times series is selected as the evaluation task.
+
+Time series, even though represented as vectors and therefore suitable for any kinds of norm-based clustering, is better compared with elastic measures \cite{Ding:2008:QMT:1454159.1454226}. The Dynamic Time Warping (DTW) measure is a widely used elastic measure in many areas since its introduction for spoken word detection \cite{1163055} and has been hardly challenged for time series mining \cite{conf/kdd/BerndtC94, Rakthanmanon:2013:ABD:2513092.2500489}.
+
+Effective clustering of time series using the DTW measure require similarity based algorithms such as the k-Average algorithm. With some acre, kernel based algorithm can also be considered provided that the resulting similarity matrix is converted into a kernel, \textit{i.e.} the matrix is a Gram matrix \cite{Lanckriet:2004:LKM:1005332.1005334}.
+
+\subsection{Datasets}
+
+A large collection of 43 time series datasets created by many laboratories all over the world and compiled by Prof. Keogh (\url{www.cs.ucr.edu/~eamonn/time_series_data}) is considered.
+
+\begin{table}
+\center
+\begin{tabular}{l|ccc}
+& min & average $\pm$ variance & max \\
+\hline
+number of classes & 2 & 8 $\pm$ 9 & 50 \\
+number of time series & 56 & 1626 $\pm$ 2023 & 9236 \\
+time series length & 24 & 372 $\pm$ 400 & 1882 \\
+\end{tabular}
+\caption{\label{tab:dbs} Statistics of the datasets. The length of the times series is expressed in samples.}
+\end{table}
+
+
+In order to ease comparison, the properties and the perofrmance of clustering algorithms under evaluation are broken into 3 tables. Table \ref{tab:2} lists the bi class datasets, \textit{i.e.} the datasets annotated in terms of presence or absence of a given property. Table \ref{tab:37} lists the datasets with a small number of classes (from 2 to 7) and Table \ref{tab:8} lists the datasets with a larger number of classes (from 8 to 50). 
+
+
+\subsection{Evaluation Protocol}
+
+For every datasets, the training and testing datasets are joined. If relevant, the DTW is computed using the implementation provided by Prof. Ellis (\url{http://www.ee.columbia.edu/~dpwe/resources/matlab/dtw}) with default parameters.
+
+Clustering is done by requesting a number of cluster equal to the actual number of classes in the dataset. Clustering is repeated 20 times with varying initial conditions, \textit{i.e.} the initial assignment of points to clusters is randomly determined. For fairness of comparison, those assignments are the same for each algorithm.
+
+\subsection{Results}
+
+\input{report/tables/methods2}
+\input{report/tables/methods37}
+\input{report/tables/methods8}
+
+\subsection{From Progressive to Batch Updates}
+
+\subsection{From Raw to Object Normalized Criterion}
+
+
+\section{Discussion}
+
+\section{Conclusion}
+
+\appendix
+
+\input{report/tables/datasets}
+
+\end{document}

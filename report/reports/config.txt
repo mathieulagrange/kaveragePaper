@@ -1,0 +1,80 @@
+
+                emailAddress: 'mathieu.lagrange@cnrs.fr'
+                completeName: 'Mathieu Lagrange'
+                machineNames: {{1x4 cell}  {1x2 cell}}
+                   inputPath: [1x41 char]
+                    codePath: [1x60 char]
+                    dataPath: [1x43 char]
+                     obsPath: [1x43 char]
+                  backupPath: '/tmp/expCodeBackup/mkaTimeSeries/'
+                  bundlePath: '/tmp/mkaTimeSeries/'
+                  matlabPath: ''
+                    toolPath: ''
+                dependencies: {[1x42 char]  [1x47 char]}
+           localDependencies: 0
+                 codeVersion: 0.1000
+                          do: -1
+                        redo: 1
+                    parallel: [0 0]
+                        mask: {{}}
+                   maskPatch: {}
+                      design: ''
+                       dummy: 0
+               setRandomSeed: 0
+                        host: 1.2000
+                         log: 1
+                    progress: 1
+                  exitMatlab: 0
+                recordTiming: 1
+             encodingVersion: 7.3000
+                       store: 1
+                    retrieve: -1
+    namingConventionForFiles: 'hash'
+                        sync: {}
+                      bundle: ''
+                       clean: ''
+                         obs: 0
+                      expose: '>'
+         tableDigitPrecision: 2
+             displayFontSize: 16
+                      report: 'rcv'
+                  reportName: 'paper'
+          latexDocumentClass: 'tufte-handout'
+                   pdfViewer: ''
+       significanceThreshold: 0.0500
+         showFactorsInReport: 4
+          factorDisplayStyle: 0
+          deleteTexDirectory: 1
+              useExpCodeSmtp: 1
+                    sendMail: 0
+                       probe: 0
+            generateRootFile: 0
+            shortProjectName: 'mktise'
+                    userName: 'lagrange'
+                 projectName: 'mkaTimeSeries'
+                 projectPath: [1x60 char]
+              configFileName: [1x91 char]
+          staticDataFileName: [1x73 char]
+              factorFileName: [1x77 char]
+                    stepName: {'similarity'  'cluster'}
+                     factors: [1x1 struct]
+                attachedMode: 1
+                         run: 1
+               localHostName: 'dodo'
+                    hostName: 'dodo'
+                   hostGroup: 1
+                       runId: 324
+                     waitBar: []
+                  progressId: 0
+                 displayData: [1x1 struct]
+               configMatName: [1x95 char]
+                  reportPath: [1x67 char]
+      suggestedNumberOfCores: Inf
+                loadFileInfo: [1x1 struct]
+               settingStatus: [1x1 struct]
+                 expCodePath: [1x55 char]
+                 logFileName: [1x86 char]
+           errorDataFileName: {}
+                     logFile: 81
+
+

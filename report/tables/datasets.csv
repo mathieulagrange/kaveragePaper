@@ -1,0 +1,44 @@
+dataSet,id
+50words, 1
+Adiac, 2
+Beef, 3
+CBF, 4
+ChlorineConcentration, 5
+CinC\_ECG\_torso, 6
+Coffee, 7
+Cricket\_X, 8
+Cricket\_Y, 9
+Cricket\_Z,10
+DiatomSizeReduction,11
+ECG200,12
+ECGFiveDays,13
+FaceAll,14
+FaceFour,15
+FacesUCR,16
+Gun\_Point,17
+Haptics,18
+InlineSkate,19
+ItalyPowerDemand,20
+Lighting2,21
+Lighting7,22
+MALLAT,23
+MedicalImages,24
+MoteStrain,25
+OSULeaf,26
+OliveOil,27
+SonyAIBORobotSurface,28
+SonyAIBORobotSurfaceII,29
+StarLightCurves,30
+SwedishLeaf,31
+Symbols,32
+Trace,33
+TwoLeadECG,34
+Two\_Patterns,35
+WordsSynonyms,36
+fish,37
+synthetic\_control,38
+uWaveGestureLibrary\_X,39
+uWaveGestureLibrary\_Y,40
+uWaveGestureLibrary\_Z,41
+wafer,42
+yoga,43

@@ -1,0 +1,80 @@
+
+                emailAddress: 'mathieu.lagrange@cnrs.fr'
+                completeName: 'Mathieu Lagrange'
+                machineNames: {{1x4 cell}  {1x2 cell}}
+                   inputPath: '/home/lagrange/data/databases/timeSeries/'
+                    codePath: '/home/lagrange/projects/houle/dev/experiments/mkaTimeSeries/'
+                    dataPath: '/home/lagrange/data/projects/mkaTimeSeries/'
+                     obsPath: '/home/lagrange/data/projects/mkaTimeSeries/'
+                  backupPath: '/tmp/expCodeBackup/mkaTimeSeries/'
+                  bundlePath: '/tmp/mkaTimeSeries/'
+                  matlabPath: ''
+                    toolPath: ''
+                dependencies: {'~/projects/houle/dev/tools/expCode/expCode'  '~/projects/houle/dev/tools/clusteringAlgorithms'}
+           localDependencies: 0
+                 codeVersion: 0.1000
+                          do: -1
+                        redo: 1
+                    parallel: [0 0]
+                        mask: {{}}
+                   maskPatch: {}
+                      design: ''
+                       dummy: 0
+               setRandomSeed: 0
+                        host: 1.2000
+                         log: 1
+                    progress: 1
+                  exitMatlab: 0
+                recordTiming: 1
+             encodingVersion: 7.3000
+                       store: 1
+                    retrieve: -1
+    namingConventionForFiles: 'hash'
+                        sync: {}
+                      bundle: ''
+                       clean: ''
+                         obs: 0
+                      expose: '>'
+         tableDigitPrecision: 2
+             displayFontSize: 16
+                      report: 'rcv'
+                  reportName: 'paper'
+          latexDocumentClass: 'tufte-handout'
+                   pdfViewer: ''
+       significanceThreshold: 0.0500
+         showFactorsInReport: 4
+          factorDisplayStyle: 0
+          deleteTexDirectory: 1
+              useExpCodeSmtp: 1
+                    sendMail: 0
+                       probe: 0
+            generateRootFile: 0
+            shortProjectName: 'mktise'
+                    userName: 'lagrange'
+                 projectName: 'mkaTimeSeries'
+                 projectPath: '/home/lagrange/projects/houle/dev/experiments/mkaTimeSeries/'
+              configFileName: '/home/lagrange/projects/houle/dev/experiments/mkaTimeSeries/config/mktiseConfigLagrange.txt'
+          staticDataFileName: '/home/lagrange/projects/houle/dev/experiments/mkaTimeSeries/config/mktise'
+              factorFileName: '/home/lagrange/projects/houle/dev/experiments/mkaTimeSeries/mktiseFactors.txt'
+                    stepName: {'similarity'  'cluster'}
+                     factors: [1x1 struct]
+                attachedMode: 1
+                         run: 1
+               localHostName: 'dodo'
+                    hostName: 'dodo'
+                   hostGroup: 1
+                       runId: 502
+                     waitBar: []
+                  progressId: 0
+                 displayData: [1x1 struct]
+               configMatName: '/home/lagrange/projects/houle/dev/experiments/mkaTimeSeries/config/mktiseConfiglagrange_502.mat'
+                  reportPath: '/home/lagrange/projects/houle/dev/experiments/mkaTimeSeries/report/'
+      suggestedNumberOfCores: Inf
+                loadFileInfo: [1x1 struct]
+               settingStatus: [1x1 struct]
+                 expCodePath: '/home/lagrange/projects/houle/dev/tools/expCode/expCode'
+                 logFileName: '/home/lagrange/projects/houle/dev/experiments/mkaTimeSeries/report/logs/log_502.txt'
+           errorDataFileName: {}
+                     logFile: 3
+
+
