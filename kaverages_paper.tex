@@ -1,8 +1,9 @@
 \documentclass[a4paper,twoside]{article}
-\usepackage{amsmath,amsthm,amssymb}
+\usepackage{jmlr2e}
+\usepackage{amsmath,amssymb}
 %\usepackage[T1]{fontenc}
 %\usepackage[latin1]{inputenc}
-\usepackage[dvipdf]{graphicx}
+%\usepackage[dvipdf]{graphicx}
 \usepackage{color}
 \usepackage[linesnumbered]{algorithm2e}
 \usepackage[hidelinks, colorlinks=true, 
@@ -16,11 +17,15 @@ linkcolor=black, citecolor=blue]{hyperref}
 \newcommand{\ml}[1]{\textcolor{blue}{ML : #1}}
 \newcommand{\mr}[1]{\textcolor{magenta}{MR : #1}}
 
+\jmlrheading{1}{2000}{1-48}{4/00}{10/00}{Marina Meil\u{a} and Michael I. Jordan}
+
 \begin{document}
 
 \title{k-averages, a linear optimization alternative to kernel k-means}
 
 \author{Mathias Rossignol \and Mathieu Lagrange}
+
+\editor{}
 
 \maketitle
 
@@ -28,12 +33,43 @@ linkcolor=black, citecolor=blue]{hyperref}
 \begin{abstract}
 
 We present an iterative flat clustering algorithm designed to operate on arbitrary similarity matrices, provided, with the only constraint that these matrices be symmetrical. Although functionally very close to kernel k-means, our proposal performs an maximization of average intra-class similarity, instead of a squared distance minimization, in order to remain closer to the semantics of similarities. We show that this approach allows relaxing the conditions on usable matrices, as well as opening better optimization possibilities. Systematic evaluation on a variety of data sets shows that the proposed approach equals or outperforms kernel k-means in most cases.
+
 \end{abstract}
 
 
 \section{Introduction}
 
+k Means \cite{macQueenBsmsp67}
 
+\cite{Banerjee:2005:CBD:1046920.1194902}
+
+k-Medoids
+
+Partition Around Medoids PAM \cite{KaufmanRousseeuw90} (complexity $O(k(n-k)^2)i$ and i is very high due to a low convergence rate)
+
+Clustering LARge Applications (CLARA) \cite{KaufmanRousseeuw90} draws a sample of objects at the begining and repeat this sampling operation several times
+
+CLARANS \cite{Ng:1994:EEC:645920.672827} preserve the whole dataset but cut complexity by  drawing a sample of neighbors in each search for the medoids.
+has two draw- backs: it assumes that all objects fit in main memory, and the result is very sensitive to the input order \cite{Zhang:1996:BED:233269.233324}
+
+pre clustering  principle \cite{bradley98scaling} arbitrary matrices \cite{conf/icde/GantiRGPF99}
+
+kernel k Means \cite{Girolami:2002:MKC:2325785.2326903}
+
+link to spectral clustering
+
+\cite{Dhillon:2007:WGC:1313055.1313291}
+
+arbitrary matrices \cite{Roth:2003:OCP:960254.960291}
+
+large scale kkmeans \cite{Chitta:2011:AKK:2020408.2020558}
+
+Properties
+arbitrary matrices
+guaranteed convergence
+fast convergence
+low object reallocations
+linear memory access
 
 \section{Related Works}
 
@@ -392,7 +428,7 @@ In the worst case scenario, $M = N$, and the complexity for one iteration of the
 
 \begin{figure}
 \label{fig:moved}
-\includegraphics[scale=0.6]{nbMoved.png} 
+\includegraphics[scale=0.6]{figures/nbMoved.png} 
 \caption{Number of moved objects per iteration during a typical clustering of 5000 objects.}
 \end{figure}
 
@@ -470,7 +506,7 @@ Another metric of choice, is the Normalized Mutual Information (NMI) criterion. 
 
 where $I(X;Y)=H(X)−H(X|Y)$ is the mutual information between the random variables $X$ and $Y$, $H(X)$ is the Shannon entropy of $X$,and $H(X|Y)$ is the conditional entropy of $X$ given $Y$. Thanks to the normalization, the metric stays between $0$ and $1$, $1$ indicating perfect matching and can be used to compare clustering with different number of clusters. Random prediction gives an NMI close to $0$, whereas the accuracy of a random prediction on a balanced bi class problem is 50\%.
 
-For those reasons and ease of reading, only the NMI is considered. Though, it shall be noted that the most of statements that will be made in the following in terms of ranking of the different algorithms  still holds while considering the accuracy as reference, see \url{} for full results.
+For those reasons and ease of reading, only the NMI is considered, as in \cite{Kulis2008}. Though, it shall be noted that the most of statements that will be made in the following in terms of ranking of the different algorithms  still holds while considering the accuracy metric as reference, see \url{} for full results.
 
 \subsection{Results}
 
