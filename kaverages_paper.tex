@@ -14,14 +14,14 @@ linkcolor=black, citecolor=blue]{hyperref}
 \newcommand{\ms}[1]{\texttt{#1}} %racccourci pour ``monospaced''
 \newcommand{\lat}{\emph} %pour les mots latins
 
-\newcommand{\ml}[1]{\textcolor{blue}{ML : #1}}
+\newcommand{\ml}[1]{\textcolor{red}{ML : #1}}
 \newcommand{\mr}[1]{\textcolor{magenta}{MR : #1}}
 
 \jmlrheading{1}{2000}{1-48}{4/00}{10/00}{Marina Meil\u{a} and Michael I. Jordan}
 
 \begin{document}
 
-\title{k-averages, a linear optimization alternative to kernel k-means}
+\title{the K-averages algorithm \\ a linear optimization alternative to kernel K-means}
 
 \author{Mathias Rossignol \and Mathieu Lagrange}
 
@@ -39,37 +39,37 @@ We present an iterative flat clustering algorithm designed to operate on arbitra
 
 \section{Introduction}
 
-k Means \cite{macQueenBsmsp67}
+As soon as conceptual data objects can be described using some sort of vocabulary, many kind of computational metrics can be considered to measure the type of relationships those objects share. Then, a common need is to group those $n$ objects into $K$ clusters, so that the similarity between objects of the same cluster is maximized. We shall focus for the purpose of this study on cluster analysis based on iterative divisive hard clustering algorithms.
 
-\cite{Banerjee:2005:CBD:1046920.1194902}
+If the data lies in a vectorial space, \textit{i.e.} objects can be represented by a n-dimensional feature vectors without loss of information, the seminal K-means algorithm \cite{macQueenBsmsp67},  based on the centroid model, that optimizes the intra cluster Euclidiean distance is probably the most efficient approach as the explicit computation of the cluster centroids ensure both computational efficiency and scalability. As shown by \cite{Banerjee:2005:CBD:1046920.1194902}, any kind of Bregman divergences may also be considered to develop such efficient clustering algorithms like the KL-divergence \cite{} and Itakura-Saito divergence \cite{}.
 
-k-Medoids
+Though, for many types of data, the projection of a representational problem into an vector space cannot \ml{(yet ?)} be done without loss of descriptive efficiency. Thus, the input data is no longer a $n x m$ matrix storing the $m$ dimensional vectors describing the objects, but a (usually symmetric) square matrix $S$ of size $n x n$ which numerically encode some sort of relationship between the objects. One has to resort to clustering algorithms based on connectivity models, since the cluster centroids cannot explicitly be computed.
 
-Partition Around Medoids PAM \cite{KaufmanRousseeuw90} (complexity $O(k(n-k)^2)i$ and i is very high due to a low convergence rate)
-
-Clustering LARge Applications (CLARA) \cite{KaufmanRousseeuw90} draws a sample of objects at the begining and repeat this sampling operation several times
-
-CLARANS \cite{Ng:1994:EEC:645920.672827} preserve the whole dataset but cut complexity by  drawing a sample of neighbors in each search for the medoids.
-has two draw- backs: it assumes that all objects fit in main memory, and the result is very sensitive to the input order \cite{Zhang:1996:BED:233269.233324}
+Earlier attempts to solve this issue considered the k-Medoids problem, where the goal is to find the $K$ objects, whose average similarity with other objects of its cluster is maximal. The Partition Around Medoids (PAM) \cite{KaufmanRousseeuw90} algorithm solves the k-Medoids problem but with a high complexity ($O(k(n-k)^2)i$) and the number of iterations $i$ is very high due to a low convergence rate. In order to scale the approach, the Clustering LARge Applications (CLARA) algorithm \cite{KaufmanRousseeuw90} draws a sample of objects before running the PAM algorithm. This sampling operation is repeated several times and the most satisfying set of medoids is retained. In contrast, CLARANS \cite{Ng:1994:EEC:645920.672827} preserves the whole set of objects but cut complexity by  drawing a sample of neighbors in each search for the medoids. \ml{pas sur de garder:} Still, this approach has two drawbacks: it assumes that all objects fit in main memory, and the result is sensitive to the input order \cite{Zhang:1996:BED:233269.233324}.
 
 pre clustering  principle \cite{bradley98scaling} arbitrary matrices \cite{conf/icde/GantiRGPF99}
 
-kernel k Means \cite{Girolami:2002:MKC:2325785.2326903}
+Following work on kernel projection \cite{Vapnik:1995:NSL:211359}, \textit{i.e.} the fact that a nonlinear data transformation into some high dimensional feature space increases the probability of the linear separability of the patterns within the transformed space, \cite{Girolami:2002:MKC:2325785.2326903} introduced a kernel version of the K-means algorithm, whose input is a kernel matrix $\mathcal{K}$ that must be a Gram matrix, \textit{i.e.} semi definite positive. \cite{Dhillon:2007:WGC:1313055.1313291} linked a weighed version of the kernel K-means objective to popular spectral clustering one, introducing en efficient way of solving the normalized cut objective.
 
-link to spectral clustering
+Originally thought as considering data lying initially in a given vectorial space then projected in an high dimensional features space thanks to a carefully chosen kernel function, the kernel K-means algorithm proved as being also useful for considering arbitrary similarity problems if some special care is taken to ensure definite positiveness \cite{Roth:2003:OCP:960254.960291}. 
 
-\cite{Dhillon:2007:WGC:1313055.1313291}
 
-arbitrary matrices \cite{Roth:2003:OCP:960254.960291}
 
-large scale kkmeans \cite{Chitta:2011:AKK:2020408.2020558}
 
-Properties
-arbitrary matrices
-guaranteed convergence
-fast convergence
-low object reallocations
-linear memory access
+
+arbitrary matrices 
+
+
+
+large scale kkmeans 
+sampling \cite{Chitta:2011:AKK:2020408.2020558}
+block storing of the similarity matrix
+coarsening \cite{Kulis2008}
+
+We introduce in this paper a hard clustering algorithm based on a connectivity model that has the following properties: 
+1) it may consider as input arbitrary symmetric similarity matrices,
+2) it has fast and guaranteed convergence, 3) it guaranties a low number of object to clusters reallocations and 4) provides good
+scalability properties due to linear memory access.
 
 \section{Related Works}
 
