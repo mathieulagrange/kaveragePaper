@@ -53,14 +53,20 @@ Following work on kernel projection \cite{Vapnik:1995:NSL:211359}, \textit{i.e.}
 Originally thought as considering data lying initially in a given vectorial space then projected in an high dimensional features space thanks to a carefully chosen kernel function, the kernel K-means algorithm proved as being also useful for considering arbitrary similarity problems if some special care is taken to ensure definite positiveness of the input matrix \cite{Roth:2003:OCP:960254.960291}. 
 
 Still, the complexity of the algorithm and the cost of memory  access  prevent from using the kernel K-means algorithm for large scale datasets without specific treatments. \cite{Chitta:2011:AKK:2020408.2020558} considered sampling of the input data, \cite{1047453} considered block storing of the input matrix, and a preclustering   approach \cite{bradley98scaling, conf/icde/GantiRGPF99} is considered by 
-\cite{Kulis2008} with a coarsening and refining phases as respectively a pre and post treatments of the clustering.
+\cite{Kulis2008} with a coarsening and refining phases as respectively a pre and post treatment of the actual clustering phase.
 
-We introduce in this paper a hard clustering algorithm based on a connectivity model that has the following properties: 
-1) it may consider as input arbitrary symmetric similarity matrices,
-2) it has fast and guaranteed convergence, 3) it guaranties a low number of object to clusters reallocations and 4) provides good
+In an effort to minimize explicitly the average intra class similarity, we introduce in this paper a new hard clustering algorithm based on a connectivity model that has the following properties: 
+\begin{enumerate}
+\item it may consider as input arbitrary symmetric similarity matrices,
+\item it has fast and guaranteed convergence, 
+\item it guaranties a low number of object to clusters reallocations and provides good
 scalability properties due to linear memory access.
 
-\section{Related Works}
+\end{enumerate}
+
+The remaining of the paper is organized as follows. Section \ref{sec:kkmeans} presents the kernel K-means objective function and the basic algorithm that minimizes this function, Section \ref{sec:kaverages} presents introduces the concepts behind the so called k-Averages algorithm that is detailed in Section \ref{sec:algo}. The complexity of the two algorithms in terms of arithmetic operations and memory access are then studied in Section \ref{sec:complexity}. The above presented properties of the proposed k-Averages algorithm are then validated on synthetic controlled data in Section \ref{sec:validation} and on 43 corpuses of time series in Section \ref{sec:experiments}.
+
+\section{kernel K-means} \label{sec:kkmeans}
 
 Kernel k-means (cite Girolami) has been for the past few years an algorithm of choice for flat data clustering with known number of clusters (cite salient uses of kkmeans). It makes use of a mathematical technique known as the \gl{kernel trick} to extend the classical k-means clustering algorithm (cite original kmeans paper) to criteria beyond simple euclidean distance proximity. Since it constitutes the closest point of comparison with our own work, we will present it here in detail, before moving on to the description of our algorithm, before dedicating a section to the comparison of the two approaches.
 
@@ -131,7 +137,8 @@ Finding the configuration that asbolutely minimizes S (eq~\ref{eq:S}) is an NP-h
 
 
 
-\section{Foundations of the k-averages algorithm}
+\section{Foundations of the k-averages algorithm} \label{sec:kaverages}
+
 
 Our proposal with the k-averages algorithm is to adopt an alternative objective function that does not rely on a geometric interpretation, like kernel k-means, but on a more simple, direct understanding of a similarity matrix. The goal is to maximize the average intra-cluster similarity between points, a commonly used metric to evaluate clustering quality, and one whose computation is very simple\cad{}linear in time.
 
@@ -309,6 +316,7 @@ of $o$ to the class it belongs to:
 In both cases, computing that impact is a fixed-cost operation; we can therefore use those formulas as the basis for an efficient iterative algorithm.
 
 \section{K-averages algorithm}
+\label{sec:algo}
 
 Our approach does not allow us to benefit, like kernel k-means, from the convergence guarantee brought by the geometric foundation of k-means. In consequence, we cannot apply a "batch" approach where at each iteration all elements are moved to their new class, and all distances (or similarities) are computed at once. Therefore, for each considered object, after finding its ideal new class, we must update the class properties for the two modified classes (source and destination), as well as recompute the average class-object similarities for them.
 
@@ -358,6 +366,7 @@ The full description of k-averages is given in Algorithm~\ref{algo:kaverages}.
 
 
 \section{Complexity analysis}
+\label{sec:complexity}
 
 We study in this section the complexity of the two approaches presented above, first form the point of view of raw complexity, then focusing on memory access.
 
@@ -447,11 +456,13 @@ Such is the price to pay to benefit from the solid geometric foundations and con
 Our purpose with the work presented in this paper is to propose an alternative algorithm that operates in a way very similar to kernel k-means, but is explicitly designed to process similarities, remains as close as possible to their semantics, and directly attempts to maximize a meaningful quantity: the average intra-class similarity.
 
 \section{Validation}
+\label{sec:validation}
 
 The claimed features of the k-Average algorithm is now validated on controlled synthetic data.
 
 
 \section{Experiments}
+\label{sec:experiments}
 
 In order to demonstrate the usefulness of the k-Averages algorithm for realistic data, the clustering of times series is selected as the evaluation task.
 
