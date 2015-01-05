@@ -1,0 +1,26 @@
+K-averages clustering of 18000 objects into 5 classes, similarity matrix in '/data/simple/testSwap_8.matrix', metrics: object normalized
+Loading data and computing initial values: 401.273 s (all future times given in seconds)
+Iteration 1, 14284 moved objects, max delta = 0.9858190222, deltaT = 57.36500001
+Iteration 2, 1378 moved objects, max delta = 0.6857110549, deltaT = 11.46200013
+Iteration 3, 652 moved objects, max delta = 0.2241738838, deltaT = 2.490999937
+Iteration 4, 395 moved objects, max delta = 0.1331247483, deltaT = 1.519000053
+Iteration 5, 304 moved objects, max delta = 0.1006768969, deltaT = 1.204999924
+Iteration 6, 217 moved objects, max delta = 0.08161152638, deltaT = 0.6919999123
+Iteration 7, 186 moved objects, max delta = 0.06474565267, deltaT = 0.5650000572
+Iteration 8, 147 moved objects, max delta = 0.04950077165, deltaT = 0.368999958
+Iteration 9, 140 moved objects, max delta = 0.04585810477, deltaT = 0.4019999504
+Iteration 10, 127 moved objects, max delta = 0.03980886418, deltaT = 0.353000164
+Iteration 11, 106 moved objects, max delta = 0.03259458451, deltaT = 0.2999999523
+Iteration 12, 84 moved objects, max delta = 0.01741788199, deltaT = 0.2330000401
+Iteration 13, 63 moved objects, max delta = 0.009170660271, deltaT = 0.05200004578
+Iteration 14, 56 moved objects, max delta = 0.01124267211, deltaT = 0.1119999886
+Iteration 15, 41 moved objects, max delta = 0.006642700316, deltaT = 0.0490000248
+Iteration 16, 44 moved objects, max delta = 0.00878658646, deltaT = 0.1259999275
+Iteration 17, 29 moved objects, max delta = 0.008081386459, deltaT = 0.09399986267
+Iteration 18, 11 moved objects, max delta = 0.004993720014, deltaT = 0.03900003433
+Iteration 19, 8 moved objects, max delta = 0.002815438631, deltaT = 0.05599999428
+Iteration 20, 2 moved objects, max delta = 0.0007488609255, deltaT = 0.0110001564
+Iteration 21, 1 moved object, max delta = 5.208703874e-05, deltaT = 0.001999855042
+Iteration 22, 0 moved object, max delta = 0, deltaT = 0.001000165939
+Total 22 iterations, 18275 moved objects, clustering performed in 77.61800003 s
+Total time with loading: 478.9360001 s

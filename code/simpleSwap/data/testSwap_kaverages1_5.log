@@ -1,0 +1,25 @@
+K-averages clustering of 11000 objects into 5 classes, similarity matrix in '/data/simple/testSwap_1.matrix', metrics: object normalized
+Loading data and computing initial values: 5.569000006 s (all future times given in seconds)
+Iteration 1, 8659 moved objects, max delta = 0.9725105561, deltaT = 2.025000095
+Iteration 2, 1182 moved objects, max delta = 0.8116806453, deltaT = 0.2769999504
+Iteration 3, 443 moved objects, max delta = 0.2828662899, deltaT = 0.1040000916
+Iteration 4, 245 moved objects, max delta = 0.1570443944, deltaT = 0.05799984932
+Iteration 5, 227 moved objects, max delta = 0.08898694031, deltaT = 0.05400013924
+Iteration 6, 140 moved objects, max delta = 0.05613916633, deltaT = 0.03299999237
+Iteration 7, 151 moved objects, max delta = 0.06144256121, deltaT = 0.03600001335
+Iteration 8, 113 moved objects, max delta = 0.05666941004, deltaT = 0.02799987793
+Iteration 9, 73 moved objects, max delta = 0.02360295096, deltaT = 0.01699995995
+Iteration 10, 34 moved objects, max delta = 0.01669076772, deltaT = 0.009000062943
+Iteration 11, 17 moved objects, max delta = 0.005659659501, deltaT = 0.005000114441
+Iteration 12, 22 moved objects, max delta = 0.01165735003, deltaT = 0.005999803543
+Iteration 13, 25 moved objects, max delta = 0.01433800911, deltaT = 0.007000207901
+Iteration 14, 17 moved objects, max delta = 0.007258213359, deltaT = 0.003999948502
+Iteration 15, 11 moved objects, max delta = 0.009349932318, deltaT = 0.003999948502
+Iteration 16, 11 moved objects, max delta = 0.006188294998, deltaT = 0.003000020981
+Iteration 17, 11 moved objects, max delta = 0.004340707373, deltaT = 0.003000020981
+Iteration 18, 5 moved objects, max delta = 0.00266166729, deltaT = 0.001999855042
+Iteration 19, 3 moved objects, max delta = 0.003895483909, deltaT = 0.00200009346
+Iteration 20, 1 moved object, max delta = 0.0009858198999, deltaT = 0.0009999275208
+Iteration 21, 0 moved object, max delta = 0, deltaT = 0.001000165939
+Total 21 iterations, 11390 moved objects, clustering performed in 2.680000067 s
+Total time with loading: 8.249000072 s

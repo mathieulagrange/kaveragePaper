@@ -1,0 +1,20 @@
+K-averages clustering of 18000 objects into 5 classes, similarity matrix in '/data/simple/testSwap_8.matrix', metrics: object normalized
+Loading data and computing initial values: 424.3629999 s (all future times given in seconds)
+Iteration 1, 14283 moved objects, max delta = 0.917977531, deltaT = 52.71199989
+Iteration 2, 2280 moved objects, max delta = 0.7823182339, deltaT = 10.96199989
+Iteration 3, 608 moved objects, max delta = 0.1644595699, deltaT = 7.601999998
+Iteration 4, 382 moved objects, max delta = 0.09591112101, deltaT = 1.768000126
+Iteration 5, 269 moved objects, max delta = 0.07670012207, deltaT = 1.330999851
+Iteration 6, 213 moved objects, max delta = 0.05201457895, deltaT = 0.8840000629
+Iteration 7, 161 moved objects, max delta = 0.04768816178, deltaT = 0.493999958
+Iteration 8, 110 moved objects, max delta = 0.02494735666, deltaT = 0.4320001602
+Iteration 9, 74 moved objects, max delta = 0.01894939188, deltaT = 0.2429997921
+Iteration 10, 56 moved objects, max delta = 0.01669316519, deltaT = 0.1920001507
+Iteration 11, 37 moved objects, max delta = 0.01401489502, deltaT = 0.07500004768
+Iteration 12, 43 moved objects, max delta = 0.009810201815, deltaT = 0.1039998531
+Iteration 13, 20 moved objects, max delta = 0.006603431235, deltaT = 0.06299996376
+Iteration 14, 27 moved objects, max delta = 0.003944024064, deltaT = 0.03400015831
+Iteration 15, 6 moved objects, max delta = 0.003369975834, deltaT = 0.01899981499
+Iteration 16, 0 moved object, max delta = 0, deltaT = 0.001000165939
+Total 16 iterations, 18569 moved objects, clustering performed in 77.00300002 s
+Total time with loading: 501.4070001 s
