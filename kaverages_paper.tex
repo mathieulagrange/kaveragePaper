@@ -316,14 +316,14 @@ Assuming that $o \notin c$, we can similarly to what has been done previously (n
   \end{aligned}
 \end{equation}
 
-The quality of a class $c$ after adding an object $o$ is thus:
+\noindent The quality of a class $c$ after adding an object $o$ is thus:
 
 \begin{equation}
   \mathcal{Q}\left(c \cup o\right) = \frac{(N_c-1) \mathcal{Q}(c)  + 2s\left(o, c\right)}{N_c+1}
   \label{eq:newQual_add}
 \end{equation}
 
-And the change in quality from its previous value:
+\noindent And the change in quality from its previous value:
 
 \begin{equation} \label{deltaAdd}
   \begin{aligned}
@@ -353,7 +353,10 @@ As can be seen, computing this impact is a fixed-cost operation. We can therefor
 
 Our approach does not allow us to benefit, like kernel k-means, from the convergence guarantee brought by the geometric foundation of k-means. In consequence, we cannot apply a \gl{batch} approach where at each iteration all elements are moved to their new class, and all distances (or similarities) are computed at once. Therefore, for each considered object, after finding its ideal new class, we must update the class properties for the two modified classes (source and destination), as well as recompute the average class-object similarities for them.
 
-Although this seems at first like systematically updating everything at each object re-allocation should have a huge performance impact, our reliance on simple averages without any quadratic terms makes it possible to have very simple update formulas: new class qualities are given by Equations~\ref{eq:newQual_remove} and \ref{eq:newQual_add}, and new object-class similarities can be computed by:
+At a first glance, dynamically updating objectives as a result of object reallocation might seem to have negative performance impact. However, our simple non-quadratic updates makes such dynamic changes easily tractable. New class qualities are thus given by Equations~\ref{eq:newQual_remove} and \ref{eq:newQual_add}, and new object-class similarities can be computed by:
+
+%% Rewritten above.. feel free to modify!!! (Arshia)
+%Although this seems at first like systematically updating everything at each object re-allocation should have a huge performance impact, our reliance on simple averages without any quadratic terms makes it possible to have very simple update formulas: new class qualities are given by Equations~\ref{eq:newQual_remove} and \ref{eq:newQual_add}, and new object-class similarities can be computed by:
 
 \begin{equation}
 	\begin{aligned}
@@ -363,7 +366,7 @@ Although this seems at first like systematically updating everything at each obj
   \label{eq:newSimilNewC}
 \end{equation}
 
-where $i$ is any object index, $n$ is the recently reallocated object, $c_s$ the \gl{source} class that object $i$ was removed from, and $c_t$ the \gl{target} class that object $n$ was added to.
+\noindent where $i$ is any object index, $n$ is the recently reallocated object, $c_s$ the \gl{source} class that object $i$ was removed from, and $c_t$ the \gl{target} class that object $n$ was added to.
 
 The full description of k-averages is given in Algorithm~\ref{algo:kaverages}.
 
@@ -401,15 +404,15 @@ The full description of k-averages is given in Algorithm~\ref{algo:kaverages}.
 \section{Complexity analysis}
 \label{sec:complexity}
 
-We study in this section the complexity of the two approaches presented above, first form the point of view of raw complexity, then focusing on memory access.
+In this section, we study the complexity of the two approaches presented above, first form the point of view of raw complexity, then focusing on memory access.
 
 \subsection{Computational complexity}
 
 \subsubsection{Kernel k-means}
 
-As can be seen on Algorithm~\ref{algo:kkmeans}, the operation on line~\ref{algline:kkmeans_cplx1} is the most costly part of the algorithm: for each object $n$ and class $c$, at each iteration, it is necessary to compute $Y_{cn}$ from Equation~\ref{eq:yki}\cad{}an $O(N^2)$ operation in itself, per object. The impossibility of simply computing the distances to a know centroid as is done in simple k-means, gives kernel k-means a much higher complexity, globally $O(N^3)$ per iteration, independently of how many objects are moved for that iteration.
+As can be seen in Algorithm~\ref{algo:kkmeans}, the operation on line~\ref{algline:kkmeans_cplx1} is the most costly part of the algorithm: for each object $n$ and class $c$, at each iteration, it is necessary to compute $Y_{cn}$ from Equation~\ref{eq:yki}\cad{}an $O(N^2)$ operation in itself, per object. The impossibility of simply computing the distances to a known centroid as is done in simple k-means gives kernel k-means a much higher complexity, globally $O(N^3)$ per iteration, independent of how many objects are moved for that iteration.
 
-It is, however, possible to improve the performance of kernel k-means by noting than in Equation~\ref{eq:yki}, the third term of the equation, which has the highest complexity, is only dependent on class definitions, and not on the considered object. We can therefore rewrite Equation~\ref{eq:yki} as:
+It is however possible to improve the performance of kernel k-means by noting than in Equation~\ref{eq:yki}, the third term of the equation, which has the highest complexity, is only dependent on class definitions and not on the considered object. We can therefore rewrite Equation~\ref{eq:yki} as:
 
 \begin{eqnarray}
 Y_{cn} & = & \mathcal{K}_{nn} - \frac{2}{N_c} \sum_{i=1}^{N} z_{ci} \mathcal{K}_{ni} + M_c \label{eq:yki_improved}
@@ -465,7 +468,7 @@ In the worst case scenario, $M = N$, and the complexity for one iteration of the
 
 \subsection{Memory access}
 
-The lowered computational costs is also accompanied by a diminution in memory access: as can be seen from Equation~\ref{eq:newSimilNewC}, in order to compute the new object-to-class similarities after moving an object $n$, only line $n$ of the similarity matrix needs to be read. For the rest of the algorithm, only the (much smaller) object-to-class similarity matrix is used. By contrast, in the case of kernel k-means, the computation of $M_c$ values at each iteration require that the whole similarity matrix be read, which can be a serious performance bottleneck in the case of large object collections.
+The lowered computational costs is also accompanied by a decrease in memory access: as can be seen from Equation~\ref{eq:newSimilNewC}, in order to compute the new object-to-class similarities after moving an object $n$, only line $n$ of the similarity matrix needs to be read. For the rest of the algorithm, only the (much smaller) object-to-class similarity matrix is used. By contrast, in the case of kernel k-means, the computation of $M_c$ values at each iteration require that the whole similarity matrix be read, which can be a serious performance bottleneck in the case of large object collections.
 
 Moreover, the similarity update function of k-averages, by reading one line of the matrix at a time, presents good data locality properties, which make it play well with standard memory paging strategies.
 
