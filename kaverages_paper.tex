@@ -497,22 +497,26 @@ The figures presented in this section were obtained on simple synthetic datasets
 
 \subsection{Clustering performance}
 
+%% Arshia: WATCH OUT.. \label should ALWAYS appear after \caption{} or you'll get unwanted numbering when citing figures... .
+
 \begin{figure}
-\label{fig:synth_perf}
 \center
 \includegraphics[scale=0.6]{figures/simpleSwap.png} 
 \caption{MISSING FIGURE. NMI of kernel k-means and k-averages clustering relative to ground truth for synthetic data sets of varying sizes and \gl{difficulty} (degree of overlap between classes).}
+\label{fig:synth_perf}
 \end{figure}
+
+%% Arshia: figure fig:synth_perf is never cited?!?
 
 \subsection{Time efficiency}
 
 Figure~\ref{fig:timing} shows the average time spent by kernel k-means and k-averages to cluster synthetic datasets or varying sizes. As previously, initial conditions on each run are identical for both algorithms.
 
 \begin{figure}
-\label{fig:timing}
 \center
 \includegraphics[scale=0.6]{figures/simpleSwap.png} 
 \caption{Average computation time of the kernel k-means (*) and kaverages (o) algorithms on computers with 2 GB (solid line) and 32 GB (dashed line) of RAM, respectively. The \gl{running time} axis follows a logarithmic scale.}
+\label{fig:timing}
 \end{figure}
 
 As can be seen, k-averages runs at least 20 times faster on average than kernel k-means in ordinary conditions, when  available memory is not an issue. When the matrix size exceeds what can be stored in RAM and the system has to resort to paged memory, as in the presented experiments when the matrix reaches about 1500MB, both algorithms suffer from a clear performance hit; however, kernel k-means is much more affected, and the difference becomes even more significant: with a 2000MB similarity matrix on a memory-limited computer, k-averages runs about 100 times faster than kernel k-means.
