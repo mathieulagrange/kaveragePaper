@@ -153,19 +153,23 @@ The version given here is the most direct algorithmic translation of the mathema
 
 \section{Foundations of the k-averages algorithm} \label{sec:kaverages}
 
+% Arshia: je propose la phrase suivante:
+% In our proposal, we adopt an alternative objective function where, unlike kernel k-means, does not rely on a geometric interpretation but an explicit account of similarity matrix.
+Our proposal with the k-averages algorithm is to adopt an alternative objective function that does not rely on a geometric interpretation, like kernel k-means, but on a simpler and direct understanding of a similarity matrix. The goal is to maximize the average intra-cluster similarity between points, a commonly used metric to evaluate clustering quality, and one whose computation is very simple\cad{}linear in time.
 
-Our proposal with the k-averages algorithm is to adopt an alternative objective function that does not rely on a geometric interpretation, like kernel k-means, but on a more simple, direct understanding of a similarity matrix. The goal is to maximize the average intra-cluster similarity between points, a commonly used metric to evaluate clustering quality, and one whose computation is very simple\cad{}linear in time.
-
-Due to its simplicity, however, that objective function cannot simply be "plugged into" the standard kernel k-means algorithm: it lacks the geometric requisites to ensure convergence. We must therefore propose an adapted algorithmic framework to exploit it: first, we show here that it is possible to easily compute the impact on the global objective function of moving a single point from one class to another; we then introduce an algorithm intended to take advantage of that formula.
+Due to its simplicity, however, the objective function cannot be simply "plugged into" the standard kernel k-means algorithm: it lacks the geometric requisites to ensure convergence. We must therefore propose an adapted algorithmic framework to exploit it: first, we show here that it is possible to easily compute the impact on the global objective function of moving a single point from one class to another; we then introduce an algorithm intended to take advantage of that formula.
 
 \subsection{Conventions and possible objective functions}
 
-In addition to the notations already presented above, we index here the set of elements belonging to a given cluster $c_k$ as $c_k = \left\{o_{k1}, \ldots, o_{kN_k}\right\}$. To simplify below, when we're simply considering one class, no matter
-which, we shall omit the first index and write $c = \left\{o_1, \ldots, o_{N_c}\right\}$.
+In addition to the notations already presented above, we index here the set of elements belonging to a given cluster $c_k$ as $c_k = \left\{o_{k1}, \ldots, o_{kN_k}\right\}$. 
+For simplicity, we omit the first index and note $c = \left\{o_1, \ldots, o_{N_c}\right\}$ when considering a single class. 
+%To simplify below, when we're simply considering one class, no matter
+%which, we shall omit the first index and write $c = \left\{o_1, \ldots, o_{N_c}\right\}$.
 
 The similarity between objects shall be written $s\left(o_i, o_j\right)$.
-Let us extend the notation $s$ to the \emph{similarity of an object to a
-  class}, which we define as the average similarity of that object
+%Let us 
+We extend the notation $s$ to the \emph{similarity of an object to a
+  class} defined as the average similarity of an object
 with all objects of the class. $s(o,c)$ accepts two definitions,
 depending on whether or not $o$ is in $c$:
 
@@ -186,9 +190,10 @@ Let's call \gl{quality} of a class the average intra-class object-to-object simi
 \mathcal{Q}\left(c\right) = \frac{1}{N_c} \sum_{i=1}^{n_c} s\left(o_i, c\right)
 \end{equation}
 
-We do not, in our work, explicitly refer to class centroids, preferring to directly consider averages of similarity values between individuals within clusters. Indeed, we never refer to a geometrical interpretation of the data. However, it should be noted that since in k-means (and kernel k-means) the centroid of a class is defined as an average of all points in that class, $\mathcal{Q}$ is strictly equivalent to the average point to centroid similarity.
+In our framework, we do not explicitly refer to class centroids, preferring to directly consider averages of similarity values between individuals within clusters. Indeed, we never refer to a geometrical interpretation of the data. However, it should be noted that since in k-means (and kernel k-means) the centroid of a class is defined as an average of all points in that class, $\mathcal{Q}$ is strictly equivalent to the average point to centroid similarity.
 
-Using the notations above, we define our objective function as the average class quality, normalized taking into account the class sizes:
+Using the notations above, we define our objective function as the average class quality, %normalized taking into account the class sizes:
+normalized with class sizes:
 
 \[
 O_2 = \frac{1}{N} \sum_{i=1}^{C} N_i \mathcal{Q}(c_i)
@@ -198,7 +203,12 @@ Since informally, our goal is to bring together objects that share high similari
 
 \subsection{Naive k-averages algorithm}
 
-Algorithm~\ref{algo:naive-kaverages} presents an algorithm that simply moves each object to the class with which is has the highest average similarity, until convergence is reached. This approach is simple and easily understood, however experiments show that it often cannot reach convergence: the reason for that is that the decision to move an object to a different cluster is taken without taking into account the impact of the move on the quality of the source cluster.
+Algorithm~\ref{algo:naive-kaverages} presents an algorithm that simply moves each object to the class with which is has the highest average similarity, until convergence is reached. 
+%This approach is simple and easily understood. 
+The algorithm is straightforward and simple. 
+However, experiments show that it often cannot reach convergence %: the reason for that is that
+since the decision to move an object to a different cluster is taken without %taking into account
+considering the impact of the move on the quality of the source cluster.
 
 \begin{algorithm}
 	\label{algo:naive-kaverages}
@@ -226,7 +236,10 @@ Algorithm~\ref{algo:naive-kaverages} presents an algorithm that simply moves eac
 	\caption{Naive k-averages algorithm.}
 \end{algorithm}
 
-In order to be able to ensure global convergence, we therefore need to compute the impact on the global objective function of moving one object from one class to another. We will then show how, by using that formulas as a guide for the optimal reallocation of objects, and only moving objects that have a strictly positive impact on the function, we can guarantee the convergence of an iterative algorithm following those rules.
+%In order to be able 
+To ensure global convergence, we need to compute the impact of moving one object from one class to another on the global objective function. 
+Using such formulation and considering positive impact of reallocation, we can then be in position to guarantee the convergence of an iterative algorithm. 
+%We will then show how, by using that formulas as a guide for the optimal reallocation of objects, and only moving objects that have a strictly positive impact on the function, we can guarantee the convergence of an iterative algorithm following those rules.
 
 \subsection{Impact of object reallocation on class quality}
 
@@ -239,13 +252,13 @@ Considering a class $c$, let us develop the expression of $\mathcal{Q}(c)$ into 
   \end{aligned}
 \end{equation}
 
-Using the assumption that the similarity matrix is symmetrical, we can reach (this is an indispensable transformation for future calculations):
+Using the assumption that the similarity matrix is symmetrical, we can reach: % (this is an indispensable transformation for future calculations):
 \begin{equation}
     \mathcal{Q}\left(c\right) = \frac{2}{N_c(N_c-1)} \sum_{i=2}^{N_c} \sum_{j=1}^{i-1} s\left(o_i, o_j\right)
     \label{eq:classQuality}
 \end{equation}
 
-For future use, let us define the notation:
+For future use and given the importance of the above transformation, we define:
 \begin{equation}
   \Sigma(c) = \sum_{i=2}^{N_c} \sum_{j=1}^{i-1} s\left(o_i, o_j\right)
 \end{equation}
@@ -261,6 +274,8 @@ Thus:
 Assuming that $o \in c$, necessarily $\exists i \mid o=o_i$. Since the
 numbering of objects is arbitrary, we can assume that $o = o_{N_c}$
 then generalize from the result thus obtained.
+
+% Arshia: Above sentence is not clear "then generalise"?
 
 \begin{equation}
   \begin{aligned}
@@ -322,7 +337,7 @@ And the change in quality from its previous value:
 
 When moving an object $o$ from class $c_s$ (\gl{source}), to whom it belongs, to a
 distinct class $c_t$ (\gl{target}), $(N_s-1)$ objects are affected
-by the variation in (\ref{deltaRemove}), and $N_t$ are affected
+by variation in (\ref{deltaRemove}), and $N_t$ are affected
 by that in (\ref{deltaAdd}), in addition to the variation in similarity
 of $o$ to the class it belongs to:
 
@@ -331,7 +346,7 @@ of $o$ to the class it belongs to:
   \label{eq:impact_classnorm}
 \end{equation}
 
-As can be seen, computing that impact is a fixed-cost operation; we can therefore use the formula as the basis for an efficient iterative algorithm.
+As can be seen, computing this impact is a fixed-cost operation. We can therefore use the formula as the basis for an efficient iterative algorithm.
 
 \section{K-averages algorithm}
 \label{sec:algo}
