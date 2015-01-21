@@ -1,0 +1,13 @@
+id,nbClasses,nbSamples,kMeans,kkmeansC,kaveragesC
+ 7,2,  56,5$\pm$1,\textbf{6$\pm$3$^*$},5$\pm$1
+12,2, 200,12$\pm$2,14$\pm$2,\textbf{15$\pm$1$^*$}
+13,2, 884,0$\pm$0,\textbf{3$\pm$2$^*$},\textbf{3$\pm$2}
+17,2, 200,\textbf{0$^*$},\textbf{0$^*$},\textbf{0$^*$}
+20,2,1096,0$\pm$0,\textbf{1$\pm$0$^*$},1$\pm$0
+21,2, 121,\textbf{3$\pm$1$^*$},1$\pm$1,1$\pm$0
+25,2,1272,30$\pm$0,52$\pm$0,\textbf{53$\pm$0$^*$}
+28,2, 621,51$\pm$25, 78$\pm$0,\textbf{ 78$\pm$0$^*$}
+29,2, 980,\textbf{24$^*$},21,21
+34,2,1162,0$\pm$0,\textbf{7$\pm$0$^*$},7$\pm$0
+42,2,7164,\textbf{0$^*$},0,0
+43,2,3300,0$\pm$0,\textbf{0$\pm$0},\textbf{0$\pm$0$^*$}
