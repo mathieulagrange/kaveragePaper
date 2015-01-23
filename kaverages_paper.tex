@@ -31,7 +31,7 @@
 
 \begin{abstract}
 
-We present an iterative flat clustering algorithm designed to operate on arbitrary similarity matrices, with the only constraint that these matrices be symmetrical. Although functionally very close to kernel k-means, our proposal performs an maximization of average intra-class similarity, instead of a squared distance minimization, in order to remain closer to the semantics of similarities. We show that this approach allows relaxing the conditions on usable matrices, as well as opening better optimization possibilities. Systematic evaluation on a variety of data sets shows that the proposed approach equals or outperforms kernel k-means in a large majority of cases, while running much faster. Most notably, it significantly reduces memory access, which makes it a good choice for very large data collections.
+We present an iterative flat clustering algorithm designed to operate on arbitrary similarity matrices, with the only constraint that these matrices be symmetrical. Although functionally very close to kernel k-means, our proposal performs an maximization of average intra-class similarity, instead of a squared distance minimization, in order to remain closer to the semantics of similarities. We show that this approach allows relaxing the conditions on usable matrices, as well as opening better optimization possibilities. Systematic evaluation on a variety of data sets shows that the proposed approach outperforms or equals kernel k-means in a large majority of cases, while running much faster. Most notably, it significantly reduces memory access, which makes it a good choice for very large data collections.
 
 \end{abstract}
 
@@ -123,8 +123,8 @@ Since the sum of $K_{nn}$ over all points remains constant, and the sum of squar
 
 \subsection{Algorithm}
 
-Finding the configuration that absolutely minimizes S (eq~\ref{eq:S}) is an NP-complete problem. However, several approaches allow finding a good approximate result. We shall only focus here on the fastest and most popular, an iterative assignment\,/\,update procedure commonly referred to as the \gl{k-means algorithm}, or as a discrete version of Lloyd's algorithm, detailed in Algorithm~\ref{algo:kkmeans}.
-% Arshia: Cite algorithm source?
+Finding the configuration that absolutely minimizes S (eq~\ref{eq:S}) is an NP-complete problem. However, several approaches allow finding a good approximate result. We shall only focus here on the fastest and most popular, an iterative assignment\,/\,update procedure commonly referred to as the \gl{k-means algorithm} (\cite{macQueenBsmsp67}), or as a discrete version of Lloyd's algorithm, detailed in Algorithm~\ref{algo:kkmeans}.
+% Arshia: Cite algorithm source? MR: yes, added
 
 \begin{algorithm}
 	\label{algo:kkmeans}
@@ -152,9 +152,7 @@ The version given here is the most direct algorithmic translation of the mathema
 
 \section{Foundations of the k-averages algorithm} \label{sec:kaverages}
 
-% Arshia: je propose la phrase suivante:
-% In our proposal, we adopt an alternative objective function where, unlike kernel k-means, does not rely on a geometric interpretation but an explicit account of similarity matrix.
-Our proposal with the k-averages algorithm is to adopt an alternative objective function that does not rely on a geometric interpretation, like kernel k-means, but on a simpler and direct understanding of a similarity matrix. The goal is to maximize the average intra-cluster similarity between points, a commonly used metric to evaluate clustering quality, and one whose computation is very simple\cad{}linear in time.
+In our proposal, we adopt an alternative objective function which, unlike kernel k-means, does not rely on a geometric interpretation but an explicit account of the similarity matrix. The goal is to maximize the average intra-cluster similarity between points, a commonly used metric to evaluate clustering quality, and one whose computation is very direct\cad{}linear in time.
 
 Due to its simplicity, however, the objective function cannot be simply "plugged into" the standard kernel k-means algorithm: it lacks the geometric requisites to ensure convergence. We must therefore propose an adapted algorithmic framework to exploit it: first, we show here that it is possible to easily compute the impact on the global objective function of moving a single point from one class to another; we then introduce an algorithm intended to take advantage of that formula.
 
@@ -202,7 +200,7 @@ Since informally, our goal is to bring together objects that share high similari
 
 \subsection{Naive k-averages algorithm}
 
-Algorithm~\ref{algo:naive-kaverages} presents a method that simply moves each object to the class with which is has the highest average similarity, until convergence is reached. The algorithm is straightforward and simple; however, experiments show that it often cannot reach convergence since the decision to move an object to a different cluster is taken without considering the impact of the move on the quality of the source cluster.
+Algorithm~\ref{algo:naive-kaverages} presents a method that simply moves each object to the class with which it has the highest average similarity, until convergence is reached. The algorithm is straightforward and simple; however, experiments show that while it can often produce interesting results, it also sometimes cannot reach convergence because the decision to move an object to a different cluster is taken without considering the impact of the move on the quality of the source cluster.
 
 \begin{algorithm}
 	\label{algo:naive-kaverages}
@@ -488,7 +486,7 @@ Another metric of choice, is the Normalized Mutual Information (NMI) criterion. 
 \textbf{NMI} = \frac{ 2\- I(C;K) }{H(C)+H(K)}
 \end{equation}
 
-where $I(X;Y)=H(X)−H(X|Y)$ is the mutual information between the random variables $X$ and $Y$, $H(X)$ is the Shannon entropy of $X$,and $H(X|Y)$ is the conditional entropy of $X$ given $Y$. Thanks to the normalization, the metric stays between $0$ and $1$, $1$ indicating a perfect match, and can be used to compare clustering with different numbers of clusters. Interestingly, random prediction gives an NMI close to $0$, whereas the accuracy of a random prediction on a balanced bi-class problem is 50\%.
+where $I(X;Y)=H(X)−H(X|Y)$ is the mutual information between the random variables $X$ and $Y$, $H(X)$ is the Shannon entropy of $X$,and $H(X|Y)$ is the conditional entropy of $X$ given $Y$. Thanks to the normalization, the metric stays between $0$ and $1$, $1$ indicating a perfect match, and can be used to compare clustering with different numbers of clusters. Interestingly, random prediction gives an NMI close to $0$, whereas the accuracy of a random prediction on a balanced bi-class problem is as high as 50\,\%.
 
 For those reasons and ease of reading, only the NMI is considered here, as in (\cite{Kulis2008}). However, it shall be noted that most of the statements that will be made in the following in terms of ranking of the different algorithms  still holds true while considering the accuracy metric as reference.
 
@@ -501,9 +499,9 @@ For those reasons and ease of reading, only the NMI is considered here, as in (\
 
 Figure~\ref{fig:synth_perf} presents the quality of clusterings obtained using kernel k-means (dotted line) and k-averages (solid line) on two series of datasets: one featuring 5 classes, the other 40 classes. On the x-axis is the variance of the Gaussian distribution used to generate point cloud for each class: the higher that value, the more the classes are spread out and overlap each other, thus making the clustering harder.
 
-Clustering is done by requesting a number of clusters equal to the actual number of classes in the dataset. In order to obtain stable and reliable figures, clustering is repeated 500 times with varying initial conditions, \textit{i.e.} the initial assignment of points to clusters is randomly determined, and only the average performance is given. For fairness of comparison, each algorithm is run with the exact same initial assignments.
+The question of choosing the proper number of clusters for a given dataset without \textit{a priori} is a well known and hard problem, and well beyond the scope of this article. Therefore, for the purpose of evaluation, clustering is done by requesting a number of clusters equal to the actual number of classes in the dataset. In order to obtain stable and reliable figures, clustering is repeated 500 times with varying initial conditions, \textit{i.e.} the initial assignment of points to clusters is randomly determined, and only the average performance is given. For fairness of comparison, each algorithm is run with the exact same initial assignments.
 
-As can be seen on the figure, in the case of a 5-class problem, k-averages outperforms kernel k-means in the \gl{easy} cases (low class spread), before converging to equivalent results. For the more complex 40-class datasets, k-averages consistently yields a slightly better result than kernel k-means, especially for higher values of the variance.
+As can be seen on the figure, in the case of a 5-class problem, k-averages outperforms kernel k-means in the \gl{easy} cases (low class spread), before converging to equivalent results. For the more complex 40-class datasets, k-averages consistently yields a better result than kernel k-means, especially for higher values of the variance.
 
 \subsection{Time efficiency}
 
@@ -516,7 +514,7 @@ Figure~\ref{fig:timing} shows the average time spent by kernel k-means and k-ave
 \label{fig:timing}
 \end{figure}
 
-As can be seen, k-averages runs at least 20 times faster on average than kernel k-means in ordinary conditions, when  available memory is not an issue. When the matrix size exceeds what can be stored in RAM and the system has to resort to paged memory, as in the presented experiments when the matrix reaches about 1500MB, both algorithms suffer from a clear performance hit; however, kernel k-means is much more affected, and the difference becomes even more significant: with a 2000MB similarity matrix on a memory-limited computer, k-averages runs about 100 times faster than kernel k-means.
+These figures confirm the theoretical complexity analysis presented in Section~\ref{sec:complexity}: k-averages runs at least 20 times faster on average than kernel k-means in ordinary conditions, when  available memory is not an issue. When the matrix size exceeds what can be stored in RAM and the system has to resort to paged memory, as in the presented experiments when the matrix reaches about 1500MB, both algorithms suffer from a clear performance hit; however, kernel k-means is much more affected, and the difference becomes even more significant: with a 2000MB similarity matrix on a memory-limited computer, k-averages runs about 100 times faster than kernel k-means.
 
 Having established the interest of our proposed method relative to kernel k-means on synthetic object collections, we now proceed to a thorough evaluation on real-life data.
 
@@ -533,7 +531,7 @@ In order to demonstrate the superior relevance for this type of data of a simila
 
 \subsection{Datasets}
 
-To compare the proposed algorithm to kernel k-means, a large collection of 43 time series datasets created by many laboratories all over the world and compiled by Prof. Keogh (\url{www.cs.ucr.edu/~eamonn/time_series_data}) is considered.  Statistics about the morphology of those datasets are summarized by Table \ref{tab:dbs}.
+To compare quality of clusterings obtained by the considered algorithms, we consider a large collection of 43 time series datasets created by many laboratories all over the world and compiled by Prof. Keogh (\url{www.cs.ucr.edu/~eamonn/time_series_data}).  Statistics about the morphology of those datasets are summarized in Table~\ref{tab:dbs}.
 
 \begin{table}
 \center
@@ -668,10 +666,7 @@ Setting aside simple k-means, k-averages yields the best clustering for 26 datas
 
 \section{Conclusion}
 
+
 \bibliography{bib}
-
-\appendix
-
-\input{report/tables/datasets}
 
 \end{document}
