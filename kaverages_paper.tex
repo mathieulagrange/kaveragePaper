@@ -123,7 +123,7 @@ Since the sum of $K_{nn}$ over all points remains constant, and the sum of squar
 
 \subsection{Algorithm}
 
-Finding the configuration that absolutely minimizes S (eq~\ref{eq:S}) is an NP-complete problem. However, several approaches allow finding a good approximate result. We shall only focus here on the fastest and most popular, an iterative assignment\,/\,update procedure commonly referred to as the \gl{k-means algorithm} (\cite{macQueenBsmsp67}), or as a discrete version of Lloyd's algorithm, detailed in Algorithm~\ref{algo:kkmeans}.
+Finding the configuration that absolutely minimizes S (eq~\ref{eq:S}) is an NP-complete problem. However, several approaches allow finding an acceptable approximation. We shall only focus here on the fastest and most popular, an iterative assignment\,/\,update procedure commonly referred to as the \gl{k-means algorithm} (\cite{macQueenBsmsp67}), or as a discrete version of Lloyd's algorithm, detailed in Algorithm~\ref{algo:kkmeans}.
 % Arshia: Cite algorithm source? MR: yes, added
 
 \begin{algorithm}
@@ -152,13 +152,13 @@ The version given here is the most direct algorithmic translation of the mathema
 
 \section{Foundations of the k-averages algorithm} \label{sec:kaverages}
 
-In our proposal, we adopt an alternative objective function which, unlike kernel k-means, does not rely on a geometric interpretation but an explicit account of the similarity matrix. The goal is to maximize the average intra-cluster similarity between points, a commonly used metric to evaluate clustering quality, and one whose computation is very direct\cad{}linear in time.
+In our proposal, we adopt an alternative objective function which, unlike kernel k-means, does not rely on a geometric interpretation but an explicit account of the similarity matrix. The goal is to maximize the average intra-cluster similarity between points, a commonly used metric to evaluate clustering quality, and one whose computation is direct\cad{}linear in time.
 
 Due to its simplicity, however, the objective function cannot be simply "plugged into" the standard kernel k-means algorithm: it lacks the geometric requisites to ensure convergence. We must therefore propose a specifically tailored algorithmic framework to exploit it: first, we show here that it is possible to easily compute the impact on the global objective function of moving a single point from one class to another; we then introduce an algorithm intended to take advantage of that formula.
 
 \subsection{Conventions and possible objective functions}
 
-In addition to the notations already presented above, we index here the set of elements belonging to a given cluster $c_k$ as $c_k = \left\{o_{k1}, \ldots, o_{kN_k}\right\}$. 
+In addition to the notations presented above, we index hereon the set of elements belonging to a given cluster $c_k$ as $c_k = \left\{o_{k1}, \ldots, o_{kN_k}\right\}$. 
 For simplicity, we omit the first index and note $c = \left\{o_1, \ldots, o_{N_c}\right\}$ when considering a single class. 
 %To simplify below, when we're simply considering one class, no matter
 %which, we shall omit the first index and write $c = \left\{o_1, \ldots, o_{N_c}\right\}$.
@@ -473,13 +473,13 @@ To illustrate and confirm the theoretical complexity computed here, the next sec
 \section{Validation}
 \label{sec:validation}
 
-In order to reliably compare the clustering quality and execution speed between the two approaches, we have written plain C implementations of Algorithms~\ref{algo:kkmeans_optim} and~\ref{algo:kaverages}, with minimal operational overhead: both read the similarity matrix from a binary file where all matrix values are stored sequentially in standard reading order, line by line, and write out the result of the clustering as a label text file. Both implementations use reasonably efficient code, but without advanced optimizations or parallel processing. All code can be found at \footnote{\url{https://bitbucket.org/mlagrange/kaverages/downloads}}.
+In order to reliably compare the clustering quality and execution speed between the two approaches, we have written plain C implementations of Algorithms~\ref{algo:kkmeans_optim} and~\ref{algo:kaverages}, with minimal operational overhead: reading the similarity matrix from a binary file where all matrix values are stored sequentially in standard reading order, line by line, and writing out the result of the clustering as a label text file. Both implementations use reasonably efficient code, but without advanced optimizations or parallel processing. All code can be found at \url{https://bitbucket.org/mlagrange/kaverages/downloads}.	%% Arshia: remove \footnote{}
 
 The figures presented in this section were obtained on synthetic datasets, created in order to give precise control on the features of the analyzed data: for $n$ points split between $C$ classes, $C$ centroids are generated at random in two dimensional space, and point coordinates are generated following a Gaussian distribution around class centroids. In addition to the numbers of objects and classes, the variance of Gaussian distributions are adjusted to modulate how clearly separable clusters are. Similarities are computed as inverse Euclidean distances between points. %This clearly simplified example is useful as a first control test bench; the next section is dedicated to experiments on more realistic datasets.
 
 \subsection{Clustering performance}
 
-Several metrics are available to evaluate the performance of a clustering algorithm. The one closest to the actual target application is the raw accuracy, that is the average number of items labeled correctly after an alignment phase of the estimated labeling with the reference one (\cite{Kuhn1955Hungarian}).
+Several metrics are available to evaluate the performance of a clustering algorithm. The one closest to the actual target application is the raw accuracy, that is the average number of items labeled correctly after an alignment phase of the estimated labeling with the reference \cite{Kuhn1955Hungarian}.
 
 Another metric of choice is the Normalized Mutual Information (NMI) criterion. Based on information theoretic principles, it measures the amount of statistical information shared by the random variables representing the predicted cluster distribution and the reference class distribution of the data points. If $P$ is the random variable denoting the cluster assignments of the points, and $C$ is the random variable denoting the underlying class labels on the points then the NMI measure is defined as:
 \begin{equation}
@@ -488,7 +488,7 @@ Another metric of choice is the Normalized Mutual Information (NMI) criterion. B
 
 where $I(X;Y)=H(X)−H(X|Y)$ is the mutual information between the random variables $X$ and $Y$, $H(X)$ is the Shannon entropy of $X$,and $H(X|Y)$ is the conditional entropy of $X$ given $Y$. Thanks to the normalization, the metric stays between $0$ and $1$, $1$ indicating a perfect match, and can be used to compare clustering with different numbers of clusters. Interestingly, random prediction gives an NMI close to $0$, whereas the accuracy of a random prediction on a balanced bi-class problem is as high as 50\,\%.
 
-For those reasons and ease of reading, only the NMI is considered in thisa paper, as in (\cite{Kulis2008}). However, it shall be noted that most of the statements that will be made in the following in terms of performance ranking of the different algorithms  still holds true while considering the accuracy metric as reference.
+In this paper, for simplicity and accessibility, only the NMI is considered for validations as in (\cite{Kulis2008}). However, it shall be noted that most statements hereafter in terms of performance ranking of the different algorithms still hold while considering the accuracy metric as reference.
 
 \begin{figure}
 \center
@@ -525,7 +525,9 @@ In order to demonstrate the usefulness of k-averages when dealing with real data
 
 Effective clustering of time series using the DTW measure require similarity based algorithms such as the k-average algorithm. With some care, kernel based algorithm can also be considered provided that the resulting similarity matrix is converted into a kernel, \textit{i.e.} the matrix is forced to be semi definite positive, \textit{i.e.} to be a Gram matrix (\cite{Lanckriet:2004:LKM:1005332.1005334}).
 
-In order to demonstrate the superior relevance for this type of data of a similarity-based clustering making use of the DTW measure, compared with a simple Euclidean distance method, we shall give as reference in the following tables the results of a simple k-means clustering.
+%In order to demonstrate the superior relevance for this type of data of a similarity-based clustering making use of the DTW measure, compared with a simple Euclidean distance method, we shall give as reference in the following tables the results of a simple k-means clustering.
+
+To showcase the relevance of the proposed approach for time-series similarity-based clustering using DTW, we use a simple k-means clustering as reference in result tables that follow.
 
 \subsection{Datasets}
 
@@ -668,7 +670,9 @@ We have presented k-averages, an iterative flat clustering algorithm that operat
 
 A particularly interesting result is that k-averages seems to yield clearly better results than kernel k-means in the case of problems with many classes (8 and more); this is confirmed both on synthetic test data and on real-life data.
 
-ARSHIA: please discuss the potential use of the realocation procedure for online problems.
+%ARSHIA: please discuss the potential use of the realocation procedure for online problems.
+
+The linear updates and compensated memory access of the proposed k-average method also provides great potentials for Online Clustering methods, where time-series data arrive incrementally into the system, where classes and clusters should be most often reallocated. Explicit reallocation considerations proposed in this paper paves the way for robust Online Clustering methods that shall be further pursued.
 
 %Implementations of k-averages in Matlab and C are freely available as mature code ready for general use, at <url>. That repository also contains the reference C implementation of kernel k-means which we have used for the experiments reported in this article.
 
