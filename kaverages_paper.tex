@@ -124,7 +124,6 @@ Since the sum of $K_{nn}$ over all points remains constant, and the sum of squar
 \subsection{Algorithm}
 
 Finding the configuration that absolutely minimizes S (eq~\ref{eq:S}) is an NP-complete problem. However, several approaches allow finding an acceptable approximation. We shall only focus here on the fastest and most popular, an iterative assignment\,/\,update procedure commonly referred to as the \gl{k-means algorithm} (\cite{macQueenBsmsp67}), or as a discrete version of Lloyd's algorithm, detailed in Algorithm~\ref{algo:kkmeans}.
-% Arshia: Cite algorithm source? MR: yes, added
 
 \begin{algorithm}
 	\label{algo:kkmeans}
@@ -261,8 +260,6 @@ Thus:
 \subsubsection{Removing an object from a class}
 
 Assuming that $o \in c$, necessarily $\exists i \mid o=o_i$. Since the numbering of objects is arbitrary, we can first simplify the following equation by considering that $o = o_{N_c}$, in order to reach a formula that is independent from that numbering.
-
-% Arshia: Above sentence is not clear "then generalise"?
 
 \begin{equation}
   \begin{aligned}
