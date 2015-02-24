@@ -32,7 +32,7 @@ for n=1:6
                 alg{n} = [algo{mod(n-1, 2)+1}];
             end
             if n>4
-                ext='SwapO3_';
+              %  ext='SwapO3_';
             end
             fileName = ['/data/simple/test' ext '' algo{mod(n-1, 2)+1} num2str(k-1) '_' num2str(m-1) '.csv']
             fid = fopen(fileName);
@@ -51,6 +51,7 @@ end
 % time( 9, 1, 2) = time( 9, 1, 1);
 vtime = squeeze(var(time, [], 3));
 atime = squeeze(mean(time, 3));
+csvwrite('runTime.csv', atime);
 % errorbar(atime, vtime)
 clf
 lineStyle = {'-', '-','--', '--', ':', ':' };
