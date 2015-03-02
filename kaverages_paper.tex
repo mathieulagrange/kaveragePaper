@@ -21,9 +21,9 @@
 
 \begin{document}
 
-\title{the K-averages algorithm \\ a linear optimization alternative to kernel K-means}
+\title{the K-averages algorithm: \\ a linear optimization alternative to kernel K-means}
 
-\author{Mathias Rossignol \and Mathieu Lagrange}
+\author{Mathias Rossignol, Mathieu Lagrange, Arshia Cont ~\IEEEmembership{Member, IEEE} \thanks{ANR Houle under reference ANR-11-JS03-005-01}}
 
 %\editor{}
 
@@ -43,7 +43,7 @@ Clustering collections of objects into classes that bring together similar ones 
 
 Iterative divisive hard clustering algorithms, such as the ubiquitous \emph{k-means} (\cite{macQueenBsmsp67}), usually perform well to identify high-level organization in large data collections in reasonable running time. For that reason, they are a sensible choice in many data mining situations, and constitute our focus in this paper.
 % ; their main drawback being that the number of desired clusters must be specified
-If the data lies in a vector space, \textit{i.e.} an object can be described by a $m$-dimensional feature vector without significant loss of information, the seminal \emph{K-means} algorithm (\cite{macQueenBsmsp67}) is probably the most efficient approach, since the explicit computation of the cluster centroids ensure both computational efficiency and scalability. This algorithm is  based on the centroid model, and minimizes the intra cluster Euclidiean distance. As shown by \cite{Banerjee:2005:CBD:1046920.1194902}, any kind of Bregman divergence, such as the KL-divergence (\cite{Dhillon:2003:DIT:944919.944973}) or the Itakura-Saito divergence (\cite{linde:algorithm}), may also be considered to develop such efficient clustering algorithms.
+If the data lies in a vector space, \textit{i.e.} an object can be described by a $m$-dimensional feature vector without significant loss of information, the seminal \emph{K-means} algorithm (\cite{macQueenBsmsp67}) is probably the most efficient approach, since the explicit computation of the cluster centroids ensure both computational efficiency and scalability. This algorithm is  based on the centroid model, and minimizes the intra cluster Euclidean distance. As shown by \cite{Banerjee:2005:CBD:1046920.1194902}, any kind of Bregman divergence, such as the KL-divergence (\cite{Dhillon:2003:DIT:944919.944973}) or the Itakura-Saito divergence (\cite{linde:algorithm}), may also be considered to develop such efficient clustering algorithms.
 
 However, for many types of data, the projection of a representational problem into an vector space cannot be done without significant loss of descriptive efficiency. To reduce this loss, specifically tailored measures of similarity are considered. As a result, the input data for clustering is no longer a $n \times m$ matrix storing the $m$-dimensional vectors describing the objects, but a (usually symmetric) square matrix $S$ of size $n \times n$ which numerically encodes some sort of relationship between the objects. In this case, one has to resort to clustering algorithms based on connectivity models, since the cluster centroids cannot explicitly be computed.
 
@@ -471,7 +471,7 @@ To illustrate and confirm the theoretical complexity computed here, the next sec
 \section{Validation}
 \label{sec:validation}
 
-In order to reliably compare the clustering quality and execution speed between the two approaches, we have written plain C implementations of Algorithms~\ref{algo:kkmeans_optim} and~\ref{algo:kaverages}, with minimal operational overhead: reading the similarity matrix from a binary file where all matrix values are stored sequentially in standard reading order, line by line, and writing out the result of the clustering as a label text file. Both implementations use reasonably efficient code, but without advanced optimizations or parallel processing. All code can be found at \url{https://bitbucket.org/mlagrange/kaverages/downloads}.	%% Arshia: remove \footnote{}
+In order to reliably compare the clustering quality and execution speed between the two approaches, we have written plain C implementations of Algorithms~\ref{algo:kkmeans_optim} and~\ref{algo:kaverages}, with minimal operational overhead: reading the similarity matrix from a binary file where all matrix values are stored sequentially in standard reading order, line by line, and writing out the result of the clustering as a label text file. Both implementations use reasonably efficient code, but without advanced optimizations or parallel processing \footnote{C and Matlab implementations can be found at \url{https://bitbucket.org/mlagrange/kaverages/downloads}}.	%% Arshia: remove \footnote{}
 
 The figures presented in this section were obtained on synthetic datasets, created in order to give precise control on the features of the analyzed data: for $n$ points split between $C$ classes, $C$ centroids are generated at random in two dimensional space, and point coordinates are generated following a Gaussian distribution around class centroids. In addition to the numbers of objects and classes, the variance of Gaussian distributions are adjusted to modulate how clearly separable clusters are. Similarities are computed as inverse Euclidean distances between points. %This clearly simplified example is useful as a first control test bench; the next section is dedicated to experiments on more realistic datasets.
 
@@ -529,7 +529,7 @@ To showcase the relevance of the proposed approach for time-series similarity-ba
 
 \subsection{Datasets}
 
-To compare quality of clusterings obtained by the considered algorithms, we consider a large collection of 43 time series datasets created by many laboratories all over the world and compiled by Prof. Keogh (\url{www.cs.ucr.edu/~eamonn/time_series_data}).  Statistics about the morphology of those datasets are summarized in Table~\ref{tab:dbs}.
+To compare quality of clusterings obtained by the considered algorithms, we consider a large collection of 43 time series datasets created by many laboratories all over the world and compiled by Prof. Keogh \footnote{Available at: \url{www.cs.ucr.edu/~eamonn/time_series_data}}.  Statistics about the morphology of those datasets are summarized in Table~\ref{tab:dbs}.
 
 \begin{table}
 \center
@@ -545,7 +545,7 @@ time series length & 24 & 372 $\pm$ 400 & 1882 \\
 
 \subsection{Evaluation Protocol}
 
-For each dataset, since we perform clustering, and not supervised learning, the training and testing data are joined. If relevant, the DTW is computed using the implementation provided by Prof. Ellis (\url{http://www.ee.columbia.edu/~dpwe/resources/matlab/dtw}) with default parameters.
+For each dataset, since we perform clustering, and not supervised learning, the training and testing data are joined. If relevant, the DTW is computed using the implementation provided by Prof. Ellis \footnote{Available at: \url{http://www.ee.columbia.edu/~dpwe/resources/matlab/dtw}} with default parameters.
 
 As in our previous experiments with synthetic data, we choose here the normalized mutual information as measure of clustering quality; clustering is done by requesting a number of clusters equal to the actual number of classes in the dataset, and repeated 500 times with varying initial conditions, each algorithm being run with the exact same initial assignments.
 
@@ -559,11 +559,10 @@ For each experiment, the result of the best performing method is marked by a sta
 
 \begin{table} 
 \begin{center} 
-\small 
- \setlength{\tabcolsep}{1em}
- \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{rcc|ccc} 
-id & nb. classes & nb. objects & k-means & kernel k-means & k-averages \\ 
+
+\begin{tabular}{rrrccc} 
+% & nb. & nb. &  & kernel &  \\ 
+id & classes & objects & k-means & k. k-means & k-averages \\ 
 %&  &  & (NMI $\times 0.01$) & (NMI $\times 0.01$) & (NMI $\times 0.01$) \\ 
 \hline 
  7 & 2 &   56 & 5$\pm$1 & \textbf{6$\pm$3$^*$} & 5$\pm$1 \\ 
@@ -579,7 +578,8 @@ id & nb. classes & nb. objects & k-means & kernel k-means & k-averages \\
 42 & 2 & 7164 & \textbf{0$^*$} & 0 & 0 \\ 
 43 & 2 & 3300 & 0$\pm$0 & \textbf{0$\pm$0} & \textbf{0$\pm$0$^*$} \\ 
 \hline 
-\multicolumn{3}{c}{significantly better}  & 3 & 3 & 3 \\ 
+\vspace{-.2cm} \\
+\multicolumn{3}{c}{significantly better:}  & 3 & 3 & 3 \\ 
 \end{tabular} 
 \end{center} 
 \caption{Average NMI in percents of clusterings by k-means, kernel k-means and k-averages for bi-class datasets over 500 runs of the algorithms.}
@@ -591,11 +591,9 @@ id & nb. classes & nb. objects & k-means & kernel k-means & k-averages \\
    
 \begin{table} 
 \begin{center} 
-\small 
- \setlength{\tabcolsep}{1em}
- \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{lccccc} 
-id & nb. classes & nb. objects & k-means & kernel k-means & k-averages \\ 
+\begin{tabular}{rrrccc} 
+% & nb. & nb. &  & kernel &  \\ 
+id & classes & objects & k-means & k. k-means & k-averages \\ 
 %&  &  & (NMI $\times 0.01$) & (NMI $\times 0.01$) & (NMI $\times 0.01$) \\ 
 \hline 
  3 & 5 &   60 & \textbf{38$\pm$2$^*$} & 35$\pm$3 & 35$\pm$2 \\ 
@@ -616,7 +614,8 @@ id & nb. classes & nb. objects & k-means & kernel k-means & k-averages \\
 37 & 7 &  350 & 31$\pm$2 & 42$\pm$2 & \textbf{42$\pm$1$^*$} \\ 
 38 & 6 &  600 & 79$\pm$3 & 84$\pm$4 & \textbf{88$\pm$3$^*$} \\ 
 \hline 
-\multicolumn{3}{c}{significantly better}  & 2 & 5 & 6 \\ 
+\vspace{-.2cm} \\
+\multicolumn{3}{c}{significantly better:}  & 2 & 5 & 6 \\ 
 \end{tabular} 
 \end{center} 
 \caption{Average NMI in percents of clusterings by k-means, kernel k-means and k-averages for datasets of 3 to 7 classes, over 500 runs of the algorithms.}
@@ -629,11 +628,9 @@ id & nb. classes & nb. objects & k-means & kernel k-means & k-averages \\
    
 \begin{table} 
 \begin{center} 
-\small 
- \setlength{\tabcolsep}{1em}
- \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{lccccc} 
-id & nb. classes & nb. objects & k-means & kernel k-means & k-averages \\ 
+\begin{tabular}{rrrccc} 
+% & nb. & nb. &  & kernel &  \\ 
+id & classes & objects & k-means & k. k-means & k-averages \\ 
 %&  &  & (NMI $\times 0.01$) & (NMI $\times 0.01$) & (NMI $\times 0.01$) \\ 
 \hline 
  1 & 50 &  905 & 64$\pm$1 & 70$\pm$1 & \textbf{72$\pm$1$^*$} \\ 
@@ -651,7 +648,8 @@ id & nb. classes & nb. objects & k-means & kernel k-means & k-averages \\
 40 &  8 & 4478 & 44$\pm$0 & 45$\pm$0 & \textbf{45$\pm$0$^*$} \\ 
 41 &  8 & 4478 & 42$\pm$1 & \textbf{43$\pm$0$^*$} & 43$\pm$0 \\ 
 \hline 
-\multicolumn{3}{c}{significantly better}  & 0 & 2 & 12 \\ 
+\vspace{-.2cm} \\
+\multicolumn{3}{c}{significantly better:}  & 0 & 2 & 12 \\ 
 \end{tabular} 
 \end{center} 
 \caption{Average NMI in percents of clusterings by k-means, kernel k-means and k-averages for datasets of 8 to 50 classes, over 500 runs of the algorithms.}
@@ -676,5 +674,21 @@ The linear updates and compensated memory access of the proposed k-average metho
 
 \bibliographystyle{IEEEtran}
 \bibliography{bib}
+
+
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/rossignol}}]{Mathias Rossignol}
+
+Biography text here.
+\end{IEEEbiography}
+
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/lagrange}}]{Mathieu Lagrange} is CNRS research scientist at Irccyn, a French laboratory. He obtained his PhD in computer science at the University of Bordeaux in 2004, and visited several institutions, both in Canada (University of Victoria, McGill University) and in France (Telecom ParisTech, Ircam). His research focuses on machine learning algorithms applied to musical and environmental audio analysis. 
+\end{IEEEbiography}
+
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]
+{figures/cont}}]{Arshia Cont}
+Arshia Cont is a research scientist at Ircam, a center dedicated to fostering arts and science collaboration in Paris. He obtained his PhD in computer music at UCSD in 2008, awarded the best computer science PhD by the French Academy of Science in 2009. His research focuses on artificial intelligence with applications in music composition and performance. He is the leader of the award winning software Antescofo and enjoyed collaborations with composers such as Pierre Boulez, Jonathan Harvey and Marco Stroppa. He has appeared as computer musician in various performances involving live electronic music with ensembles such as LA Philharmonics, Berlin Philharmonics, BBC Orchestra, Chicago Symphony. Since 2012, he is the scientific leader of the MuTant research team at Ircam and Inria and also the director of Research/Creativity Interfaces Department at Ircam, coordinating artistic and scientific activities in the institution.
+\end{IEEEbiography}
+
+
 
 \end{document}
