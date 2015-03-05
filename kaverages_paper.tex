@@ -21,7 +21,9 @@
 
 \begin{document}
 
-\title{the K-averages algorithm: \\ a linear optimization alternative to kernel K-means}
+%\title{the K-averages algorithm: \\ a linear optimization alternative to kernel K-means}
+
+\title{Efficient similarity-based data clustering by optimal object to cluster reallocation}
 
 \author{Mathias Rossignol, Mathieu Lagrange, Arshia Cont ~\IEEEmembership{Member, IEEE} \thanks{ANR Houle under reference ANR-11-JS03-005-01}}
 
@@ -105,16 +107,29 @@ S = \sum_{c=1}^{C} \sum_{n=1}^{N} z_{cn} Y_{cn}
 \]
 
 where
-\begin{eqnarray}
-Y_{cn} & = & \left(o_n-\mu_c\right)\left(o_n-\mu_c\right)^\top \\
-       & = & o_n.o_n - 2 o_n.\mu_c + \mu_c.\mu_c \\
-       & = & o_n.o_n - 2 o_n.\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i +
-       	 \left(\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i\right).\left(\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i\right) \\
-       & = & o_n.o_n - \frac{2}{N_c} \sum_{i=1}^{N} z_{ci} o_n.o_i +
+\begin{align}
+\begin{split}
+Y_{cn} & =  \left(o_n-\mu_c\right)\left(o_n-\mu_c\right)^\top \\
+       & =  o_n.o_n - 2 o_n.\mu_c + \mu_c.\mu_c \\
+       & =  o_n.o_n - 2 o_n.\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i +
+       	 \left(\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i\right)^2 \\ %.\left(\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i\right) \\
+       & =  o_n.o_n - \frac{2}{N_c} \sum_{i=1}^{N} z_{ci} o_n.o_i +
        	 \frac{1}{N_c^2} \sum_{i=1}^{N} \sum_{j=1}^{N} z_{ki} z_{kj} o_i.o_j \\
-       & = & \mathcal{K}_{nn} - \frac{2}{N_c} \sum_{i=1}^{N} z_{ci} \mathcal{K}_{ni} +
+       & =  \mathcal{K}_{nn} - \frac{2}{N_c} \sum_{i=1}^{N} z_{ci} \mathcal{K}_{ni} +
          \frac{1}{N_c^2} \sum_{i=1}^{N} \sum_{j=1}^{N} z_{ki} z_{kj} \mathcal{K}_{ij} \label{eq:yki}
-\end{eqnarray}
+\end{split}
+\end{align}
+
+%\begin{eqnarray}
+%Y_{cn} & = & \left(o_n-\mu_c\right)\left(o_n-\mu_c\right)^\top \\
+%       & = & o_n.o_n - 2 o_n.\mu_c + \mu_c.\mu_c \\
+%       & = & o_n.o_n - 2 o_n.\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i +
+%       	 \left(\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i\right).\left(\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i\right) \\
+%       & = & o_n.o_n - \frac{2}{N_c} \sum_{i=1}^{N} z_{ci} o_n.o_i +
+%       	 \frac{1}{N_c^2} \sum_{i=1}^{N} \sum_{j=1}^{N} z_{ki} z_{kj} o_i.o_j \\
+%       & = & \mathcal{K}_{nn} - \frac{2}{N_c} \sum_{i=1}^{N} z_{ci} \mathcal{K}_{ni} +
+%         \frac{1}{N_c^2} \sum_{i=1}^{N} \sum_{j=1}^{N} z_{ki} z_{kj} \mathcal{K}_{ij} \label{eq:yki}
+%\end{eqnarray}
 
 %% Comment by Arshia: The following paragraph is too fast!
 % what does "mostly bounded" mean?
@@ -254,9 +269,15 @@ For future use and given the importance of the above transformation, we define:
 
 Thus:
 \begin{equation}
-    \mathcal{Q}\left(c\right) = \frac{2}{N_c(N_c-1)}\Sigma(c) \phantom{XX}\mathrm{and}\phantom{XX} \Sigma(c) = \frac{N_c(N_c-1)\mathcal{Q}\left(c\right)}{2}
+    \mathcal{Q}\left(c\right) = \frac{2}{N_c(N_c-1)}\Sigma(c) 
 \end{equation}
-
+and
+\begin{equation}
+\Sigma(c) = \frac{N_c(N_c-1)\mathcal{Q}\left(c\right)}{2}
+\end{equation}
+%\begin{equation}
+%    \mathcal{Q}\left(c\right) = \frac{2}{N_c(N_c-1)}\Sigma(c) \phantom{XX}\mathrm{and}\phantom{XX} \Sigma(c) = \frac{N_c(N_c-1)\mathcal{Q}\left(c\right)}{2}
+%\end{equation}
 
 \subsubsection{Removing an object from a class}
 
@@ -311,12 +332,15 @@ Assuming that $o \notin c$, we can similarly to what has been done previously (n
 \noindent And the change in quality from its previous value:
 
 \begin{equation} \label{deltaAdd}
-  \begin{aligned}
-    \mathcal{Q}\left(c \cup o\right) - \mathcal{Q}\left(c\right) & = \frac{(N_c-1) \mathcal{Q}(c)  - (N_c+1) \mathcal{Q}(c)  + 2s\left(o, c\right)}{N_c+1} \\
-                                                                           & = \frac{2\left(s\left(o, c\right)-\mathcal{Q}(c)\right)}{N_c+1}
-    \end{aligned}
+    \mathcal{Q}\left(c \cup o\right) - \mathcal{Q}\left(c\right)  = \frac{2\left(s\left(o, c\right)-\mathcal{Q}(c)\right)}{N_c+1}
 \end{equation}
 
+%\begin{equation} \label{deltaAdd}
+%  \begin{aligned}
+%    \mathcal{Q}\left(c \cup o\right) - \mathcal{Q}\left(c\right) & = \frac{(N_c-1) \mathcal{Q}(c)  - (N_c+1) \mathcal{Q}(c)  + 2s\left(o, c\right)}{N_c+1} \\
+%                                                                           & = \frac{2\left(s\left(o, c\right)-\mathcal{Q}(c)\right)}{N_c+1}
+%    \end{aligned}
+%\end{equation}
 
 \subsection{Impact of object reallocation on the global objective function}
 
@@ -325,10 +349,14 @@ distinct class $c_t$ (\gl{target}), $(N_s-1)$ objects are affected
 by the variation in (\ref{deltaRemove}), and $N_t$ are affected
 by that in (\ref{deltaAdd}); in addition, one object $o$ moves from a class whose quality is $\mathcal{Q}(c_s)$ to one whose quality is $\mathcal{Q}\left(c_t \cup o\right)$, as expressed by equation~\ref{eq:newQual_add}:
 
-\begin{equation}
-  \delta_o(c_s, c_t) = \frac{2N_t \left(s\left(o, c_t\right)-\mathcal{Q}(c_t)\right)}{N_t+1} + \frac{2(N_s-1)\left( \mathcal{Q}(c_s) - s\left(o, c_s\right)\right)}{N_s-2} - \mathcal{Q}(c_s) + \frac{(N_t-1) \mathcal{Q}(c_t)  + 2s\left(o, c_t\right)}{N_t+1}
+\begin{align}
+\begin{split}
+  \delta_o(c_s, c_t) = & \frac{2N_t \left(s\left(o, c_t\right)-\mathcal{Q}(c_t)\right)}{N_t+1} + \\
+&  \frac{2(N_s-1)\left( \mathcal{Q}(c_s) - s\left(o, c_s\right)\right)}{N_s-2}  + \\
+ &  \frac{(N_t-1) \mathcal{Q}(c_t)  + 2s\left(o, c_t\right)}{N_t+1} - \mathcal{Q}(c_s) \\
+\end{split}
   \label{eq:impact_classnorm}
-\end{equation}
+\end{align}
 
 As can be seen, computing this impact is a fixed-cost operation. We can therefore use the formula as the basis for an efficient iterative algorithm.
 
@@ -675,19 +703,19 @@ The linear updates and compensated memory access of the proposed k-average metho
 \bibliographystyle{IEEEtran}
 \bibliography{bib}
 
-
-\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/rossignol}}]{Mathias Rossignol}
-
-Biography text here.
-\end{IEEEbiography}
-
-\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/lagrange}}]{Mathieu Lagrange} is CNRS research scientist at Irccyn, a French laboratory. He obtained his PhD in computer science at the University of Bordeaux in 2004, and visited several institutions, both in Canada (University of Victoria, McGill University) and in France (Telecom ParisTech, Ircam). His research focuses on machine learning algorithms applied to musical and environmental audio analysis. 
-\end{IEEEbiography}
-
-\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]
-{figures/cont}}]{Arshia Cont}
-Arshia Cont is a research scientist at Ircam, a center dedicated to fostering arts and science collaboration in Paris. He obtained his PhD in computer music at UCSD in 2008, awarded the best computer science PhD by the French Academy of Science in 2009. His research focuses on artificial intelligence with applications in music composition and performance. He is the leader of the award winning software Antescofo and enjoyed collaborations with composers such as Pierre Boulez, Jonathan Harvey and Marco Stroppa. He has appeared as computer musician in various performances involving live electronic music with ensembles such as LA Philharmonics, Berlin Philharmonics, BBC Orchestra, Chicago Symphony. Since 2012, he is the scientific leader of the MuTant research team at Ircam and Inria and also the director of Research/Creativity Interfaces Department at Ircam, coordinating artistic and scientific activities in the institution.
-\end{IEEEbiography}
+%
+%\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/rossignol}}]{Mathias Rossignol}
+%
+%Biography text here.
+%\end{IEEEbiography}
+%
+%\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/lagrange}}]{Mathieu Lagrange} is CNRS research scientist at Irccyn, a French laboratory. He obtained his PhD in computer science at the University of Bordeaux in 2004, and visited several institutions, both in Canada (University of Victoria, McGill University) and in France (Telecom ParisTech, Ircam). His research focuses on machine learning algorithms applied to musical and environmental audio analysis. \ml{put appendix with names of datasets}
+%\end{IEEEbiography}
+%
+%\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]
+%{figures/cont}}]{Arshia Cont}
+%Arshia Cont is a research scientist at Ircam, a center dedicated to fostering arts and science collaboration in Paris. He obtained his PhD in computer music at UCSD in 2008, awarded the best computer science PhD by the French Academy of Science in 2009. His research focuses on artificial intelligence with applications in music composition and performance. He is the leader of the award winning software Antescofo and enjoyed collaborations with composers such as Pierre Boulez, Jonathan Harvey and Marco Stroppa. He has appeared as computer musician in various performances involving live electronic music with ensembles such as LA Philharmonics, Berlin Philharmonics, BBC Orchestra, Chicago Symphony. Since 2012, he is the scientific leader of the MuTant research team at Ircam and Inria and also the director of Research/Creativity Interfaces Department at Ircam, coordinating artistic and scientific activities in the institution.
+%\end{IEEEbiography}
 
 
 
