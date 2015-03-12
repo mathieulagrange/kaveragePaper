@@ -1927,18 +1927,8 @@ cap.status.std
 
 FUNCTION {format.url}
 { url empty$
+     { "" }
     { "" }
-    { this.to.prev.status
-      this.status.std
-      cap.yes 'status.cap :=
-      name.url.prefix " " *
-      "\url{" * url * "}" *
-      punct.no 'this.status.punct :=
-      punct.period 'prev.status.punct :=
-      space.normal 'this.status.space :=
-      space.normal 'prev.status.space :=
-      quote.no 'this.status.quote :=
-    }
   if$
 }
 
