@@ -36,7 +36,7 @@ Paris, France
 \addr IRCCYN\\
 Nantes, France
 \AND
-\name Arshia Cont \email his.email@email.com\\
+\name Arshia Cont \email arshia.cont@ircam.fr\\
 \addr IRCAM\\
 1, place Igor Stravinski\\
 Paris, France}
@@ -78,7 +78,7 @@ The kernel k-means algorithm proves to be equally useful when considering arbitr
 
 Despite such improvements, kernel k-means can hardly be applied to large scale datasets without special treatments because of high algorithmic and memory access costs. 
 %Still, the complexity of the algorithm and the cost of memory  access  prevent from using the kernel k-means algorithm for large scale datasets without specific treatments. 
-\citet{Chitta:2011:AKK:2020408.2020558} considered sampling of the input data, \citet{1047453} considered block storing of the input matrix, and a preclustering  approach \citep`{bradley98scaling, conf/icde/GantiRGPF99} is considered by \citet{Kulis2008} with a coarsening and refining phases as respectively a pre- and post-treatment of the actual clustering phase.
+\citet{Chitta:2011:AKK:2020408.2020558} considered sampling of the input data, \citet{1047453} considered block storing of the input matrix, and a preclustering  approach \citet{bradley98scaling} is considered by \citet{Kulis2008} with a coarsening and refining phases as respectively a pre- and post-treatment of the actual clustering phase.
 
 The work we present is this paper results from an effort to directly maximize the average intra-class similarity, without resorting to a geometric interpretation of data. Following that idea allows us to propose a new hard clustering algorithm, which we call \emph{k-averages}, with the following properties: 
 \begin{itemize}
@@ -589,9 +589,6 @@ As in our previous experiments with synthetic data, we choose here the normalize
 
 \subsection{Results}
 
-For ease of readability and comparison, the presented results are split into 3 tables. Table~\ref{tab:results-2} lists the results obtained on bi-class datasets, \textit{i.e.} the datasets annotated in terms of presence or absence of a given property; Table~\ref{tab:results-37} concerns the datasets with a small number of classes (from 3 to 7); and Table~\ref{tab:results-8} focuses the datasets with a larger number of classes (from 8 to 50).
-
-For each experiment, the result of the best performing method is marked by a star, and results equivalent to the best are highlighted in bold. Equivalence is tested with a paired t-test at 0.05 significance level. It should be noted that this decision is the result of a statistical analysis on the 500 runs performed; it can therefore happen, without contradiction, that a method has a higher average NMI than the other but is not significantly better, or, conversely, that it does perform significantly better despite an identical average NMI at the numerical precision of the tables.
 
 %% BI-CLASS
 
@@ -601,7 +598,7 @@ For each experiment, the result of the best performing method is marked by a sta
 \label{tab:results-2} 
 \begin{tabular}{rrrccc} 
 % & nb. & nb. &  & kernel &  \\ 
-id & classes & objects & k-means & k. k-means & k-averages \\ 
+id & classes & objects & k-means & kernel k-means & k-averages \\ 
 %&  &  & (NMI $\times 0.01$) & (NMI $\times 0.01$) & (NMI $\times 0.01$) \\ 
 \hline 
  7 & 2 &   56 & 5$\pm$1 & \textbf{6$\pm$3$^*$} & 5$\pm$1 \\ 
@@ -622,6 +619,11 @@ id & classes & objects & k-means & k. k-means & k-averages \\
 \end{tabular} 
 \end{center} 
 \end{table} 
+
+For ease of readability and comparison, the presented results are split into 3 tables. Table~\ref{tab:results-2} lists the results obtained on bi-class datasets, \textit{i.e.} the datasets annotated in terms of presence or absence of a given property; Table~\ref{tab:results-37} concerns the datasets with a small number of classes (from 3 to 7); and Table~\ref{tab:results-8} focuses the datasets with a larger number of classes (from 8 to 50).
+
+For each experiment, the result of the best performing method is marked by a star, and results equivalent to the best are highlighted in bold. Equivalence is tested with a paired t-test at 0.05 significance level. It should be noted that this decision is the result of a statistical analysis on the 500 runs performed; it can therefore happen, without contradiction, that a method has a higher average NMI than the other but is not significantly better, or, conversely, that it does perform significantly better despite an identical average NMI at the numerical precision of the tables.
+
  
  %% 3-7 classes
  
@@ -632,7 +634,7 @@ id & classes & objects & k-means & k. k-means & k-averages \\
 \label{tab:results-37}
 \begin{tabular}{rrrccc} 
 % & nb. & nb. &  & kernel &  \\ 
-id & classes & objects & k-means & k. k-means & k-averages \\ 
+id & classes & objects & k-means & kernel k-means & k-averages \\ 
 %&  &  & (NMI $\times 0.01$) & (NMI $\times 0.01$) & (NMI $\times 0.01$) \\ 
 \hline 
  3 & 5 &   60 & \textbf{38$\pm$2$^*$} & 35$\pm$3 & 35$\pm$2 \\ 
@@ -669,7 +671,7 @@ id & classes & objects & k-means & k. k-means & k-averages \\
 \label{tab:results-8}
 \begin{tabular}{rrrccc} 
 % & nb. & nb. &  & kernel &  \\ 
-id & classes & objects & k-means & k. k-means & k-averages \\ 
+id & classes & objects & k-means & kernel k-means & k-averages \\ 
 %&  &  & (NMI $\times 0.01$) & (NMI $\times 0.01$) & (NMI $\times 0.01$) \\ 
 \hline 
  1 & 50 &  905 & 64$\pm$1 & 70$\pm$1 & \textbf{72$\pm$1$^*$} \\ 
@@ -751,7 +753,7 @@ from ANR project Houle (grant ANR-11-JS03-005-01)}
 \small 
  \setlength{\tabcolsep}{.16667em} 
 \begin{tabular}{lccc} 
-name & id & nbClasses & nbSamples \\ 
+name & id & number of classes & number of samples \\ 
 \hline 
 50words &  1 & 50 &  905 \\ 
 Adiac &  2 & 37 &  781 \\ 
