@@ -1,5 +1,5 @@
-\documentclass[twoside,11pt]{article}
-\usepackage{jmlr2e}
+\documentclass[natbib,smallextended]{svjour3}
+%\usepackage{jmlr2e}
 \usepackage{amsmath,amssymb}
 %\usepackage[T1]{fontenc}
 %\usepackage[latin1]{inputenc}
@@ -16,32 +16,61 @@
 \newcommand{\ml}[1]{\textcolor{red}{ML : #1}}
 \newcommand{\mr}[1]{\textcolor{magenta}{MR : #1}}
 
-\jmlrheading{1}{2000}{1-48}{05/2015}{00/00}{M. Rossignol, M. Lagrange and A. Cont}
+\smartqed  % flush right qed marks, e.g. at end of proof
+%
+\usepackage{graphicx}
 
-\ShortHeadings{Similarity-based data clustering by optimal object to cluster reallocation}{Rossignol, Lagrange and Cont}
+%\jmlrheading{1}{2000}{1-48}{05/2015}{00/00}{M. Rossignol, M. Lagrange and A. Cont}
 
-\firstpageno{1}
+%\ShortHeadings{Similarity-based data clustering by optimal object to cluster reallocation}{Rossignol, Lagrange and Cont}
+
+%\firstpageno{1}
 
 \begin{document}
 
 \title{Efficient similarity-based data clustering by optimal object to cluster reallocation}
 
-\author{
-\name Mathias Rossignol \email mathias.rossignol@gmail.com\\
-\addr IRCAM\\
+\author{ Mathias Rossignol      \and
+        Mathieu Lagrange  \and
+        Arshia Cont
+}
+
+%\authorrunning{Short form of author list} % if too long for running head
+
+\institute{
+ Mathias Rossignol 
+\at IRCAM\\
+1, place Igor Stravinski\\
+Paris, France \\
+\email mathias.rossignol@gmail.com\\
+\and
+ Mathieu Lagrange \at
+ IRCCYN\\
+Nantes, France \\
+\email lagrange.mathieu@cnrs.fr
+\and
+ Arshia Cont \at IRCAM\\
 1, place Igor Stravinski\\
 Paris, France
-\AND
-\name Mathieu Lagrange \email lagrange.mathieu@cnrs.fr\\
-\addr IRCCYN\\
-Nantes, France
-\AND
-\name Arshia Cont \email arshia.cont@ircam.fr\\
-\addr IRCAM\\
-1, place Igor Stravinski\\
-Paris, France}
+ \email arshia.cont@ircam.fr\\
+ }
 
-\editor{}
+%
+%
+%F. Author \at
+%              first address \\
+%              Tel.: +123-45-678910\\
+%              Fax: +123-45-678910\\
+%              \email{fauthor@example.com}           %  \\
+%%             \emph{Present address:} of F. Author  %  if needed
+%           \and
+%           S. Author \at
+%              second address
+%}
+
+
+
+%\editor{}
 
 \maketitle
 
@@ -702,10 +731,12 @@ The linear updates and compensated memory access of the proposed k-average metho
 
 %Implementations of k-averages in Matlab and C are freely available as mature code ready for general use, at <url>. That repository also contains the reference C implementation of kernel k-means which we have used for the experiments reported in this article.
 
-\acks{We would like to acknowledge support for this project
-from ANR project Houle (grant ANR-11-JS03-005-01)}
 
+\section{Acknowledgments}
+We would like to acknowledge support for this project
+from ANR project Houle (grant ANR-11-JS03-005-01)
 
+\bibliographystyle{aps-nameyear}  
 \bibliography{bib}
 
 
