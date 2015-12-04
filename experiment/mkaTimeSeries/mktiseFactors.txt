@@ -1,0 +1,8 @@
+dataSet =1:3== {'50words', 'Adiac', 'Beef', 'CBF', 'ChlorineConcentration', 'CinC_ECG_torso', 'Coffee', 'Cricket_X', 'Cricket_Y', 'Cricket_Z', 'DiatomSizeReduction', 'ECG200', 'ECGFiveDays', 'FaceAll', 'FaceFour', 'FacesUCR', 'Gun_Point', 'Haptics', 'InlineSkate', 'ItalyPowerDemand', 'Lighting2', 'Lighting7', 'MALLAT', 'MedicalImages', 'MoteStrain', 'OSULeaf', 'OliveOil', 'SonyAIBORobotSurface', 'SonyAIBORobotSurfaceII', 'StarLightCurves', 'SwedishLeaf', 'Symbols', 'Trace', 'TwoLeadECG', 'Two_Patterns', 'WordsSynonyms', 'fish', 'synthetic_control', 'uWaveGestureLibrary_X', 'uWaveGestureLibrary_Y', 'uWaveGestureLibrary_Z', 'wafer', 'yoga'}
+distance === {'dtw', 'euclidean', 'linear'}
+normalizeData === [0 1]
+clustering =2:== {'kkMeans', 'kAverages', 'random', 'kAveragesC++', 'kMeans', 'kkMeans1', 'naive_kkmeansC', 'kkmeansC', 'kaveragesC'} 
+objective =2:=4/[2 4 9]= {'raw', 'class', 'object'}
+strategy =2:=4/[2 4]= {'p', 'P', 'b', 'm', 'M'}
+nbRuns =2:== [1 20 100 500]
+nbIterations =2:== [200 1000]

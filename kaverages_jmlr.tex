@@ -594,28 +594,25 @@ As in our previous experiments with synthetic data, we choose here the normalize
 
 \begin{table} 
 \begin{center} 
-\caption{Average NMI in percents of clusterings by k-means, kernel k-means and k-averages for bi-class datasets over 500 runs of the algorithms.}
+\caption{NMI in percents of clusterings by k-means, kernel k-means and k-averages for bi-class datasets.}
 \label{tab:results-2} 
 \begin{tabular}{rrrccc} 
 % & nb. & nb. &  & kernel &  \\ 
 id & classes & objects & k-means & kernel k-means & k-averages \\ 
 %&  &  & (NMI $\times 0.01$) & (NMI $\times 0.01$) & (NMI $\times 0.01$) \\ 
 \hline 
- 7 & 2 &   56 & 5$\pm$1 & \textbf{6$\pm$3$^*$} & 5$\pm$1 \\ 
-12 & 2 &  200 & 12$\pm$2 & 14$\pm$2 & \textbf{15$\pm$1$^*$} \\ 
-13 & 2 &  884 & 0$\pm$0 & \textbf{3$\pm$2$^*$} & \textbf{3$\pm$2} \\ 
-17 & 2 &  200 & \textbf{0$^*$} & \textbf{0$^*$} & \textbf{0$^*$} \\ 
-20 & 2 & 1096 & 0$\pm$0 & \textbf{1$\pm$0$^*$} & 1$\pm$0 \\ 
-21 & 2 &  121 & \textbf{3$\pm$1$^*$} & 1$\pm$1 & 1$\pm$0 \\ 
-25 & 2 & 1272 & 30$\pm$0 & 52$\pm$0 & \textbf{53$\pm$0$^*$} \\ 
-28 & 2 &  621 & 51$\pm$25 &  78$\pm$0 & \textbf{ 78$\pm$0$^*$} \\ 
-29 & 2 &  980 & \textbf{24$^*$} & 21 & 21 \\ 
-34 & 2 & 1162 & 0$\pm$0 & \textbf{7$\pm$0$^*$} & 7$\pm$0 \\ 
-42 & 2 & 7164 & \textbf{0$^*$} & 0 & 0 \\ 
-43 & 2 & 3300 & 0$\pm$0 & \textbf{0$\pm$0} & \textbf{0$\pm$0$^*$} \\ 
-\hline 
-\vspace{-.2cm} \\
-\multicolumn{3}{c}{significantly better:}  & 3 & 3 & 3 \\ 
+ 7 & 2 &   56 & \textbf{54.1} &  9.5 &  5.9 \\ 
+12 & 2 &  200 & 12.9 & \textbf{15.5} & 14.6 \\ 
+13 & 2 &  884 & 0.1 & \textbf{3.6} & 2.5 \\ 
+17 & 2 &  200 & \textbf{0.0} & \textbf{0.0} & \textbf{0.0} \\ 
+20 & 2 & 1096 & 0.1 & \textbf{0.9} & \textbf{0.9} \\ 
+21 & 2 &  121 & 2.1 & 0.0 & \textbf{4.9} \\ 
+25 & 2 & 1272 & 29.9 & \textbf{49.3} & \textbf{49.3} \\ 
+28 & 2 &  621 & \textbf{68.3} &  3.7 &  3.9 \\ 
+29 & 2 &  980 & \textbf{24.1} & 21.4 & 21.4 \\ 
+34 & 2 & 1162 & \textbf{0.4} & 0.0 & 0.0 \\ 
+42 & 2 & 7164 & \textbf{0.0} & 0.0 & 0.0 \\ 
+43 & 2 & 3300 & 0.1 & \textbf{0.4} & \textbf{0.4} \\ 
 \end{tabular} 
 \end{center} 
 \end{table} 
@@ -630,33 +627,30 @@ For each experiment, the result of the best performing method is marked by a sta
    
 \begin{table} 
 \begin{center} 
-\caption{Average NMI in percents of clusterings by k-means, kernel k-means and k-averages for datasets of 3 to 7 classes, over 500 runs of the algorithms.}
+\caption{NMI in percents of clusterings by k-means, kernel k-means and k-averages for datasets of 3 to 7 classes.}
 \label{tab:results-37}
 \begin{tabular}{rrrccc} 
 % & nb. & nb. &  & kernel &  \\ 
 id & classes & objects & k-means & kernel k-means & k-averages \\ 
 %&  &  & (NMI $\times 0.01$) & (NMI $\times 0.01$) & (NMI $\times 0.01$) \\ 
 \hline 
- 3 & 5 &   60 & \textbf{38$\pm$2$^*$} & 35$\pm$3 & 35$\pm$2 \\ 
- 4 & 3 &  930 & 36$\pm$1 & \textbf{51$\pm$4} & \textbf{51$\pm$3$^*$} \\ 
- 5 & 3 & 4307 & 0$\pm$0 & \textbf{0$\pm$0$^*$} & 0$\pm$0 \\ 
- 6 & 4 & 1420 & 24$\pm$3 & 43$\pm$5 & \textbf{44$\pm$4$^*$} \\ 
-11 & 4 &  322 &  82$\pm$5 & 83$\pm$10 & \textbf{ 89$\pm$8$^*$} \\ 
-15 & 4 &  112 & 44$\pm$4 & \textbf{66$\pm$8$^*$} & 65$\pm$7 \\ 
-18 & 5 &  463 & 9$\pm$0 & \textbf{9$\pm$1$^*$} & \textbf{9$\pm$0} \\ 
-19 & 7 &  650 & \textbf{5$\pm$1} & \textbf{5$\pm$1$^*$} & \textbf{5$\pm$1} \\ 
-22 & 7 &  143 & 44$\pm$2 & 51$\pm$3 & \textbf{52$\pm$1$^*$} \\ 
-26 & 6 &  442 & 22$\pm$2 & 22$\pm$3 & \textbf{23$\pm$3$^*$} \\ 
-27 & 4 &   60 & \textbf{54$\pm$5$^*$} & 46$\pm$8 & 50$\pm$7 \\ 
-30 & 3 & 9236 & 60$\pm$0 & \textbf{61$\pm$2$^*$} & 60$\pm$0 \\ 
-32 & 6 & 1020 & 76$\pm$5 & \textbf{80$\pm$4$^*$} & \textbf{80$\pm$1} \\ 
-33 & 4 &  200 & 52$\pm$2 & \textbf{57$\pm$6$^*$} & 53$\pm$3 \\ 
-35 & 4 & 5000 &   2$\pm$0 & \textbf{15$\pm$11$^*$} & 14$\pm$12 \\ 
-37 & 7 &  350 & 31$\pm$2 & 42$\pm$2 & \textbf{42$\pm$1$^*$} \\ 
-38 & 6 &  600 & 79$\pm$3 & 84$\pm$4 & \textbf{88$\pm$3$^*$} \\ 
-\hline 
-\vspace{-.2cm} \\
-\multicolumn{3}{c}{significantly better:}  & 2 & 5 & 6 \\ 
+ 3 & 5 &   60 & \textbf{36.1} & 34.6 & 31.0 \\ 
+ 4 & 3 &  930 & 36.8 & \textbf{46.5} & 43.6 \\ 
+ 5 & 3 & 4307 & \textbf{0.2} & 0.1 & 0.1 \\ 
+ 6 & 4 & 1420 & 19.8 & \textbf{23.7} & 23.7 \\ 
+11 & 4 &  322 & \textbf{79.7} & 73.9 & 78.8 \\ 
+15 & 4 &  112 & 48.2 & \textbf{89.5} & 82.2 \\ 
+18 & 5 &  463 &  9.2 & \textbf{11.7} & 11.1 \\ 
+19 & 7 &  650 & 3.8 & 6.0 & \textbf{6.6} \\ 
+22 & 7 &  143 & 39.7 & 51.1 & \textbf{51.2} \\ 
+26 & 6 &  442 & 17.3 & 18.3 & \textbf{22.6} \\ 
+27 & 4 &   60 & \textbf{68.4} & 33.8 & 27.8 \\ 
+30 & 3 & 9236 & \textbf{60.3} & 60.3 & 60.3 \\ 
+32 & 6 & 1020 & 78.5 & \textbf{84.7} & 83.3 \\ 
+33 & 4 &  200 & 50.2 & 50.4 & \textbf{50.5} \\ 
+35 & 4 & 5000 & \textbf{1.8} & 0.2 & 0.2 \\ 
+37 & 7 &  350 & 28.5 & 33.3 & \textbf{34.7} \\ 
+38 & 6 &  600 & 79.9 & \textbf{96.4} & 92.4 \\ 
 \end{tabular} 
 \end{center} 
 \end{table} 
@@ -667,30 +661,27 @@ id & classes & objects & k-means & kernel k-means & k-averages \\
    
 \begin{table} 
 \begin{center} 
-\caption{Average NMI in percents of clusterings by k-means, kernel k-means and k-averages for datasets of 8 to 50 classes, over 500 runs of the algorithms.}
+\caption{NMI in percents of clusterings by k-means, kernel k-means and k-averages for datasets of 8 to 50 classes.}
 \label{tab:results-8}
 \begin{tabular}{rrrccc} 
 % & nb. & nb. &  & kernel &  \\ 
 id & classes & objects & k-means & kernel k-means & k-averages \\ 
 %&  &  & (NMI $\times 0.01$) & (NMI $\times 0.01$) & (NMI $\times 0.01$) \\ 
 \hline 
- 1 & 50 &  905 & 64$\pm$1 & 70$\pm$1 & \textbf{72$\pm$1$^*$} \\ 
- 2 & 37 &  781 & 58$\pm$1 & 63$\pm$1 & \textbf{66$\pm$1$^*$} \\ 
- 8 & 12 &  780 & 26$\pm$1 & 26$\pm$2 & \textbf{27$\pm$1$^*$} \\ 
- 9 & 12 &  780 & 33$\pm$2 & 33$\pm$2 & \textbf{33$\pm$1$^*$} \\ 
-10 & 12 &  780 & 27$\pm$1 & 26$\pm$2 & \textbf{27$\pm$1$^*$} \\ 
-14 & 14 & 2250 & 37$\pm$2 & \textbf{78$\pm$2$^*$} & 75$\pm$2 \\ 
-16 & 14 & 2250 & 37$\pm$2 & 78$\pm$2 & \textbf{79$\pm$2$^*$} \\ 
-23 &  8 & 2400 & 87$\pm$4 & 89$\pm$4 & \textbf{90$\pm$3$^*$} \\ 
-24 & 10 & 1141 & 25$\pm$1 & 31$\pm$2 & \textbf{32$\pm$1$^*$} \\ 
-31 & 15 & 1125 & 54$\pm$1 & 66$\pm$2 & \textbf{68$\pm$1$^*$} \\ 
-36 & 25 &  905 & 43$\pm$1 & 51$\pm$1 & \textbf{52$\pm$1$^*$} \\ 
-39 &  8 & 4478 & 44$\pm$1 & 46$\pm$1 & \textbf{46$\pm$1$^*$} \\ 
-40 &  8 & 4478 & 44$\pm$0 & 45$\pm$0 & \textbf{45$\pm$0$^*$} \\ 
-41 &  8 & 4478 & 42$\pm$1 & \textbf{43$\pm$0$^*$} & 43$\pm$0 \\ 
-\hline 
-\vspace{-.2cm} \\
-\multicolumn{3}{c}{significantly better:}  & 0 & 2 & 12 \\ 
+ 1 & 50 &  905 & 65.5 & \textbf{70.2} & 69.7 \\ 
+ 2 & 37 &  781 & 59.3 & 57.9 & \textbf{59.8} \\ 
+ 8 & 12 &  780 & 26.0 & \textbf{29.3} & 25.7 \\ 
+ 9 & 12 &  780 & 29.9 & 34.1 & \textbf{35.7} \\ 
+10 & 12 &  780 & 24.4 & 24.2 & \textbf{30.1} \\ 
+14 & 14 & 2250 & 38.5 & \textbf{72.8} & 69.9 \\ 
+16 & 14 & 2250 & 35.9 & 71.5 & \textbf{73.4} \\ 
+23 &  8 & 2400 & 91.7 & \textbf{97.4} & 90.9 \\ 
+24 & 10 & 1141 & 23.5 & 29.2 & \textbf{29.3} \\ 
+31 & 15 & 1125 & 56.4 & \textbf{72.9} & 70.4 \\ 
+36 & 25 &  905 & 42.3 & 49.6 & \textbf{51.5} \\ 
+39 &  8 & 4478 & 43.6 & \textbf{45.7} & 45.4 \\ 
+40 &  8 & 4478 & 42.9 & 44.7 & \textbf{44.7} \\ 
+41 &  8 & 4478 &  0.3 & \textbf{42.8} & 42.6 \\ 
 \end{tabular} 
 \end{center} 
 \end{table} 
