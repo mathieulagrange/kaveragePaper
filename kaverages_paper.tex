@@ -34,7 +34,7 @@
 
 \begin{abstract}
 
-We present an iterative flat hard clustering algorithm designed to operate on arbitrary similarity matrices, with the only constraint that these matrices be symmetrical. Although functionally very close to kernel k-means, our proposal performs an maximization of average intra-class similarity, instead of a squared distance minimization, in order to remain closer to the semantics of similarities. We show that this approach allows relaxing the conditions on usable matrices, as well as opening better optimization possibilities. Systematic evaluation on a variety of data sets shows that the proposed approach outperforms or equals kernel k-means in a large majority of cases, while running much faster. Most notably, it significantly reduces memory access, which makes it a good choice for large data collections.
+We present an iterative flat hard clustering algorithm designed to operate on arbitrary similarity matrices, with the only constraint that these matrices be symmetrical. Although functionally very close to kernel k-means, our proposal performs an maximization of average intra-class similarity, instead of a squared distance minimization, in order to remain closer to the semantics of similarities. We show that this approach allows relaxing the conditions on usable matrices, as well as opening better optimization possibilities. Systematic evaluation on a variety of data sets shows that the proposed approach gives performance equivalent to kernel k-means, while running much faster. Most notably, it significantly reduces memory access, which makes it a good choice for large data collections.
 
 \end{abstract}
 
@@ -53,9 +53,10 @@ If the data lies in a vector space, \textit{i.e.} an object can be described by 
 
 However, for many types of data, the projection of a representational problem into an vector space cannot be done without significant loss of descriptive efficiency. To reduce this loss, specifically tailored measures of similarity are considered. As a result, the input data for clustering is no longer a $n \times m$ matrix storing the $m$-dimensional vectors describing the objects, but a (usually symmetric) square matrix $S$ of size $n \times n$ which numerically encodes some sort of relationship between the objects. In this case, one has to resort to clustering algorithms based on connectivity models, since the cluster centroids cannot be explicitly computed.
 
-Earlier attempts to solve this issue considered the k-medoids problem, where the goal is to find the $k$ objects that maximize the average similarity with the other objects of their respective clusters, or \emph{medoids}. The Partition Around Medoids (PAM) algorithm (\cite{KaufmanRousseeuw90}) solves the k-medoids problem but with a high complexity ($O(k(n-k)^2)i$, $n$ being the number of objects) and high number of iterations $i$, due to low convergence rate. In order to scale the approach, the Clustering LARge Applications (CLARA) algorithm (\cite{KaufmanRousseeuw90}) draws a sample of objects before running the PAM algorithm. This sampling operation is repeated several times and the most satisfying set of medoids is retained. In contrast, CLARANS (\cite{Ng:1994:EEC:645920.672827}) preserves the whole set of objects but cuts complexity by  drawing a sample of neighbors in each search for the medoids.
+Early attempts to solve this issue considered the k-medoids problem, where the goal is to find the $k$ objects that maximize the average similarity with the other objects of their respective clusters, or \emph{medoids}. The Partition Around Medoids (PAM) algorithm (\cite{KaufmanRousseeuw90}) solves the k-medoids problem but with a high complexity ($O(k(n-k)^2)i$, $n$ being the number of objects) and high number of iterations $i$, due to low convergence rate. In order to scale the approach, the Clustering LARge Applications (CLARA) algorithm (\cite{KaufmanRousseeuw90}) draws a sample of objects before running the PAM algorithm. This sampling operation is repeated several times and the most satisfying set of medoids is retained. In contrast, CLARANS (\cite{Ng:1994:EEC:645920.672827}) preserves the whole set of objects but cuts complexity by  drawing a sample of neighbors in each search for the medoids.
 %, with two drawbacks: it assumes that all objects fit in main memory, and the result is sensitive to the input order \cite{Zhang:1996:BED:233269.233324}.
 
+Another classical approach to the issue is to run a variant of k-means that considers average intra-cluster similarity as the guiding criterion for object-to-class reallocation \cite[Chapter 10.7]{Duda01}. This straightforward technique performs well in may cases, but the complexity of computing anew intra-cluster similarities at each iteration makes it impractical for large datasets.
 
 Following work on kernel projection (\cite{Vapnik:1995:NSL:211359}), that is, the fact that a nonlinear data transformation into some high dimensional feature space increases the probability of the linear separability of patterns within the transformed space, \cite{Girolami:2002:MKC:2325785.2326903} introduced a kernel version of the K-means algorithm, whose input is a kernel matrix $\mathcal{K}$ that must be a Gram matrix, \textit{i.e.} semi definite positive. \cite{Dhillon:2007:WGC:1313055.1313291} linked a weighted version of the kernel K-means objective to the popular spectral clustering, introducing an efficient way of solving the normalized cut objective.
 
@@ -64,17 +65,16 @@ The kernel k-means algorithm proves to be equally useful when considering arbitr
 %% Long sentence! rewritten above
 %Originally thought as considering data lying initially in a given vector space then projected in an high dimensional features space thanks to a carefully chosen kernel function, the kernel k-means algorithm proved to be equally useful when considering arbitrary similarity problems if some special care is taken to ensure definite positiveness of the input matrix (\cite{Roth:2003:OCP:960254.960291}).
 
-Despite such improvements, kernel k-means can hardly be applied to large scale datasets without special treatments because of high algorithmic and memory access costs. 
+Despite such improvements, kernel k-means cannot easily be applied to large scale datasets without special treatments, because of its high algorithmic and memory access costs. 
 %Still, the complexity of the algorithm and the cost of memory  access  prevent from using the kernel k-means algorithm for large scale datasets without specific treatments. 
 \cite{Chitta:2011:AKK:2020408.2020558} considered sampling of the input data, \cite{1047453} considered block storing of the input matrix, and a preclustering  approach (\cite{bradley98scaling, conf/icde/GantiRGPF99}) is considered by \cite{Kulis2008} with a coarsening and refining phases as respectively a pre- and post-treatment of the actual clustering phase.
 
-The work we present is this paper results from an effort to directly maximize the average intra-class similarity, without resorting to a geometric interpretation of data. Following that idea allows us to propose a new hard clustering algorithm, which we call \emph{k-averages}, with the following properties: 
+We show in this paper that by using a semantically equivalent variant of the average intra-cluster similarity presented in \cite[Chapter 10.7]{Duda01}, it becomes possible to perform a computationally efficient greedy optimization \cite[Chapter 10.8]{Duda01}. Although both of those techniques are well known, combining them is non trivial, and allows us to propose a novel hard clustering algorithm, which we call \emph{k-averages}, with the following properties: 
 \begin{itemize}
-%\item it may consider as input arbitrary symmetric similarity matrices,
 \item input data can be arbitrary symmetric similarity matrices,
 \item it has fast and guaranteed convergence, with a number of object to clusters reallocations roughly equal to the number of objects,
 \item it provides good scalability thanks to a reduced need for memory access, and
-\item on a collection of synthetic and natural test data, its results are on average slightly better than those of kernel k-means, and obtained in a fraction of its computing time, particularly when paged memory is required.
+\item on a collection of synthetic and natural test data, its results are equivalent to those of kernel k-means, and obtained in a fraction of its computing time, particularly when paged memory is required.
 \end{itemize}
 
 The remaining of the paper is organized as follows: Section~\ref{sec:kkmeans} presents the kernel k-means objective function and the basic algorithm that minimizes this function, and Section~\ref{sec:kaverages} introduces the concepts behind the k-averages algorithm, 
@@ -114,11 +114,11 @@ where
 \begin{align}
 \begin{split}
 Y_{cn} & =  \left(o_n-\mu_c\right)\left(o_n-\mu_c\right)^\top \\
-       & =  o_n.o_n - 2 o_n.\mu_c + \mu_c.\mu_c \\
-       & =  o_n.o_n - 2 o_n.\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i +
+       & =  o_no_n - 2 o_n\mu_c + \mu_c\mu_c \\
+       & =  o_no_n - 2 o_n\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i +
        	 \left(\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i\right)^2 \\ %.\left(\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i\right) \\
-       & =  o_n.o_n - \frac{2}{N_c} \sum_{i=1}^{N} z_{ci} o_n.o_i +
-       	 \frac{1}{N_c^2} \sum_{i=1}^{N} \sum_{j=1}^{N} z_{ki} z_{kj} o_i.o_j \\
+       & =  o_no_n - \frac{2}{N_c} \sum_{i=1}^{N} z_{ci} o_no_i +
+       	 \frac{1}{N_c^2} \sum_{i=1}^{N} \sum_{j=1}^{N} z_{ki} z_{kj} o_io_j \\
        & =  \mathcal{K}_{nn} - \frac{2}{N_c} \sum_{i=1}^{N} z_{ci} \mathcal{K}_{ni} +
          \frac{1}{N_c^2} \sum_{i=1}^{N} \sum_{j=1}^{N} z_{ki} z_{kj} \mathcal{K}_{ij} \label{eq:yki}
 \end{split}
@@ -173,7 +173,7 @@ The version given here is the most direct algorithmic translation of the mathema
 
 In our proposal, we adopt an alternative objective function which, unlike kernel k-means, does not rely on a geometric interpretation but an explicit account of the similarity matrix. The goal is to maximize the average intra-cluster similarity between points, a commonly used metric to evaluate clustering quality, and one whose computation is direct\cad{}linear in time.
 
-Due to its simplicity, however, the objective function cannot be simply "plugged into" the standard kernel k-means algorithm: it lacks the geometric requisites to ensure convergence. We must therefore propose a specifically tailored algorithmic framework to exploit it: first, we show here that it is possible to easily compute the impact on the global objective function of moving a single point from one class to another; we then introduce an algorithm intended to take advantage of that formula.
+Due to its simplicity, however, the objective function cannot be simply ``\,plugged into\,'' the standard kernel k-means algorithm: it lacks the geometric requisites to ensure convergence. We must therefore propose a specifically tailored algorithmic framework to exploit it: first, we show here that it is possible to easily compute the impact on the global objective function of moving a single point from one class to another; this allows us to develop a greedy optimization algorithm taking advantage of that formula.
 
 \subsection{Conventions and possible objective functions}
 
@@ -208,8 +208,7 @@ Let us call the \gl{quality} of a class the average intra-class object-to-object
 
 In our framework, we do not explicitly refer to class centroids, preferring to directly consider averages of similarity values between individuals within clusters. Indeed, we never refer to a geometrical interpretation of the data. However, it should be noted that since in k-means (and kernel k-means) the centroid of a class is defined as an average of all points in that class, $\mathcal{Q}$ is strictly equivalent to the average point to centroid similarity.
 
-Using the notations above, we define our objective function as the average class quality, %normalized taking into account the class sizes:
-normalized with class sizes:
+Using the notations above, we define our objective function as the average class quality, normalized with class sizes:
 
 \[
 O_2 = \frac{1}{N} \sum_{i=1}^{C} N_i \mathcal{Q}(c_i)
@@ -367,9 +366,9 @@ As can be seen, computing this impact is a fixed-cost operation. We can therefor
 \section{K-averages algorithm}
 \label{sec:algo}
 
-Our approach does not allow us to benefit, like kernel k-means, from the convergence guarantee brought by the geometric foundation of k-means. In consequence, we cannot apply a \gl{batch} approach where at each iteration all elements are moved to their new class, and all distances (or similarities) are computed at once. Therefore, for each considered object, after finding its ideal new class, we must update the class properties for the two modified classes (source and destination), as well as recompute the average class-object similarities for them.
+Our approach does not allow us to benefit, like kernel k-means, from the convergence guarantee brought by the geometric foundation of k-means. In consequence, we cannot apply a \gl{batch} approach where at each iteration all elements are moved to their new class, and all distances (or similarities) are computed at once. Therefore, for each considered object, after finding its ideal new class, we must update the class properties for the two modified classes (source and destination), as well as recompute the average class-object similarities for them. This is the principle of the ``,greedy\,'' k-means algorithm \cite[Chapter10.8]{Duda01}, but whereas for k-means that approach increases complexity, in this case it allows for much improved computational performance.
 
-At a first glance, dynamically updating objectives as a result of object reallocation might seem to have negative performance impact. However, our simple non-quadratic updates makes such dynamic changes easily tractable. New class qualities are thus given by Equations~\ref{eq:newQual_remove} and \ref{eq:newQual_add}, and new object-class similarities can be computed by:
+Indeed, at a first glance, dynamically updating objectives as a result of object reallocation might seem to have negative performance impact. However, our simple non-quadratic updates makes such dynamic changes easily tractable. New class qualities are thus given by Equations~\ref{eq:newQual_remove} and \ref{eq:newQual_add}, and new object-class similarities can be computed by:
 
 %% Rewritten above.. feel free to modify!!! (Arshia)
 %Although this seems at first like systematically updating everything at each object re-allocation should have a huge performance impact, our reliance on simple averages without any quadratic terms makes it possible to have very simple update formulas: new class qualities are given by Equations~\ref{eq:newQual_remove} and \ref{eq:newQual_add}, and new object-class similarities can be computed by:
