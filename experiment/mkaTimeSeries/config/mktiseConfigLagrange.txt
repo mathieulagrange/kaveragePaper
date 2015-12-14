@@ -12,15 +12,15 @@ probe  = 0
 % regenerate root file of the experiment (use of newer versions of the expLanes lib may reguired it)
 generateRootFile  = 0
 % add a factor to the experiment. Format of the request: {'name', 'modalities', 'steps', 'selector', defaultModalityId, rankInFactorFile}
-addFactor =
+addFactor  = 
 % remove a factor from the experiment. Format of the request: {rankInFactorFile, defaultModalityId}
-removeFactor =
-% add a step to the experiment. Format of the request: {'name', rank}
-addStep =
+removeFactor  = 
+% add a step to the experiment. Format of the request: 'name' (last step rank) or {'name', rank}
+addStep  = 
 % remove a given step from the experiment. Format of the request: rank
-removeStep =
+removeStep  = 
 % fill the README.txt file with information about replication of the experiment
-readMe = 0
+readMe  = 0
 
 %% HOSTNAMES AND PATHS
 
@@ -29,7 +29,7 @@ machineNames  = {{ 'pc-lagrange', 'dodo', 'toto', 'lolo.local'}, {'pc-adtsi-sund
 % path to input data (usually accessed read only)
 inputPath  = ~/data/databases/timeSeries
 % path to the code repository of the experiment
-codePath  = ~/bb/papersimilarity2014/experiment/mkaTimeSeries
+codePath  = ~/versioned/paperKaverages15/experiment/mkaTimeSeries
 % path to the data repository of the experiment (structured with one directory per step)
 dataPath  = ~/data/projects/mkaTimeSeries
 % path to the data repository of the experiment for observation data (same as dataPath if left blank)
@@ -37,7 +37,7 @@ obsPath  =
 % path to store backups of data
 backupPath  = /tmp/expCodeBackup/mkaTimeSeries
 % path to export the experiment
-exportPath = /tmp/<experimentName>
+exportPath  = /tmp/<experimentName>
 % path to the directory of the Matlab binary
 matlabPath  = 
 % path to Unix tools (pdflatex, rsync, ssh, screen), can be a string, a cell array of strings
@@ -57,7 +57,7 @@ codeVersion  = 0.1
 % processing steps to execute: -1 none, 0 all, >0 processing step by numeric id
 do  = -1
 % do not perform computation if data and obs files with runID>resume are already there
-resume = 0
+resume  = 0
 % use parallel processing, if |parallel|>1 specify the number of cores, if array set at step level, if >0 parallelize settings, if <0 parallelize within each setting (the code of the step shall use parfor or the like), can be a numeric value for all processing steps or an array of numeric value, one per step
 parallel  = 0
 % factor mask: cell array defining the modalities to be set for the factors (0 do all, 1 first modality, [1 3] first and third modality), can be a cell array of cell array
@@ -91,19 +91,19 @@ retrieve  = -1
 % naming convention for data files: long (complete naming, may lead to too long file names), short (abbreviated naming, may also lead to too long file names), hash (hash based naming, compact but may lead to naming clashes)
 namingConventionForFiles  = hash
 % export elements of the experiment designated as a string with tokens separated by white spaces (addition of a 'z' token outputs a zip file): 'c' (code), 'd' (dependencies), 'i' (input), 1 (output data of step 1), 1d (stored data of step 1 only), 1o (observations of step 1 only)
-export =
+export  = 
 % sync data across machines specified as a cell array with: elements (as in export), optional host as numeric id (1.2 means the second host of the first group of machines, default to 2), direction 'd' (download from server to local host, default), 'u' (upload from host to server). Provided with the elements as string, the command default to server 2 in download mode.
 sync  = {}
 % clean explanes directories and project data repositories. As string id : t (expLanes temporary directory), b (experiment backup directory), k (all steps directories while keeping reachable settings), 1 (output data of step 1), 1d (remove stored data of step 1 only), 1o (observations of step 1 only). As numeric id (clean the corresponding step directory, 0 means all directories)
 clean  = 
-% specify at which step the branching (if any) is effective (default 0)
-branchStep = 0
+% specify at which step the fork (if any) is effective (default 0)
+forkStep = 0
 
 
 %% EXPOSITION
 
 % step for which to display observations: -1 none, 0 last processed step if any, >0 specific step
-display = 0
+display  = 0
 % specify default display of observations (>: prompt, t: table, p:plot)
 expose  = >
 % mantissa precision for the display of observations

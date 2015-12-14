@@ -11,7 +11,7 @@ function [config, store, obs] = mktise3max(config, setting, data)
 % Date: 02-Dec-2015
 
 % Set behavior for debug mode
-if nargin==0, mkaTimeSeries('do', 3, 'mask', {0 1 2 [5] [3] [1] 2 1}, 'parallel', 1); return; else store=[]; obs=[]; end % 1 2 [8 9 5] [3] [1] 2 1
+if nargin==0, mkaTimeSeries('do', 3, 'mask', {0 1 2 [8 9 5] [3] [1] 2 1}, 'parallel', 1); return; else store=[]; obs=[]; end % 1 2 [8 9 5] [3] [1] 2 1
 
 dataOne = expLoad(config, [], 1, 'data');
 if ~isempty(dataOne)
@@ -30,10 +30,10 @@ if ~isempty(dataOne)
 end
 
 for k=1:size(data.clusters, 1)
-    energy(k) = energy(S, data.clusters(k, :));
+    [intra(k) inter(k)] = energy(S, data.clusters(k, :));
 end
 
-[em, ind] = min(energy);
+[em, ind] = min(intra);
 
 % imported data
 loadedObs = expLoad(config, [], 2, 'obs');
@@ -41,25 +41,32 @@ loadedObs = expLoad(config, [], 2, 'obs');
 if ~isempty(loadedObs)
     obs.nmi = loadedObs.nmi(ind);
     obs.accuracy = loadedObs.accuracy(ind);
+    obs.ii = intra/inter;
+    obs.is = intra/(intra+inter);
 end
 
 
-function e = energy(S, c)
+function [intra, inter] = energy(S, c)
 
 if min(c)==0
     c=c+1;
 end
 nbc = max(unique(c));
 
-e = zeros(1, nbc);
+intra = zeros(1, nbc);
+inter = zeros(1, nbc);
 for k=1:size(S, 1)
     for l=k+1:size(S, 1)
       if c(k)==c(l)
-          e(c(k)) = e(c(k)) + S(k, l);
+          intra(c(k)) = intra(c(k)) + S(k, l);
+      else
+        inter(c(k)) = inter(c(k)) + S(k, l);         
       end
     end
 end
-e(e==0) = [];
-e=mean(e);
+intra(intra==0) = [];
+intra=mean(intra);
+inter(inter==0) = [];
+inter=mean(inter);
 
 
