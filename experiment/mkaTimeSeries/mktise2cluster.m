@@ -65,14 +65,15 @@ for k=1:setting.nbRuns
             end
             warning on all
         case 'kkMeans1'
-            [clusters, energy, nbIterations conv] = knkmeans(S, init, setting.nbIterations, 1);
+            [clusters, intra, nbIterations conv] = knkmeans(S, init, setting.nbIterations, 1);
         case 'kkMeans'
-            [clusters, energy, nbIterations conv] = knkmeans(S, init, setting.nbIterations);
+            [clusters, intra, nbIterations conv] = knkmeans(S, init, setting.nbIterations);
             
         case 'kAverages'
             [clusters, nbMoved] = mka(S, data.nbClasses, setting.objective, setting.strategy, init, setting.nbIterations);
             nbIterations = length(nbMoved);
             moved(k, 1:length(nbMoved)) = nbMoved;
+            intra =  energy(S, clusters);
         case 'kAveragesC++'
             [clusters, nbIterations] =  kaverages(S, init, ['s' setting.objective(1), setting.strategy], setting.nbIterations);
         case 'random'
@@ -87,9 +88,9 @@ for k=1:setting.nbRuns
     
     metrics = clusteringMetrics(clusters, data.class);
     obs.nmi(k) = metrics.nmi;
+    obs.energy(k) = intra;
     obs.accuracy(k) = metrics.accuracy;
     obs.iterations(k) = nbIterations;
-obs.energy(k) = energy(S, clusters, data.nbClasses);
 end
 
 
@@ -152,14 +153,3 @@ if isfield(config, 'plot')
     end
 end
 
-function e = energy(S, c, nbc)
-
-e = zeros(1, nbc);
-for k=1:size(S, 1)
-    for l=k+1:size(S, 1)
-      if c(k)==c(l)
-          e(c(k)) = e(c(k)) + S(k, l);
-      end
-    end
-end
-e=mean(e);

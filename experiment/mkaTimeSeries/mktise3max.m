@@ -11,7 +11,19 @@ function [config, store, obs] = mktise3max(config, setting, data)
 % Date: 02-Dec-2015
 
 % Set behavior for debug mode
-if nargin==0, mkaTimeSeries('do', 3, 'mask', {0 1 2 [8 9 5] [3] [1] 2 1}, 'parallel', 1); return; else store=[]; obs=[]; end % 1 2 [8 9 5] [3] [1] 2 1
+if nargin==0, mkaTimeSeries('do', 3, 'mask', {0 1 2 [1 2] [3] [1] 2 1}); return; else store=[]; obs=[]; end % 1 2 [8 9 5] [3] [1] 2 1
+ind=1;
+% if isfield(data.obs, 'energy')
+switch setting.clustering
+    case 'kAverages'
+        [em, ind] = max(data.obs.energy);
+    otherwise
+        [em, ind] = min(data.obs.energy);
+end
+obs.nmi = data.obs.nmi(ind);
+obs.accuracy = data.obs.accuracy(ind);
+
+return
 
 dataOne = expLoad(config, [], 1, 'data');
 if ~isempty(dataOne)
@@ -46,27 +58,5 @@ if ~isempty(loadedObs)
 end
 
 
-function [intra, inter] = energy(S, c)
-
-if min(c)==0
-    c=c+1;
-end
-nbc = max(unique(c));
-
-intra = zeros(1, nbc);
-inter = zeros(1, nbc);
-for k=1:size(S, 1)
-    for l=k+1:size(S, 1)
-      if c(k)==c(l)
-          intra(c(k)) = intra(c(k)) + S(k, l);
-      else
-        inter(c(k)) = inter(c(k)) + S(k, l);         
-      end
-    end
-end
-intra(intra==0) = [];
-intra=mean(intra);
-inter(inter==0) = [];
-inter=mean(inter);
 
 

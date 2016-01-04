@@ -11,7 +11,7 @@ function [config, store, obs] = mktise4overall(config, setting, data)
 % Date: 03-Dec-2015
 
 % Set behavior for debug mode
-if nargin==0, mkaTimeSeries('do', 4, 'mask', {0 1 2 [1 2 8 9] [3] [1] 2 1}); return; else store=[]; obs=[]; end
+if nargin==0, mkaTimeSeries('do', 4, 'mask', {0 1 2 [1 2] [3] [1] 2 1}); return; else store=[]; obs=[]; end
 
 % imported data
 loadedObs = expLoad(config, [], 3, 'obs');
