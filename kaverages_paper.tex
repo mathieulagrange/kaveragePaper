@@ -72,12 +72,10 @@ Paris, France
 
 
 \begin{abstract}% Comment apparently necessary
-We present an iterative flat hard clustering algorithm designed to operate on arbitrary similarity matrices, with the only constraint that these matrices be symmetrical. Although functionally very close to kernel k-means, our proposal performs an maximization of average intra-class similarity, instead of a squared distance minimization, in order to remain closer to the semantics of similarities. We show that this approach allows relaxing the conditions on usable matrices, as well as opening better optimization possibilities. Systematic evaluation on a variety of data sets shows that compared with kernel k-means, the proposed approach gives equivalent or slightly better performance, while running much faster. Most notably, it significantly reduces memory access, which makes it a good choice for large data collections.
+We present an iterative flat hard clustering algorithm designed to operate on arbitrary similarity matrices, with the only constraint that these matrices be symmetrical. Although functionally very close to kernel k-means, our proposal performs an maximization of average intra-class similarity, instead of a squared distance minimization, in order to remain closer to the semantics of similarities. We show that this approach allows relaxing the conditions on usable matrices, as well as opening better optimization possibilities. Systematic evaluation on a variety of data sets shows that compared with kernel k-means, the proposed approach gives equivalent or better performance, while running much faster. Most notably, it significantly reduces memory access, which makes it a good choice for large data collections.
 \end{abstract}
 
-\begin{keywords}
-clustering, similarity, non-metric data representation, time series clustering
-\end{keywords}
+\keywords{clustering, similarity, non-metric data representation, time series clustering}
 
 
 \section{Introduction}
@@ -213,7 +211,7 @@ In our proposal, we adopt an alternative objective function which, unlike kernel
 
 Due to its simplicity, however, the objective function cannot be simply \gl{plugged into} the standard kernel k-means algorithm: it lacks the geometric requisites to ensure convergence. We must therefore propose a specifically tailored algorithmic framework to exploit it: first, we show here that it is possible to easily compute the impact on the global objective function of moving a single point from one class to another; this allows us to develop a greedy optimization algorithm taking advantage of that formula.
 
-\subsection{Conventions and possible objective functions}
+\subsection{Conventions and objective function}
 
 In addition to the notations presented above, we index hereon the set of elements belonging to a given cluster $c_k$ as $c_k = \left\{o_{k1}, \ldots, o_{kN_k}\right\}$. 
 For simplicity, we omit the first index and note $c = \left\{o_1, \ldots, o_{N_c}\right\}$ when considering a single class. 
@@ -397,7 +395,7 @@ As can be seen, computing this impact is a fixed-cost operation. We can therefor
 \section{K-averages algorithm}
 \label{sec:algo}
 
-Our approach does not allow us to benefit, like kernel k-means, from the convergence guarantee brought by the geometric foundation of k-means. In consequence, we cannot apply a \gl{batch} approach where at each iteration all elements are moved to their new class, and all distances (or similarities) are computed at once. Therefore, for each considered object, after finding its ideal new class, we must update the class properties for the two modified classes (source and destination), as well as recompute the average class-object similarities for them. This is the principle of the \gl{greedy} k-means algorithm \citep[Chapter10.8]{Duda01}, but whereas for k-means that approach increases complexity, in this case it allows for much improved computational performance.
+Our approach does not allow us to benefit, like kernel k-means, from the convergence guarantee brought by the geometric foundation of k-means. In consequence, we cannot apply a \gl{batch} approach where at each iteration all elements are moved to their new class, and all distances (or similarities) are computed at once. Therefore, for each considered object, after finding its ideal new class, we must update the class properties for the two modified classes (source and destination), as well as recompute the average class-object similarities for them. This is the principle of the \gl{greedy} k-means algorithm \citep[Chapter10.8]{Duda01}, but whereas for k-means that approach increases complexity (and even more so for kernel k-means), in this case it allows for much improved computational performance.
 
 Indeed, at a first glance, dynamically updating objectives as a result of object reallocation might seem to have negative performance impact. However, our simple non-quadratic updates makes such dynamic changes easily tractable. New class qualities are thus given by Equations~\ref{eq:newQual_remove} and \ref{eq:newQual_add}, and new object-class similarities can be computed by:
 
@@ -584,12 +582,12 @@ Having established the interest of our proposed method relative to kernel k-mean
 
 In order to demonstrate the usefulness of k-averages when dealing with real data, we have chosen to focus on the clustering of times series as the evaluation task. Time series, even though represented as vectors and therefore suitable for any kinds of norm-based clustering, are best compared with elastic measures \citep{Ding:2008:QMT:1454159.1454226, Wang:2013:ECR:2429736.2429754}, partly due to their varying length. The Dynamic Time Warping (DTW) measure is an elastic measure widely used in many areas since its introduction for spoken word detection \citep{1163055} and has never been significantly challenged for time series mining \citep{conf/kdd/BerndtC94, Rakthanmanon:2013:ABD:2513092.2500489}.
 
-Effective clustering of time series using the DTW measure require similarity based algorithms such as the k-average algorithm. With some care, kernel based algorithm can also be considered provided that the resulting similarity matrix is converted into a kernel, \textit{i.e.} the matrix is forced to be semi definite positive, \textit{i.e.} to be a Gram matrix \citep{Lanckriet:2004:LKM:1005332.1005334}.
+Effective clustering of time series using the DTW measure require similarity based algorithms such as the k-averages algorithm. With some care, kernel based algorithm can also be considered provided that the resulting similarity matrix is converted into a kernel, \textit{i.e.} the matrix is forced to be semi definite positive, \textit{i.e.} to be a Gram matrix \citep{Lanckriet:2004:LKM:1005332.1005334}.
 
 \subsection{Datasets}
 
 To compare quality of clusterings obtained by the considered algorithms, we consider a large collection of 43 time series datasets created by many laboratories all over the world and compiled by Prof. Keogh \footnote{Available at: \url{www.cs.ucr.edu/~eamonn/time_series_data}}. Thus, while all the experiments presented here are performed on time series (chosen for being a good example of a data type requiring similarity-based clustering, as opposed to a simple Euclidean approach), the great variety in the sources and semantics of said series (bio-informatics, linguistics, astronomy, gesture modeling, chemistry\ldots{}) gives this validation a wide foundation. Statistics about the morphology of those datasets are summarized in Table~\ref{tab:dbs}. 
-In the results described in the next sections, datasets are refered by a numerical id for the sake of clarity, matching between those ids and the actual names of the datasets are shown on Table \ref{didtNoda1}.
+In the results described in the next sections, datasets are refered by a numerical id for the sake of brevity; the correspondence between those ids and the actual names of the datasets is shown on Table \ref{didtNoda1}.
 
 \begin{table}
 \center
@@ -605,36 +603,35 @@ time series length & 24 & 372 $\pm$ 400 & 1882 \\
 
 \subsection{Evaluation Protocol}
 
-For each dataset, since we perform clustering, and not supervised learning, the training and testing data are joined. If relevant, the DTW is computed using the implementation provided by Prof. Ellis \footnote{Available at: \url{http://www.ee.columbia.edu/~dpwe/resources/matlab/dtw}} with default parameters.
+For each dataset, since we perform clustering, and not supervised learning, the training and testing data are joined. DTW similarities are computed using the implementation provided by Prof. Ellis \footnote{Available at: \url{http://www.ee.columbia.edu/~dpwe/resources/matlab/dtw}} with default parameters.
 
-As in our previous experiments with synthetic data, we choose here the normalized mutual information as measure of clustering quality; clustering is done by requesting a number of clusters equal to the actual number of classes in the dataset, and repeated 200 times with varying initial conditions, each algorithm being run with the exact same initial assignments. Of the 200 clusterings thus produced, we keep the one that shows the best convergence (\emph{i.e.} exhibits the highest average intra-class similarity) and compute the NMI of that result with the ground truth.
+As in our previous experiments with synthetic data, we choose here the normalized mutual information as measure of clustering quality; clustering is done by requesting a number of clusters equal to the actual number of classes in the dataset, and repeated 200 times with varying initial conditions, each algorithm being run with the exact same initial assignments. Of the 200 clusterings thus produced, we keep the one that shows the best convergence (\emph{i.e.} has the maximum final value of its objective function, as reported by the algorithm) and compute the NMI of that result with the ground truth.
 
 \subsection{Results}
-
 
 %% BI-CLASS
 
 \begin{table} 
 \begin{center} 
-\caption{NMI in percents of clusterings by kernel k-means and k-averages for bi-class datasets.}
+\caption{NMI (in percents) of clusterings by kernel k-means and k-averages for bi-class datasets.}
 \label{tab:results-2} 
 \begin{tabular}{rrrccc} 
 % & nb. & nb. &  & kernel &  \\ 
 id & classes & objects & & kernel k-means & k-averages \\ 
 %&  &  & (NMI $\times 0.01$) & (NMI $\times 0.01$) & (NMI $\times 0.01$) \\ 
 \hline 
- 7 & 2 &   56 &  & \textbf{56.4} & 55.7 \\ 
-12 & 2 &  200 &  & 65.2 & \textbf{65.3} \\ 
-13 & 2 &  884 &  & 55.7 & \textbf{56.5} \\ 
-17 & 2 &  200 &  & \textbf{61.9} & \textbf{61.9} \\ 
-20 & 2 & 1096 &  & \textbf{73.5} & \textbf{73.5} \\ 
-21 & 2 &  121 &  & 56.7 & \textbf{57.7} \\ 
-25 & 2 & 1272 &  & 55.6 & \textbf{55.7} \\ 
-28 & 2 &  621 &  & 55.8 & \textbf{55.8} \\ 
-29 & 2 &  980 &  & \textbf{55.6} & \textbf{55.6} \\ 
-34 & 2 & 1162 &  & \textbf{53.1} & 52.9 \\ 
-42 & 2 & 7164 &  & \textbf{79.6} & \textbf{79.6} \\ 
-43 & 2 & 3300 &  & \textbf{64.1} & 63.5 \\ 
+ 7 & 2 &   56 &  & \textbf{4.0} & \textbf{4.0} \\ 
+12 & 2 &  200 &  & \textbf{14.6} & 14.6 \\ 
+13 & 2 &  884 &  & \textbf{2.5} & 2.5 \\ 
+17 & 2 &  200 &  & \textbf{0.0} & \textbf{0.0} \\ 
+20 & 2 & 1096 &  & \textbf{0.9} & \textbf{0.9} \\ 
+21 & 2 &  121 &  & \textbf{11.1} & \textbf{11.1} \\ 
+25 & 2 & 1272 &  & \textbf{49.3} & 48.2 \\ 
+28 & 2 &  621 &  & \textbf{56.2} & \textbf{56.2} \\ 
+29 & 2 &  980 &  & \textbf{21.4} & \textbf{21.4} \\ 
+34 & 2 & 1162 &  & \textbf{0.0} & \textbf{0.0} \\ 
+42 & 2 & 7164 &  & \textbf{0.0} & \textbf{0.0} \\ 
+43 & 2 & 3300 &  & \textbf{0.3} & 0.0 \\ 
 \end{tabular} 
 \end{center} 
 \end{table} 
@@ -644,78 +641,72 @@ For ease of readability and comparison, the presented results are split into 3 t
 For each experiment, the result of the best performing method is marked in bold.
  
  %% 3-7 classes
- 
    
 \begin{table} 
 \begin{center} 
-\caption{NMI in percents of clusterings by kernel k-means and k-averages for datasets of 3 to 7 classes.}
+\caption{NMI (in percents) of clusterings by kernel k-means and k-averages for datasets of 3 to 7 classes.}
 \label{tab:results-37}
 \begin{tabular}{rrrccc} 
 % & nb. & nb. &  & kernel &  \\ 
 id & classes & objects & & kernel k-means & k-averages \\ 
 %&  &  & (NMI $\times 0.01$) & (NMI $\times 0.01$) & (NMI $\times 0.01$) \\ 
 \hline 
- 3 & 5 &   60 &  & \textbf{34.0} & 25.7 \\ 
- 4 & 3 &  930 &  & \textbf{44.0} & 43.3 \\ 
- 5 & 3 & 4307 &  & 36.6 & \textbf{36.9} \\ 
- 6 & 4 & 1420 &  & \textbf{32.2} & 31.7 \\ 
-11 & 4 &  322 &  & \textbf{32.5} & 29.8 \\ 
-15 & 4 &  112 &  & 37.6 & \textbf{39.0} \\ 
-18 & 5 &  463 &  & \textbf{25.7} & 25.7 \\ 
-19 & 7 &  650 &  & \textbf{19.9} & 18.9 \\ 
-22 & 7 &  143 &  & \textbf{22.8} & 22.3 \\ 
-26 & 6 &  442 &  & 24.1 & \textbf{24.6} \\ 
-27 & 4 &   60 &  & \textbf{33.0} & 30.3 \\ 
-30 & 3 & 9236 &  & \textbf{46.3} & \textbf{46.3} \\ 
-32 & 6 & 1020 &  & \textbf{39.7} & 36.9 \\ 
-33 & 4 &  200 &  & \textbf{39.8} & 37.3 \\ 
-35 & 4 & 5000 &  & \textbf{31.1} & 30.8 \\ 
-37 & 7 &  350 &  & \textbf{19.8} & 19.4 \\ 
-38 & 6 &  600 &  & \textbf{32.0} & 29.1 \\ 
+ 3 & 5 &   60 &  & 35.1 & \textbf{38.3} \\ 
+ 4 & 3 &  930 &  & 34.2 & \textbf{54.8} \\ 
+ 5 & 3 & 4307 &  & 0.1 & \textbf{0.4} \\ 
+ 6 & 4 & 1420 &  & \textbf{25.2} & 22.5 \\ 
+11 & 4 &  322 &  & \textbf{85.0} & 83.2 \\ 
+15 & 4 &  112 &  & \textbf{75.4} & 69.5 \\ 
+18 & 5 &  463 &  & 8.7 & \textbf{9.2} \\ 
+19 & 7 &  650 &  & 7.3 & \textbf{7.3} \\ 
+22 & 7 &  143 &  & 51.0 & \textbf{52.6} \\ 
+26 & 6 &  442 &  & 26.3 & \textbf{27.2} \\ 
+27 & 4 &   60 &  & 27.8 & \textbf{28.3} \\ 
+30 & 3 & 9236 &  & \textbf{60.3} & \textbf{60.3} \\ 
+32 & 6 & 1020 &  & 79.5 & \textbf{81.1} \\ 
+33 & 4 &  200 &  & 50.5 & \textbf{68.5} \\ 
+35 & 4 & 5000 &  & \textbf{21.6} & 14.7 \\ 
+37 & 7 &  350 &  & 33.7 & \textbf{36.9} \\ 
+38 & 6 &  600 &  & \textbf{96.4} & 88.8 \\ 
 \end{tabular} 
 \end{center} 
 \end{table} 
  
  
  %% 8-50 classes
- 
    
 \begin{table} 
 \begin{center} 
-\caption{NMI in percents of clusterings by kernel k-means and k-averages for datasets of 8 to 50 classes.}
+\caption{NMI (in percents) of clusterings by kernel k-means and k-averages for datasets of 8 to 50 classes.}
 \label{tab:results-8}
 \begin{tabular}{rrrccc} 
 % & nb. & nb. &  & kernel &  \\ 
 id & classes & objects & & kernel k-means & k-averages \\ 
 %&  &  & (NMI $\times 0.01$) & (NMI $\times 0.01$) & (NMI $\times 0.01$) \\ 
 \hline 
- 1 & 50 &  905 &  & \textbf{3.6} & 3.3 \\ 
- 2 & 37 &  781 &  & \textbf{6.4} & 3.8 \\ 
- 8 & 12 &  780 &  & \textbf{13.1} & 11.3 \\ 
- 9 & 12 &  780 &  & \textbf{11.6} & 11.4 \\ 
-10 & 12 &  780 &  & \textbf{13.1} & 11.2 \\ 
-14 & 14 & 2250 &  &  9.9 & \textbf{10.0} \\ 
-16 & 14 & 2250 &  & 10.1 & \textbf{10.2} \\ 
-23 &  8 & 2400 &  & 20.9 & \textbf{21.6} \\ 
-24 & 10 & 1141 &  & 17.9 & \textbf{18.1} \\ 
-31 & 15 & 1125 &  & \textbf{11.1} &  9.8 \\ 
-36 & 25 &  905 &  & \textbf{6.0} & 5.9 \\ 
-39 &  8 & 4478 &  & \textbf{19.4} & 19.4 \\ 
-40 &  8 & 4478 &  & 22.3 & \textbf{22.4} \\ 
-41 &  8 & 4478 &  & 19.9 & \textbf{20.2} \\ 
+ 1 & 50 &  905 &  & 70.2 & \textbf{71.0} \\ 
+ 2 & 37 &  781 &  & 55.0 & \textbf{58.2} \\ 
+ 8 & 12 &  780 &  & \textbf{28.6} & 26.2 \\ 
+ 9 & 12 &  780 &  & \textbf{33.8} & 33.4 \\ 
+10 & 12 &  780 &  & 25.6 & \textbf{26.2} \\ 
+14 & 14 & 2250 &  & \textbf{72.8} & 64.3 \\ 
+16 & 14 & 2250 &  & \textbf{72.1} & 70.4 \\ 
+23 &  8 & 2400 &  & \textbf{97.4} & 87.0 \\ 
+24 & 10 & 1141 &  & 28.3 & \textbf{29.8} \\ 
+31 & 15 & 1125 &  & 69.2 & \textbf{70.2} \\ 
+36 & 25 &  905 &  & \textbf{52.5} & 51.2 \\ 
+39 &  8 & 4478 &  & 46.4 & \textbf{46.9} \\ 
+40 &  8 & 4478 &  & \textbf{45.2} & 44.2 \\ 
+41 &  8 & 4478 &  & 42.7 & \textbf{42.8} \\ 
 \end{tabular} 
 \end{center} 
 \end{table} 
 
-Kernel k-means yields a better clustering for 24 datasets out of 43, while k-averages takes the lead in 14 cases, the five remaining ones being equivalent. In most cases, the performance difference between the two is low enough that the two may be used interchangeably. Given the substantial improvement in computational complexity allowed by k-averages, especially very very large data collections, these results
+A first constatation is that most of the bi-class problems (Table~\ref{tab:results-2}) do not seem to lend themselves well to this kind of approach: kernel k-means and k-averages produce quasi-identical results, poor in most cases. Concerning the medium numbers of classes (Table~\ref{tab:results-37}), k-averages outperforms kernel k-means for 11 datasets out of 17, while kernel k-means leads for only 5. For the larger numbers of classes, the results are spread evenly, each method outperforming the other in 7 cases.
 
 \section{Conclusion}
 
-We have presented k-averages, an iterative flat clustering algorithm that operates on arbitrary similarity matrices by explicitly and directly aiming to optimize the average intra-class similarity. Having established the mathematical foundation of our proposal, including guaranteed convergence, we have thoroughly compared it with the widely used standard method, kernel k-means, showing that our algorithm converges much faster (20 times faster under ordinary conditions) and leading to better clustering results for the task of clustering times series, while also being more sparing in memory use.
-
-A particularly interesting result is that k-averages seems to yield clearly better results than kernel k-means in the case of problems with many classes (8 and more); this is confirmed both on synthetic test data and on real-life data.
-
-%ARSHIA: please discuss the potential use of the realocation procedure for online problems.
+We have presented k-averages, an iterative flat clustering algorithm that operates on arbitrary similarity matrices by explicitly and directly aiming to optimize the average intra-class similarity. Having established the mathematical foundation of our proposal, including guaranteed convergence, we have thoroughly compared it with the widely used standard method, kernel k-means, showing that our algorithm converges much faster (20 times faster under ordinary conditions) and leading to equivalent or better clustering results for the task of clustering both synthetic data and times series from a wide variety of sources, while also being more sparing in memory use.
 
 The linear updates and compensated memory access of the proposed k-average method also provide great potentials for online clustering methods, where time-series data arrive incrementally into the system, and where classes and clusters should be most often reallocated. Explicit reallocation considerations proposed in this paper pave the way for robust online clustering methods that shall be further pursued.
 
