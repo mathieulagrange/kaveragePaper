@@ -11,7 +11,7 @@ function [config, store, obs] = mktise2cluster(config, setting, data)
 % Date: 26-Aug-2014
 
 % Set behavior for debug mode
-if nargin==0, mkaTimeSeries('do', 2, 'mask', {[0], 1, 2, [9], [3], [1], 1, 1}, 'plot', 1, 'report', 'r',  'reportName', 'moved'); return; else store=[]; obs=[]; end
+if nargin==0, mkaTimeSeries('do', 2, 'mask', {[0], 1, 2, [1], [3], [1], 1, 1}, 'plot', 1, 'report', 'r',  'reportName', 'moved'); return; else store=[]; obs=[]; end
 
 expRandomSeed();
 % should generate the init now
@@ -79,16 +79,25 @@ for k=1:setting.nbRuns
         case 'random'
             clusters = ceil(rand(1, data.nbSamples)*data.nbClasses);
             nbIterations =  NaN;
+        case 'cluto'
+            matrixFileName = ['/tmp/' config.experimentName '_' setting.infoShortString '.csv'];
+            dlmwrite(matrixFileName, data.nbSamples, 'delimiter', ' ');
+            dlmwrite(matrixFileName, S, 'delimiter', ' ', '-append');
+            
+            system(['~/versioned/paperKaverages15/code/cluto-2.1.1/Linux/scluster -clmethod=' setting.cluto ' ' matrixFileName ' ' num2str(data.nbClasses)]);
+            clusters = csvread([matrixFileName '.clustering.' num2str(data.nbClasses)]);
+            intra = 0;
+            nbIterations = 0;
         otherwise
-            [clusters, log] = simpleClustering(setting.clustering(1:end-1), [outputFilePrefix '.matrix'],data.nbClasses, outputFilePrefix, init, strcmp(setting.objective, 'raw'));
-      obs.time(k) = log.time;
-      nbIterations = log.iterations;
+            [clusters, log] = simpleClustering(setting.clustering(1:end-1), [outputFilePrefix '.matrix'],data.nbClasses, outputFilePrefix, init, strcmp(setting.objective, 'raw >/dev/null'));
+            obs.time(k) = log.time;
+            nbIterations = log.iterations;
     end
     clusterSet(k, :) = clusters;
     
     metrics = clusteringMetrics(clusters, data.class);
     obs.nmi(k) = metrics.nmi;
-    obs.energy(k) = intra;
+    obs.energy(k) = sum(intra);
     obs.accuracy(k) = metrics.accuracy;
     obs.iterations(k) = nbIterations;
 end

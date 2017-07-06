@@ -2,7 +2,7 @@
 \usepackage{amsmath,amssymb}
 \usepackage{color}
 \usepackage[linesnumbered]{algorithm2e}
-\usepackage[hidelinks, colorlinks=true, linkcolor=black, citecolor=blue]{hyperref} 
+\usepackage[hidelinks, colorlinks=true, linkcolor=black, citecolor=blue]{hyperref}
 
 \newcommand{\cad}{---} % tiret cadratin
 \newcommand{\gl}[1]{``\,#1\,''} % Guillemets standard
@@ -30,11 +30,11 @@
         Mathieu Lagrange  \and
         Arshia Cont
 }
-
-%\authorrunning{Short form of author list} % if too long for running head
+%\author{}
+\authorrunning{} % if too long for running head
 
 \institute{
- Mathias Rossignol 
+ Mathias Rossignol
 \at IRCAM\\
 1, place Igor Stravinski\\
 Paris, France \\
@@ -77,6 +77,8 @@ We present an iterative flat hard clustering algorithm designed to operate on ar
 
 \keywords{clustering, similarity, non-metric data representation, time series clustering}
 
+We would like to acknowledge support for this project
+from ANR project Houle (grant ANR-11-JS03-005-01).
 
 \section{Introduction}
 
@@ -96,13 +98,13 @@ Another classical approach to the issue is to run a variant of k-means that cons
 
 Following work on kernel projection \citep{Vapnik:1995:NSL:211359}, that is, the fact that a nonlinear data transformation into some high dimensional feature space increases the probability of the linear separability of patterns within the transformed space, \citet{Girolami:2002:MKC:2325785.2326903} introduced a kernel version of the K-means algorithm, whose input is a kernel matrix $\mathcal{K}$ that must be a Gram matrix, \textit{i.e.} semi definite positive. \citet{Dhillon:2007:WGC:1313055.1313291} linked a weighted version of the kernel K-means objective to the popular spectral clustering, introducing an efficient way of solving the normalized cut objective.
 
-The kernel k-means algorithm proves to be equally useful when considering arbitrary similarity problems if special care is taken to ensure definite positiveness of the input matrix \citep{Roth:2003:OCP:960254.960291}. This follows original algorithmic considerations where vector space data is projected into high dimensional spaces using a carefully chosen kernel function. 
+The kernel k-means algorithm proves to be equally useful when considering arbitrary similarity problems if special care is taken to ensure definite positiveness of the input matrix \citep{Roth:2003:OCP:960254.960291}. This follows original algorithmic considerations where vector space data is projected into high dimensional spaces using a carefully chosen kernel function.
 
 %% Long sentence! rewritten above
 %Originally thought as considering data lying initially in a given vector space then projected in an high dimensional features space thanks to a carefully chosen kernel function, the kernel k-means algorithm proved to be equally useful when considering arbitrary similarity problems if some special care is taken to ensure definite positiveness of the input matrix (\cite{Roth:2003:OCP:960254.960291}).
 
-Despite such improvements, kernel k-means cannot be easily applied to large scale datasets without special treatments because of high algorithmic and memory access costs. 
-%Still, the complexity of the algorithm and the cost of memory  access  prevent from using the kernel k-means algorithm for large scale datasets without specific treatments. 
+Despite such improvements, kernel k-means cannot be easily applied to large scale datasets without special treatments because of high algorithmic and memory access costs.
+%Still, the complexity of the algorithm and the cost of memory  access  prevent from using the kernel k-means algorithm for large scale datasets without specific treatments.
 \citet{Chitta:2011:AKK:2020408.2020558} considered sampling of the input data, \citet{1047453} considered block storing of the input matrix, and a preclustering  approach \citet{bradley98scaling} is considered by \citet{Kulis2008} with a coarsening and refining phases as respectively a pre- and post-treatment of the actual clustering phase.
 
 We show in this paper that by using a semantically equivalent variant of the average intra-cluster similarity presented in \citep[Chapter 10.7]{Duda01}, it becomes possible to perform a computationally efficient greedy optimization \citep[Chapter 10.8]{Duda01} with guaranteed convergence. Although both of those techniques are well known, combining them is non trivial, and allows us to propose a novel hard clustering algorithm, which we call \emph{k-averages}, with the following properties:
@@ -113,9 +115,9 @@ We show in this paper that by using a semantically equivalent variant of the ave
 \item on a collection of synthetic and natural test data, its results are equivalent to those of kernel k-means, and obtained in a fraction of its computing time, particularly when paged memory is required.
 \end{itemize}
 
-The remaining of the paper is organized as follows: Section~\ref{sec:kkmeans} presents the kernel k-means objective function and the basic algorithm that minimizes this function, and Section~\ref{sec:kaverages} introduces the concepts behind the k-averages algorithm, 
-%before giving a detailed description of it in Section~\ref{sec:algo}. 
-followed by a detailed algorithmic description in Section~\ref{sec:algo}. 
+The remaining of the paper is organized as follows: Section~\ref{sec:kkmeans} presents the kernel k-means objective function and the basic algorithm that minimizes this function, and Section~\ref{sec:kaverages} introduces the concepts behind the k-averages algorithm,
+%before giving a detailed description of it in Section~\ref{sec:algo}.
+followed by a detailed algorithmic description in Section~\ref{sec:algo}.
 The complexity of the two algorithms in terms of arithmetic operations and memory access is then studied in Section \ref{sec:complexity}. The above presented properties of the proposed k-averages algorithm are then validated on synthetic controlled data in Section \ref{sec:validation} and on 43 corpora of time series in Section \ref{sec:experiments}.
 
 \section{Kernel k-means} \label{sec:kkmeans}
@@ -186,9 +188,9 @@ Finding the configuration that absolutely minimizes S (eq~\ref{eq:S}) is an NP-c
 	\SetAlgoLined
 	\KwData{number of objects $N$, number of classes $C$, kernel matrix $\mathcal{K}$}
 	\KwResult{label vector $L$ defining a partition of the objects into $C$ classes}
-	\BlankLine	
+	\BlankLine
 	\textbf{Initialization:} fill L with random values in $[1..C]$\;
-	\BlankLine	
+	\BlankLine
 	\While {$L$ is modified} {
 		\For {$n \leftarrow 1$ to $N$} {
 			\For {$c \leftarrow 1$ to $C$} {
@@ -213,13 +215,13 @@ Due to its simplicity, however, the objective function cannot be simply \gl{plug
 
 \subsection{Conventions and objective function}
 
-In addition to the notations presented above, we index hereon the set of elements belonging to a given cluster $c_k$ as $c_k = \left\{o_{k1}, \ldots, o_{kN_k}\right\}$. 
-For simplicity, we omit the first index and note $c = \left\{o_1, \ldots, o_{N_c}\right\}$ when considering a single class. 
+In addition to the notations presented above, we index hereon the set of elements belonging to a given cluster $c_k$ as $c_k = \left\{o_{k1}, \ldots, o_{kN_k}\right\}$.
+For simplicity, we omit the first index and note $c = \left\{o_1, \ldots, o_{N_c}\right\}$ when considering a single class.
 %To simplify below, when we're simply considering one class, no matter
 %which, we shall omit the first index and write $c = \left\{o_1, \ldots, o_{N_c}\right\}$.
 
 The similarity between objects shall be written $s\left(o_i, o_j\right)$.
-%Let us 
+%Let us
 We extend the notation $s$ to the \emph{similarity of an object to a
   class} defined as the average similarity of an object
 with all objects of the class. $s(o,c)$ accepts two definitions,
@@ -261,11 +263,11 @@ Algorithm~\ref{algo:naive-kaverages} presents a method that simply moves each ob
 	\SetAlgoLined
 	\KwData{number of objects $N$, number of classes $C$, similarity matrix $\mathcal{S}$}
 	\KwResult{label vector $L$ defining a partition of the objects into $C$ classes}
-	\BlankLine	
-	\textbf{Initialization:} 
+	\BlankLine
+	\textbf{Initialization:}
 		Fill L with random values in $[1..C]$\;
 		Compute initial object-class similarities $S$ following eq~\ref{eq:soc_inclass} or eq~\ref{eq:soc_notinclass}\;
-	\BlankLine	
+	\BlankLine
 	\While {$L$ is modified} {
 		\For {$i \leftarrow 1$ to $N$} {
 			previousClass $\leftarrow L_i$\;
@@ -282,7 +284,7 @@ Algorithm~\ref{algo:naive-kaverages} presents a method that simply moves each ob
 	\caption{The naive k-averages algorithm.}
 \end{algorithm}
 
-To ensure global convergence, we need to compute the impact on the global objective function of moving one object from one class to another. Using such formulation and performing only reallocation that have a positive impact, the convergence of such an iterative algorithm is guaranteed. 
+To ensure global convergence, we need to compute the impact on the global objective function of moving one object from one class to another. Using such formulation and performing only reallocation that have a positive impact, the convergence of such an iterative algorithm is guaranteed.
 
 \subsection{Impact of object reallocation on class quality}
 
@@ -419,12 +421,12 @@ The full description of k-averages is given in Algorithm~\ref{algo:kaverages}.
 	\SetAlgoLined
 	\KwData{number of objects $N$, number of classes $C$, similarity matrix $\mathcal{S}$}
 	\KwResult{label vector $L$ defining a partition of the objects into $C$ classes}
-	\BlankLine	
+	\BlankLine
 	\textbf{Initialization:}
 		Fill L with random values in $[1..C]$\;
 		Compute initial object-class similarities $S$ following eq~\ref{eq:soc_inclass} or eq~\ref{eq:soc_notinclass}\;
 		Compute initial class qualities $\mathcal{Q}$ following eq~\ref{eq:classQuality}\;
-	\BlankLine	
+	\BlankLine
 	\While {$L$ is modified} {
 		\For {$i \leftarrow 1$ to $N$} {
 			previousClass $\leftarrow L_i$\;
@@ -473,10 +475,10 @@ Algorithm~\ref{algo:kkmeans} thus becomes Algorithm~\ref{algo:kkmeans_optim}, wh
 	\SetAlgoLined
 	\KwData{number of objects $N$, number of classes $C$, kernel matrix $\mathcal{K}$}
 	\KwResult{label vector $L$ defining a partition of the objects into $C$ classes}
-	\BlankLine	
+	\BlankLine
 	\textbf{Initialization:}
 	fill L with random values in $[1..C]$\;
-	\BlankLine	
+	\BlankLine
 	\While {$L$ is modified} {
 	    \For {$c \leftarrow 1$ to $C$} {
 	        Compute $M_c$ following eq~\ref{eq:mc} \label{algline:kkmeans_imp_mc}
@@ -509,14 +511,14 @@ To go further in this analysis, we display on Figure~\ref{fig:totalMoved}  the t
 
 \begin{figure}
 \center
-\includegraphics[width = .65\textwidth]{figures/iterMove.png} 
+\includegraphics[width = .65\textwidth]{figures/iterMove.png}
 \caption{Number of moved objects per iteration when clustering a variety of datasets with the k-averages algorithm, normalized by the total number of objects to cluster. The datasets used to create this figure are the real-life time series data that we employ for experimental validation, \textit{cf.} Section~\ref{sec:experiments}.}
 \label{fig:moved}
 \end{figure}
 
 \begin{figure}
 \center
-\includegraphics[width = .65\textwidth]{figures/sampleMove.png} 
+\includegraphics[width = .65\textwidth]{figures/sampleMove.png}
 \caption{Total number of object reallocations over a run of the k-averages algorithm, plotted against the number of objects to be clustered. The datasets used to create this figure are the real-life time series data that we employ for experimental validation, \textit{cf.} Section~\ref{sec:experiments}.}
 \label{fig:totalMoved}
 \end{figure}
@@ -551,7 +553,7 @@ In this paper, for simplicity and accessibility, only the NMI is considered for 
 
 \begin{figure}
 \center
-\includegraphics[width=.7\textwidth]{figures/synthetic.pdf} 
+\includegraphics[width=.7\textwidth]{figures/synthetic.pdf}
 \caption{NMI of kernel k-means (*) and k-averages (o) clustering relative to ground truth as a function of the \gl{spread} of those classes for synthetic data sets of 5 and 40 classes, displayed in dashed and solid lines, respectively.}
 \label{fig:synth_perf}
 \end{figure}
@@ -568,7 +570,7 @@ Figure~\ref{fig:timing} shows the average time spent by kernel k-means and k-ave
 
 \begin{figure}
 \center
-\includegraphics[width= .7\textwidth]{figures/simpleSwap.png} 
+\includegraphics[width= .7\textwidth]{figures/simpleSwap.png}
 \caption{Average computation time of the kernel k-means (*) and kaverages (o) algorithms on computers with 2 GB (solid line) and 32 GB (dashed line) of RAM, respectively. The \gl{running time} axis follows a logarithmic scale.}
 \label{fig:timing}
 \end{figure}
@@ -586,7 +588,7 @@ Effective clustering of time series using the DTW measure require similarity bas
 
 \subsection{Datasets}
 
-To compare quality of clusterings obtained by the considered algorithms, we consider a large collection of 43 time series datasets created by many laboratories all over the world and compiled by Prof. Keogh \footnote{Available at: \url{www.cs.ucr.edu/~eamonn/time_series_data}}. Thus, while all the experiments presented here are performed on time series (chosen for being a good example of a data type requiring similarity-based clustering, as opposed to a simple Euclidean approach), the great variety in the sources and semantics of said series (bio-informatics, linguistics, astronomy, gesture modeling, chemistry\ldots{}) gives this validation a wide foundation. Statistics about the morphology of those datasets are summarized in Table~\ref{tab:dbs}. 
+To compare quality of clusterings obtained by the considered algorithms, we consider a large collection of 43 time series datasets created by many laboratories all over the world and compiled by Prof. Keogh \footnote{Available at: \url{www.cs.ucr.edu/~eamonn/time_series_data}}. Thus, while all the experiments presented here are performed on time series (chosen for being a good example of a data type requiring similarity-based clustering, as opposed to a simple Euclidean approach), the great variety in the sources and semantics of said series (bio-informatics, linguistics, astronomy, gesture modeling, chemistry\ldots{}) gives this validation a wide foundation. Statistics about the morphology of those datasets are summarized in Table~\ref{tab:dbs}.
 In the results described in the next sections, datasets are refered by a numerical id for the sake of brevity; the correspondence between those ids and the actual names of the datasets is shown on Table \ref{didtNoda1}.
 
 \begin{table}
@@ -611,96 +613,96 @@ As in our previous experiments with synthetic data, we choose here the normalize
 
 %% BI-CLASS
 
-\begin{table} 
-\begin{center} 
+\begin{table}
+\begin{center}
 \caption{NMI (in percents) of clusterings by kernel k-means and k-averages for bi-class datasets.}
-\label{tab:results-2} 
-\begin{tabular}{rrrccc} 
-% & nb. & nb. &  & kernel &  \\ 
-id & classes & objects & & kernel k-means & k-averages \\ 
-%&  &  & (NMI $\times 0.01$) & (NMI $\times 0.01$) & (NMI $\times 0.01$) \\ 
-\hline 
- 7 & 2 &   56 &  & \textbf{4.0} & \textbf{4.0} \\ 
-12 & 2 &  200 &  & \textbf{14.6} & 14.6 \\ 
-13 & 2 &  884 &  & \textbf{2.5} & 2.5 \\ 
-17 & 2 &  200 &  & \textbf{0.0} & \textbf{0.0} \\ 
-20 & 2 & 1096 &  & \textbf{0.9} & \textbf{0.9} \\ 
-21 & 2 &  121 &  & \textbf{11.1} & \textbf{11.1} \\ 
-25 & 2 & 1272 &  & \textbf{49.3} & 48.2 \\ 
-28 & 2 &  621 &  & \textbf{56.2} & \textbf{56.2} \\ 
-29 & 2 &  980 &  & \textbf{21.4} & \textbf{21.4} \\ 
-34 & 2 & 1162 &  & \textbf{0.0} & \textbf{0.0} \\ 
-42 & 2 & 7164 &  & \textbf{0.0} & \textbf{0.0} \\ 
-43 & 2 & 3300 &  & \textbf{0.3} & 0.0 \\ 
-\end{tabular} 
-\end{center} 
-\end{table} 
+\label{tab:results-2}
+\begin{tabular}{rrrccc}
+% & nb. & nb. &  & kernel &  \\
+id & classes & objects & & kernel k-means & k-averages \\
+%&  &  & (NMI $\times 0.01$) & (NMI $\times 0.01$) & (NMI $\times 0.01$) \\
+\hline
+ 7 & 2 &   56 &  & \textbf{4.0} & \textbf{4.0} \\
+12 & 2 &  200 &  & \textbf{14.6} & 14.6 \\
+13 & 2 &  884 &  & \textbf{2.5} & 2.5 \\
+17 & 2 &  200 &  & \textbf{0.0} & \textbf{0.0} \\
+20 & 2 & 1096 &  & \textbf{0.9} & \textbf{0.9} \\
+21 & 2 &  121 &  & \textbf{11.1} & \textbf{11.1} \\
+25 & 2 & 1272 &  & \textbf{49.3} & 48.2 \\
+28 & 2 &  621 &  & \textbf{56.2} & \textbf{56.2} \\
+29 & 2 &  980 &  & \textbf{21.4} & \textbf{21.4} \\
+34 & 2 & 1162 &  & \textbf{0.0} & \textbf{0.0} \\
+42 & 2 & 7164 &  & \textbf{0.0} & \textbf{0.0} \\
+43 & 2 & 3300 &  & \textbf{0.3} & 0.0 \\
+\end{tabular}
+\end{center}
+\end{table}
 
 For ease of readability and comparison, the presented results are split into 3 tables. Table~\ref{tab:results-2} lists the results obtained on bi-class datasets, \textit{i.e.} the datasets annotated in terms of presence or absence of a given property; Table~\ref{tab:results-37} concerns the datasets with a small number of classes (from 3 to 7); and Table~\ref{tab:results-8} focuses the datasets with a larger number of classes (from 8 to 50).
 
 For each experiment, the result of the best performing method is marked in bold.
- 
+
  %% 3-7 classes
-   
-\begin{table} 
-\begin{center} 
+
+\begin{table}
+\begin{center}
 \caption{NMI (in percents) of clusterings by kernel k-means and k-averages for datasets of 3 to 7 classes.}
 \label{tab:results-37}
-\begin{tabular}{rrrccc} 
-% & nb. & nb. &  & kernel &  \\ 
-id & classes & objects & & kernel k-means & k-averages \\ 
-%&  &  & (NMI $\times 0.01$) & (NMI $\times 0.01$) & (NMI $\times 0.01$) \\ 
-\hline 
- 3 & 5 &   60 &  & 35.1 & \textbf{38.3} \\ 
- 4 & 3 &  930 &  & 34.2 & \textbf{54.8} \\ 
- 5 & 3 & 4307 &  & 0.1 & \textbf{0.4} \\ 
- 6 & 4 & 1420 &  & \textbf{25.2} & 22.5 \\ 
-11 & 4 &  322 &  & \textbf{85.0} & 83.2 \\ 
-15 & 4 &  112 &  & \textbf{75.4} & 69.5 \\ 
-18 & 5 &  463 &  & 8.7 & \textbf{9.2} \\ 
-19 & 7 &  650 &  & 7.3 & \textbf{7.3} \\ 
-22 & 7 &  143 &  & 51.0 & \textbf{52.6} \\ 
-26 & 6 &  442 &  & 26.3 & \textbf{27.2} \\ 
-27 & 4 &   60 &  & 27.8 & \textbf{28.3} \\ 
-30 & 3 & 9236 &  & \textbf{60.3} & \textbf{60.3} \\ 
-32 & 6 & 1020 &  & 79.5 & \textbf{81.1} \\ 
-33 & 4 &  200 &  & 50.5 & \textbf{68.5} \\ 
-35 & 4 & 5000 &  & \textbf{21.6} & 14.7 \\ 
-37 & 7 &  350 &  & 33.7 & \textbf{36.9} \\ 
-38 & 6 &  600 &  & \textbf{96.4} & 88.8 \\ 
-\end{tabular} 
-\end{center} 
-\end{table} 
- 
- 
+\begin{tabular}{rrrccc}
+% & nb. & nb. &  & kernel &  \\
+id & classes & objects & & kernel k-means & k-averages \\
+%&  &  & (NMI $\times 0.01$) & (NMI $\times 0.01$) & (NMI $\times 0.01$) \\
+\hline
+ 3 & 5 &   60 &  & 35.1 & \textbf{38.3} \\
+ 4 & 3 &  930 &  & 34.2 & \textbf{54.8} \\
+ 5 & 3 & 4307 &  & 0.1 & \textbf{0.4} \\
+ 6 & 4 & 1420 &  & \textbf{25.2} & 22.5 \\
+11 & 4 &  322 &  & \textbf{85.0} & 83.2 \\
+15 & 4 &  112 &  & \textbf{75.4} & 69.5 \\
+18 & 5 &  463 &  & 8.7 & \textbf{9.2} \\
+19 & 7 &  650 &  & 7.3 & \textbf{7.3} \\
+22 & 7 &  143 &  & 51.0 & \textbf{52.6} \\
+26 & 6 &  442 &  & 26.3 & \textbf{27.2} \\
+27 & 4 &   60 &  & 27.8 & \textbf{28.3} \\
+30 & 3 & 9236 &  & \textbf{60.3} & \textbf{60.3} \\
+32 & 6 & 1020 &  & 79.5 & \textbf{81.1} \\
+33 & 4 &  200 &  & 50.5 & \textbf{68.5} \\
+35 & 4 & 5000 &  & \textbf{21.6} & 14.7 \\
+37 & 7 &  350 &  & 33.7 & \textbf{36.9} \\
+38 & 6 &  600 &  & \textbf{96.4} & 88.8 \\
+\end{tabular}
+\end{center}
+\end{table}
+
+
  %% 8-50 classes
-   
-\begin{table} 
-\begin{center} 
+
+\begin{table}
+\begin{center}
 \caption{NMI (in percents) of clusterings by kernel k-means and k-averages for datasets of 8 to 50 classes.}
 \label{tab:results-8}
-\begin{tabular}{rrrccc} 
-% & nb. & nb. &  & kernel &  \\ 
-id & classes & objects & & kernel k-means & k-averages \\ 
-%&  &  & (NMI $\times 0.01$) & (NMI $\times 0.01$) & (NMI $\times 0.01$) \\ 
-\hline 
- 1 & 50 &  905 &  & 70.2 & \textbf{71.0} \\ 
- 2 & 37 &  781 &  & 55.0 & \textbf{58.2} \\ 
- 8 & 12 &  780 &  & \textbf{28.6} & 26.2 \\ 
- 9 & 12 &  780 &  & \textbf{33.8} & 33.4 \\ 
-10 & 12 &  780 &  & 25.6 & \textbf{26.2} \\ 
-14 & 14 & 2250 &  & \textbf{72.8} & 64.3 \\ 
-16 & 14 & 2250 &  & \textbf{72.1} & 70.4 \\ 
-23 &  8 & 2400 &  & \textbf{97.4} & 87.0 \\ 
-24 & 10 & 1141 &  & 28.3 & \textbf{29.8} \\ 
-31 & 15 & 1125 &  & 69.2 & \textbf{70.2} \\ 
-36 & 25 &  905 &  & \textbf{52.5} & 51.2 \\ 
-39 &  8 & 4478 &  & 46.4 & \textbf{46.9} \\ 
-40 &  8 & 4478 &  & \textbf{45.2} & 44.2 \\ 
-41 &  8 & 4478 &  & 42.7 & \textbf{42.8} \\ 
-\end{tabular} 
-\end{center} 
-\end{table} 
+\begin{tabular}{rrrccc}
+% & nb. & nb. &  & kernel &  \\
+id & classes & objects & & kernel k-means & k-averages \\
+%&  &  & (NMI $\times 0.01$) & (NMI $\times 0.01$) & (NMI $\times 0.01$) \\
+\hline
+ 1 & 50 &  905 &  & 70.2 & \textbf{71.0} \\
+ 2 & 37 &  781 &  & 55.0 & \textbf{58.2} \\
+ 8 & 12 &  780 &  & \textbf{28.6} & 26.2 \\
+ 9 & 12 &  780 &  & \textbf{33.8} & 33.4 \\
+10 & 12 &  780 &  & 25.6 & \textbf{26.2} \\
+14 & 14 & 2250 &  & \textbf{72.8} & 64.3 \\
+16 & 14 & 2250 &  & \textbf{72.1} & 70.4 \\
+23 &  8 & 2400 &  & \textbf{97.4} & 87.0 \\
+24 & 10 & 1141 &  & 28.3 & \textbf{29.8} \\
+31 & 15 & 1125 &  & 69.2 & \textbf{70.2} \\
+36 & 25 &  905 &  & \textbf{52.5} & 51.2 \\
+39 &  8 & 4478 &  & 46.4 & \textbf{46.9} \\
+40 &  8 & 4478 &  & \textbf{45.2} & 44.2 \\
+41 &  8 & 4478 &  & 42.7 & \textbf{42.8} \\
+\end{tabular}
+\end{center}
+\end{table}
 
 A first constatation is that most of the bi-class problems (Table~\ref{tab:results-2}) do not seem to lend themselves well to this kind of approach: kernel k-means and k-averages produce quasi-identical results, poor in most cases. Concerning the medium numbers of classes (Table~\ref{tab:results-37}), k-averages outperforms kernel k-means for 11 datasets out of 17, while kernel k-means leads for only 5. For the larger numbers of classes, the results are spread evenly, each method outperforming the other in 7 cases.
 
@@ -715,9 +717,9 @@ The linear updates and compensated memory access of the proposed k-average metho
 
 \section{Acknowledgments}
 We would like to acknowledge support for this project
-from ANR project Houle (grant ANR-11-JS03-005-01)
+from ANR project Houle (grant ANR-11-JS03-005-01).
 
-\bibliographystyle{aps-nameyear}  
+\bibliographystyle{aps-nameyear}
 \bibliography{bib}
 
 
@@ -748,63 +750,63 @@ from ANR project Houle (grant ANR-11-JS03-005-01)
 
 \section{Description of the datasets}
 \label{sec:appendix}
-  
+
 \begin{table} [h!]
 \begin{center}
-\caption{Description of the time series datasets used for evaluation.} 
-\label{didtNoda1}  
-\small 
- \setlength{\tabcolsep}{.16667em} 
-\begin{tabular}{lccc} 
-name & id & number of classes & number of samples \\ 
-\hline 
-50words &  1 & 50 &  905 \\ 
-Adiac &  2 & 37 &  781 \\ 
-Beef &  3 &  5 &   60 \\ 
-CBF &  4 &  3 &  930 \\ 
-ChlorineConcentration &  5 &  3 & 4307 \\ 
-CinC\_ECG\_torso &  6 &  4 & 1420 \\ 
-Coffee &  7 &  2 &   56 \\ 
-Cricket\_X &  8 & 12 &  780 \\ 
-Cricket\_Y &  9 & 12 &  780 \\ 
-Cricket\_Z & 10 & 12 &  780 \\ 
-DiatomSizeReduction & 11 &  4 &  322 \\ 
-ECG200 & 12 &  2 &  200 \\ 
-ECGFiveDays & 13 &  2 &  884 \\ 
-FaceAll & 14 & 14 & 2250 \\ 
-FaceFour & 15 &  4 &  112 \\ 
-FacesUCR & 16 & 14 & 2250 \\ 
-Gun\_Point & 17 &  2 &  200 \\ 
-Haptics & 18 &  5 &  463 \\ 
-InlineSkate & 19 &  7 &  650 \\ 
-ItalyPowerDemand & 20 &  2 & 1096 \\ 
-Lighting2 & 21 &  2 &  121 \\ 
-Lighting7 & 22 &  7 &  143 \\ 
-MALLAT & 23 &  8 & 2400 \\ 
-MedicalImages & 24 & 10 & 1141 \\ 
-MoteStrain & 25 &  2 & 1272 \\ 
-OSULeaf & 26 &  6 &  442 \\ 
-OliveOil & 27 &  4 &   60 \\ 
-SonyAIBORobotSurface & 28 &  2 &  621 \\ 
-SonyAIBORobotSurfaceII & 29 &  2 &  980 \\ 
-StarLightCurves & 30 &  3 & 9236 \\ 
-SwedishLeaf & 31 & 15 & 1125 \\ 
-Symbols & 32 &  6 & 1020 \\ 
-Trace & 33 &  4 &  200 \\ 
-TwoLeadECG & 34 &  2 & 1162 \\ 
-Two\_Patterns & 35 &  4 & 5000 \\ 
-WordsSynonyms & 36 & 25 &  905 \\ 
-fish & 37 &  7 &  350 \\ 
-synthetic\_control & 38 &  6 &  600 \\ 
-uWaveGestureLibrary\_X & 39 &  8 & 4478 \\ 
-uWaveGestureLibrary\_Y & 40 &  8 & 4478 \\ 
-uWaveGestureLibrary\_Z & 41 &  8 & 4478 \\ 
-wafer & 42 &  2 & 7164 \\ 
-yoga & 43 &  2 & 3300 \\ 
-\end{tabular} 
-\end{center} 
-\end{table} 
- 
+\caption{Description of the time series datasets used for evaluation.}
+\label{didtNoda1}
+\small
+ \setlength{\tabcolsep}{.16667em}
+\begin{tabular}{lccc}
+name & id & number of classes & number of samples \\
+\hline
+50words &  1 & 50 &  905 \\
+Adiac &  2 & 37 &  781 \\
+Beef &  3 &  5 &   60 \\
+CBF &  4 &  3 &  930 \\
+ChlorineConcentration &  5 &  3 & 4307 \\
+CinC\_ECG\_torso &  6 &  4 & 1420 \\
+Coffee &  7 &  2 &   56 \\
+Cricket\_X &  8 & 12 &  780 \\
+Cricket\_Y &  9 & 12 &  780 \\
+Cricket\_Z & 10 & 12 &  780 \\
+DiatomSizeReduction & 11 &  4 &  322 \\
+ECG200 & 12 &  2 &  200 \\
+ECGFiveDays & 13 &  2 &  884 \\
+FaceAll & 14 & 14 & 2250 \\
+FaceFour & 15 &  4 &  112 \\
+FacesUCR & 16 & 14 & 2250 \\
+Gun\_Point & 17 &  2 &  200 \\
+Haptics & 18 &  5 &  463 \\
+InlineSkate & 19 &  7 &  650 \\
+ItalyPowerDemand & 20 &  2 & 1096 \\
+Lighting2 & 21 &  2 &  121 \\
+Lighting7 & 22 &  7 &  143 \\
+MALLAT & 23 &  8 & 2400 \\
+MedicalImages & 24 & 10 & 1141 \\
+MoteStrain & 25 &  2 & 1272 \\
+OSULeaf & 26 &  6 &  442 \\
+OliveOil & 27 &  4 &   60 \\
+SonyAIBORobotSurface & 28 &  2 &  621 \\
+SonyAIBORobotSurfaceII & 29 &  2 &  980 \\
+StarLightCurves & 30 &  3 & 9236 \\
+SwedishLeaf & 31 & 15 & 1125 \\
+Symbols & 32 &  6 & 1020 \\
+Trace & 33 &  4 &  200 \\
+TwoLeadECG & 34 &  2 & 1162 \\
+Two\_Patterns & 35 &  4 & 5000 \\
+WordsSynonyms & 36 & 25 &  905 \\
+fish & 37 &  7 &  350 \\
+synthetic\_control & 38 &  6 &  600 \\
+uWaveGestureLibrary\_X & 39 &  8 & 4478 \\
+uWaveGestureLibrary\_Y & 40 &  8 & 4478 \\
+uWaveGestureLibrary\_Z & 41 &  8 & 4478 \\
+wafer & 42 &  2 & 7164 \\
+yoga & 43 &  2 & 3300 \\
+\end{tabular}
+\end{center}
+\end{table}
+
 
 
 

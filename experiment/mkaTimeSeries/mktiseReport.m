@@ -6,7 +6,7 @@ function config = mktiseReport(config)
 % Copyright: Mathieu Lagrange
 % Date: 26-Aug-2014
 
-if nargin==0, mkaTimeSeries('report', 'rcv',  'reportName', 'paper'); return; end
+if nargin==0, mkaTimeSeries('report', 'rcv',  'reportName', 'cluto'); return; end
 
 [dataSets, nbDataSets] = expFactorValues(config, 'dataSet');
 
@@ -14,6 +14,23 @@ if nargin==0, mkaTimeSeries('report', 'rcv',  'reportName', 'paper'); return; en
 % RUN KKMEANS with factor one only
 
 switch config.reportName
+    case 'cluto'
+        class2 = [7 12 13 17 20 21 25 28 29 34 42 43];
+        class37 = [3 4 5 6 11 15 18 19 22 26 27 30 32 33 35 37 38];
+        class8 = [1 2 8 9 10 14 16 23 24 31 36 39 40 41];
+        classes = {class2 class37 class8};
+        classesNames = {'2', '37', '8'};
+        
+        nbRuns = 4;
+        norm =2;
+            
+        for k=1 :length(classes)
+           % config = expExpose(config, 'l', 'mask', {classes{k} 1 2 0 0 0 2}, 'step', 1, 'highlight', -1, ...
+           %     'obs', [1 3 4], 'caption', 'Morphology of the datasets', 'orientation', 'v', 'precision', 0, 'noFactor', 1);
+            config = expExpose(config, 'l', 'mask', {classes{k} 1 2 [1 2 10] [3] [1] 0 1 1}, 'step', 2, ...
+                'highlight', 0, 'highlightColor', -1, 'highlightStyle', 'Best', 'obs', 4, 'percent', 2 ...
+               , 'expand', 'dataSet', 'orientation', 'vi'); % 'orientation', 'vi', 'precision', 1, 'expand', 'dataSet', 'noObservation', 1, 'orderSetting', [2 1], 'mergeDisplay', 'h', 'save', ['methods' classesNames{k}], 'fontSize', 'small');
+        end
     case 'appendix'
                config = expExpose(config, 'l', 'mask', {0 1 2 0 0 0 2}, 'step', 1, 'highlight', -1, ...
                 'obs', [1 3 4], 'caption', 'Morphology of the datasets', 'orientation', 'v', 'precision', 0, 'save', 'appendix', 'fontSize', 'small');
