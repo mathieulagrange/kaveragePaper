@@ -1,0 +1,88 @@
+\documentclass[10pt]{article}
+
+\title{Reply to reviewers concerning submission PONE-D-17-23730: "Efficient similarity-based data clustering by optimal object to cluster reallocation"}
+
+\begin{document}
+
+\maketitle
+
+As a preamble, we would like to thank the editor and the reviewer for their comments and suggestions. Following these comments, we made several changes to the article, which are summarized here. The next sections list our answers to each of the reviewer’s comments, with references to the revised manuscript (page, column, and paragraph) where appropriate.
+
+
+\section{Tasks}
+
+\begin{enumerate}
+
+\item write rebuttal letter
+\item diff pdf
+\item manuscript pdf
+
+\end{enumerate}
+
+\section{Answers to Reviewer I}
+
+\begin{enumerate}
+
+\item \emph{Some points are not clear, and there are many English mistakes. For example,
+(1) an maximization of --> a maximization of (abstract)
+(2) relaxing the conditions --> what are "the conditions" here? (abstract)
+(3) our simple non-quadratic updates makes --> make (Section 4)
+(4) times series --> time series (Section 7)}
+
+$\rightarrow$
+
+\item \emph{The contribution of this manuscript is not clear (or not sufficient). It is a well-known fact that minimizing the sum of squared distances between a data point and its cluster center can be converted into a form of maximizing the within-cluster similarity as noted in Duda et al. (Chapter 10.7). Also, considering the actual change of the objective function leads to a natural extension of the batch k-means as described in Duda et al. (Chapter 10.8). These two well-known ideas seem to be the main ideas of the proposed algorithm.}
+
+$\rightarrow$
+
+\item \emph{In Section 7, the proposed algorithm has been compared with only one baseline method (kernel k-means). Since there are a number of clustering algorithms, other state-of-the-art clustering algorithms also should be compared with the proposed algorithm to show the usefulness of the method. Also, in Section 7.3, the run time of the methods should be presented.}
+
+$\rightarrow$
+
+\end{enumerate}
+
+\section{Answers to Reviewer II}
+
+
+\begin{enumerate}
+
+\item \emph{The flexibility to use arbitrary similarity measures is a novel contribution.}
+
+$\rightarrow$
+
+\item \emph{Exploiting only points that change cluster membership is a clever idea and leads to lower complexity.}
+
+$\rightarrow$
+
+
+\item \emph{Convergence Issues: Permitting arbitrary similarity measures raises questions about convergence. In case of kernel k-means, the similarity measure is obtained using a positive definite kernel. Such a kernel implicitly assumes a Hilbert space, where Euclidean distances can be computed by virtue of inner products. Such a mapping through kernel functions is the premise for convergence of the basic iterative MSE procedure described in Duda \& Hart Ch 10.8. As arbitrary similarity measures are permitted, it is not clear how the convergence properties are impacted. Intuitively and empirically (based on Fig. 1) it seems that convergence should happen, however, unfortunately the paper does not discuss the similarity measure that is used for experiments in Fig. 1. Do arbitrary similarity measures always converge?}
+
+$\rightarrow$
+
+\item \emph{Sensitivity to clustering performance:
+Duda \& Hart (in Ch. 10.8) point out that the iterative optimization scheme is more susceptible to local minimum. I expect this effect to be exacerbated when arbitrary similarity measures are used. However, this has not been thoroughly investigated.}
+
+$\rightarrow$
+
+\item \emph{Initialization of the algorithm:
+In Alg. 3, the initialization 'L', i.e., the initial point-cluster assignment is done randomly. This is not the case in kernel k-means. It is surprising that despite the random initialization, the performance of k-average clustering matches the kernel k-means in many cases. As in the case of k-means and its iterative version, I would expect that the final solution depends on the initialization. Randomly initializing cluster labels ignores any notion of similarity between points, and are likely to lead to local poor minima in the overall optimization. This fact has been completely ignored and not investigated at all in the paper.}
+
+$\rightarrow$
+
+\item \emph{Writing and Grammar: The paper is very poorly written. There are several grammatical mistakes (e.g., 'an maximization' in the abstract. There are several more throughout the paper).}
+
+$\rightarrow$
+
+\item \emph{Notation and technical errors:
+The notation is not clear. For example, in (1), the notation used for vector multiplication (inner and outer products) is incorrect. On page 7, the statement that $\mathcal{Q}$ is strictly equivalent to the average point to centroid similarity' is not true in general, but only in case when the similarity can be interpreted as an inner product. If this is not the case, I suppose a proof to back this statement up is necessary. $\delta_o$ in (9) is not introduced.}
+
+$\rightarrow$
+
+\item \emph{I would expect that comparisons with spectral clustering in terms of quality of clustering should also be included. Spectral clustering also permits arbitrary similarity measures and thus is directly relevant to the proposed work.}
+
+$\rightarrow$
+
+\end{enumerate}
+
+
+\end{document}
