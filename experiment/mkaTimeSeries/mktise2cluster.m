@@ -11,7 +11,7 @@ function [config, store, obs] = mktise2cluster(config, setting, data)
 % Date: 26-Aug-2014
 
 % Set behavior for debug mode
-if nargin==0, mkaTimeSeries('do', 2, 'mask', {[0], 1, 2, [1], [3], [1], 1, 1}, 'plot', 1, 'report', 'r',  'reportName', 'moved'); return; else store=[]; obs=[]; end
+if nargin==0, mkaTimeSeries('do', 2, 'mask', {[1], 1, 2, [1], [3], [1], 1, 1}); return; else store=[]; obs=[]; end
 
 expRandomSeed();
 % should generate the init now
@@ -65,9 +65,9 @@ for k=1:setting.nbRuns
             end
             warning on all
         case 'kkMeans1'
-            [clusters, intra, nbIterations conv] = knkmeans(S, init, setting.nbIterations, 1);
+            [clusters, intra, nbIterations] = knkmeans(S, init, setting.nbIterations, 1);
         case 'kkMeans'
-            [clusters, intra, nbIterations conv] = knkmeans(S, init, setting.nbIterations);
+            [clusters, intra, nbIterations] = knkmeans(S, init, setting.nbIterations);
             
         case 'kAverages'
             [clusters, nbMoved] = mka(S, data.nbClasses, setting.objective, setting.strategy, init, setting.nbIterations);
@@ -88,10 +88,23 @@ for k=1:setting.nbRuns
             clusters = csvread([matrixFileName '.clustering.' num2str(data.nbClasses)]);
             intra = 0;
             nbIterations = 0;
+        case 'sc'
+            [C, L, U] = SpectralClustering(S, data.nbClasses, 3);
+            % prepare init
+            options = statset();
+            options.MaxIter =  setting.nbIterations;
+            for l=1:data.nbClasses
+                centroids(l, :) = mean(U(init==l, :));
+            end
+            
+            clusters = kmeans(U, data.nbClasses, 'options', options, 'start', centroids, 'emptyaction', 'singleton');
+         intra =  energy(S, clusters);
+         nbIterations = setting.nbIterations;
         otherwise
             [clusters, log] = simpleClustering(setting.clustering(1:end-1), [outputFilePrefix '.matrix'],data.nbClasses, outputFilePrefix, init, strcmp(setting.objective, 'raw >/dev/null'));
             obs.time(k) = log.time;
             nbIterations = log.iterations;
+             intra =  energy(S, clusters);
     end
     clusterSet(k, :) = clusters;
     
