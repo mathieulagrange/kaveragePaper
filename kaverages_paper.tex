@@ -518,7 +518,7 @@ To go further in this analysis, we display on Figure~\ref{fig:totalMoved}  the t
 \begin{figure}
 \center
 \includegraphics[width = .65\textwidth]{figures/iterMove.png}
-\caption{Number of moved objects per iteration when clustering a variety of datasets with the k-averages algorithm, normalized by the total number of objects to cluster. The datasets used to create this figure are the real-life time series data that we employ for experimental validation, \textit{cf.} Section~\ref{sec:experiments}.}
+\caption{Number of moved objects per iteration when clustering a variety of datasets with the k-averages algorithm, normalized by the total number of objects to cluster. The datasets used to create this figure are the real-life time series data that we employ for experimental validation evalauted under the Dynamic Time Warping (DTW) similarity measure, \textit{cf.} Section~\ref{sec:experiments}.}
 \label{fig:moved}
 \end{figure}
 
@@ -613,7 +613,7 @@ time series length & 24 & 372 $\pm$ 400 & 1882 \\
 
 For each dataset, since we perform clustering, and not supervised learning, the training and testing data are joined. DTW similarities are computed using the implementation provided by Prof. Ellis \footnote{Available at: \url{http://www.ee.columbia.edu/~dpwe/resources/matlab/dtw}} with default parameters.
 
-As in our previous experiments with synthetic data, we choose here the normalized mutual information as measure of clustering quality; clustering is done by requesting a number of clusters equal to the actual number of classes in the dataset, and repeated 200 times with varying initial conditions, each algorithm being run with the exact same initial assignments. Of the 200 clusterings thus produced, we keep the one that shows the best convergence (\emph{i.e.} has the maximum final value of its objective function, as reported by the algorithm) and compute the NMI of that result with the ground truth.
+As in our previous experiments with synthetic data, we choose here the normalized mutual information as measure of clustering quality; clustering is done by requesting a number of clusters equal to the actual number of classes in the dataset, and repeated 200 times with varying initial conditions, each algorithm being run with the exact same initial assignments. For the 200 clusterings thus produced, we compute the NMI between them and the ground truth clustering. Average and standard deviation statistics are then computed.
 
 \subsection{Clustering performance}
 
@@ -624,7 +624,7 @@ As in our previous experiments with synthetic data, we choose here the normalize
 \caption{NMI (in percents) of clusterings by kernel k-means and k-averages for bi-class datasets.}
 \label{tab:results-2}
 \begin{tabular}{lccc}
-clustering & sc & kkMeans & kaveragesC \\
+ & spectral clustering & kernel k-means & k-averages \\
 \hline
 Coffee & 3.4 $\pm$0.0 & 6.9 $\pm$4.1 & \textbf{7.8 $\pm$3.6} \\
 ECG200 &  9.9 $\pm$0.0 & \textbf{14.8 $\pm$1.0} & 14.6 $\pm$0.0 \\
@@ -653,7 +653,7 @@ For each experiment, the result of the best performing method is marked in bold.
 \caption{NMI (in percents) of clusterings by kernel k-means and k-averages for datasets of 3 to 7 classes.}
 \label{tab:results-37}
 \begin{tabular}{lccc}
-clustering & sc & kkMeans & kaveragesC \\
+ & spectral clustering & kernel k-means & k-averages \\
 \hline
 Beef & 25.7 $\pm$2.4 & \textbf{35.5 $\pm$2.8} & 34.5 $\pm$2.6 \\
 CBF & 11.1 $\pm$0.2 & 41.0 $\pm$8.4 & \textbf{41.0 $\pm$7.0} \\
@@ -684,7 +684,7 @@ synthetic\_control & 63.0 $\pm$0.7 & 85.3 $\pm$4.9 & \textbf{89.5 $\pm$0.8} \\
 \caption{NMI (in percents) of clusterings by kernel k-means and k-averages for datasets of 8 to 50 classes.}
 \label{tab:results-8}
 \begin{tabular}{lccc}
-clustering & sc & kkMeans & kaveragesC \\
+ & spectral clustering & kernel k-means & k-averages \\
 \hline
 50words & 46.9 $\pm$1.0 & 69.6 $\pm$0.8 & \textbf{71.7 $\pm$0.6} \\
 Adiac & 55.0 $\pm$1.0 & 55.7 $\pm$1.0 & \textbf{58.9 $\pm$0.6} \\
@@ -714,7 +714,8 @@ A first constatation is that most of the bi-class problems (Table~\ref{tab:resul
 \caption{Computation time (in seconds) for several implementations of the evaluated clustering algoritms for datasets of 2 classes.}
 \label{tab:resultSpeed-2}
 \begin{tabular}{lcccc}
-clustering & sc & kkMeans & kkmeansC & kaveragesC \\
+ & \multicolumn{2}{c}{Matlab} & \multicolumn{2}{c}{C} \\
+ & spectral clustering & kk-means & kk-means & k-averages \\
 \hline
 Coffee & 0.02 & 0.00 & \textbf{0.00} & 0.00 \\
 ECG200 & 0.03 & 0.00 & 0.00 & \textbf{0.00} \\
@@ -737,7 +738,8 @@ yoga & 3.55 & 0.80 & 0.66 & \textbf{0.10} \\
 \caption{Computation time (in seconds) for several implementations of the evaluated clustering algoritms for datasets of 3 to 7 classes.}
 \label{tab:resultSpeed-37}
 \begin{tabular}{lcccc}
-clustering & sc & kkMeans & kkmeansC & kaveragesC \\
+  & \multicolumn{2}{c}{Matlab} & \multicolumn{2}{c}{C} \\
+  & spectral clustering & kk-means & kk-means & k-averages \\
 \hline
 Beef & 0.02 & 0.00 & 0.00 & \textbf{0.00} \\
 CBF & 0.17 & 0.08 & 0.05 & \textbf{0.01} \\
@@ -768,7 +770,8 @@ synthetic\_control & 0.09 & 0.03 & 0.01 & \textbf{0.01} \\
 \caption{Computation time (in seconds) for several implementations of the evaluated clustering algoritms for datasets of 8 to 50 classes.}
 \label{tab:resultSpeed-8}
 \begin{tabular}{lcccc}
-clustering & sc & kkMeans & kkmeansC & kaveragesC \\
+  & \multicolumn{2}{c}{Matlab} & \multicolumn{2}{c}{C} \\
+  & spectral clustering & kk-means & kk-means & k-averages \\
 \hline
 50words & 0.89 & 0.19 & 0.05 & \textbf{0.03} \\
 Adiac & 0.49 & 0.16 & 0.05 & \textbf{0.03} \\
