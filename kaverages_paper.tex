@@ -107,12 +107,18 @@ Despite such improvements, kernel k-means cannot be easily applied to large scal
 %Still, the complexity of the algorithm and the cost of memory  access  prevent from using the kernel k-means algorithm for large scale datasets without specific treatments.
 \citet{Chitta:2011:AKK:2020408.2020558} considered sampling of the input data, \citet{1047453} considered block storing of the input matrix, and a preclustering  approach \citet{bradley98scaling} is considered by \citet{Kulis2008} with a coarsening and refining phases as respectively a pre- and post-treatment of the actual clustering phase.
 
-We show in this paper that by using a semantically equivalent variant of the average intra-cluster similarity presented in \citep[Chapter 10.7]{Duda01}, it becomes possible to perform a computationally efficient greedy optimization \citep[Chapter 10.8]{Duda01} with guaranteed convergence. Although both of those techniques are well known, combining them is non trivial, and allows us to propose a novel hard clustering algorithm, which we call \emph{k-averages}, with the following properties:
+We show in this paper that by using a semantically equivalent variant of the average intra-cluster similarity presented in \citep[Chapter 10.7]{Duda01}, it becomes possible to perform a computationally efficient greedy optimization \citep[Chapter 10.8]{Duda01} with guaranteed convergence for arbitrary similarity measures. Although both of those techniques are well known, combining them is non trivial, and lead to a clustering algorithm, which we call k-averages with the following properties:
 \begin{itemize}
 \item input data can be arbitrary symmetric similarity matrices,
-\item it has fast and guaranteed convergence, with a number of object to clusters reallocations roughly equal to the number of objects,
+\item it has fast and guaranteed convergence, with a number of object to clusters reallocations experimentally found to be roughly equal to the number of objects,
 \item it provides good scalability thanks to a reduced need for memory access, and
 \item on a collection of synthetic and natural test data, its results are equivalent to those of kernel k-means, and obtained in a fraction of its computing time, particularly when paged memory is required.
+\end{itemize}
+
+As such, the main contribution of the paper is to present a clustering algorithm:
+\begin{itemize}
+  \item  that can handle arbitrary affinity matrices, \textit{i.e.} semi-positivness is not a mandatory requirement for guaranteed convergence
+  \item thanks to a carefully designed strategy to update the membership of objects to cluster, the algorithm is fast and memory efficient.
 \end{itemize}
 
 The remaining of the paper is organized as follows: Section~\ref{sec:kkmeans} presents the kernel k-means objective function and the basic algorithm that minimizes this function, and Section~\ref{sec:kaverages} introduces the concepts behind the k-averages algorithm,
@@ -609,7 +615,7 @@ For each dataset, since we perform clustering, and not supervised learning, the 
 
 As in our previous experiments with synthetic data, we choose here the normalized mutual information as measure of clustering quality; clustering is done by requesting a number of clusters equal to the actual number of classes in the dataset, and repeated 200 times with varying initial conditions, each algorithm being run with the exact same initial assignments. Of the 200 clusterings thus produced, we keep the one that shows the best convergence (\emph{i.e.} has the maximum final value of its objective function, as reported by the algorithm) and compute the NMI of that result with the ground truth.
 
-\subsection{Results}
+\subsection{Clustering performance}
 
 %% BI-CLASS
 
@@ -617,23 +623,21 @@ As in our previous experiments with synthetic data, we choose here the normalize
 \begin{center}
 \caption{NMI (in percents) of clusterings by kernel k-means and k-averages for bi-class datasets.}
 \label{tab:results-2}
-\begin{tabular}{rrrccc}
-% & nb. & nb. &  & kernel &  \\
-id & classes & objects & & kernel k-means & k-averages \\
-%&  &  & (NMI $\times 0.01$) & (NMI $\times 0.01$) & (NMI $\times 0.01$) \\
+\begin{tabular}{lccc}
+clustering & sc & kkMeans & kaveragesC \\
 \hline
- 7 & 2 &   56 &  & \textbf{4.0} & \textbf{4.0} \\
-12 & 2 &  200 &  & \textbf{14.6} & 14.6 \\
-13 & 2 &  884 &  & \textbf{2.5} & 2.5 \\
-17 & 2 &  200 &  & \textbf{0.0} & \textbf{0.0} \\
-20 & 2 & 1096 &  & \textbf{0.9} & \textbf{0.9} \\
-21 & 2 &  121 &  & \textbf{11.1} & \textbf{11.1} \\
-25 & 2 & 1272 &  & \textbf{49.3} & 48.2 \\
-28 & 2 &  621 &  & \textbf{56.2} & \textbf{56.2} \\
-29 & 2 &  980 &  & \textbf{21.4} & \textbf{21.4} \\
-34 & 2 & 1162 &  & \textbf{0.0} & \textbf{0.0} \\
-42 & 2 & 7164 &  & \textbf{0.0} & \textbf{0.0} \\
-43 & 2 & 3300 &  & \textbf{0.3} & 0.0 \\
+Coffee & 3.4 $\pm$0.0 & 6.9 $\pm$4.1 & \textbf{7.8 $\pm$3.6} \\
+ECG200 &  9.9 $\pm$0.0 & \textbf{14.8 $\pm$1.0} & 14.6 $\pm$0.0 \\
+ECGFiveDays & 0.1 $\pm$0.0 & \textbf{3.3 $\pm$0.3} & 2.5 $\pm$0.0 \\
+Gun\_Point & \textbf{14.8 $\pm$1.3} &  0.0 $\pm$0.0 &  0.0 $\pm$0.0 \\
+ItalyPowerDemand & \textbf{1.1} & 0.9 & 0.9 \\
+Lighting2 & 4.1 $\pm$0.3 & \textbf{4.9 $\pm$3.7} & 4.3 $\pm$4.2 \\
+MoteStrain &  0.0 $\pm$0.0 & \textbf{48.9 $\pm$0.6} & 48.8 $\pm$0.6 \\
+SonyAIBORobotSurface &   3.4 $\pm$0.0 & 45.0 $\pm$20.7 & \textbf{45.1 $\pm$20.5} \\
+SonyAIBORobotSurfaceII &  2.5 $\pm$0.0 & \textbf{21.4 $\pm$0.0} & \textbf{21.4 $\pm$0.0} \\
+TwoLeadECG & \textbf{1.4 $\pm$0.0} & 0.1 $\pm$0.6 & 0.0 $\pm$0.2 \\
+wafer & \textbf{0.0} & 0.0 & 0.0 \\
+yoga & \textbf{0.5 $\pm$0.0} & 0.2 $\pm$0.1 & 0.2 $\pm$0.1 \\
 \end{tabular}
 \end{center}
 \end{table}
@@ -648,28 +652,26 @@ For each experiment, the result of the best performing method is marked in bold.
 \begin{center}
 \caption{NMI (in percents) of clusterings by kernel k-means and k-averages for datasets of 3 to 7 classes.}
 \label{tab:results-37}
-\begin{tabular}{rrrccc}
-% & nb. & nb. &  & kernel &  \\
-id & classes & objects & & kernel k-means & k-averages \\
-%&  &  & (NMI $\times 0.01$) & (NMI $\times 0.01$) & (NMI $\times 0.01$) \\
+\begin{tabular}{lccc}
+clustering & sc & kkMeans & kaveragesC \\
 \hline
- 3 & 5 &   60 &  & 35.1 & \textbf{38.3} \\
- 4 & 3 &  930 &  & 34.2 & \textbf{54.8} \\
- 5 & 3 & 4307 &  & 0.1 & \textbf{0.4} \\
- 6 & 4 & 1420 &  & \textbf{25.2} & 22.5 \\
-11 & 4 &  322 &  & \textbf{85.0} & 83.2 \\
-15 & 4 &  112 &  & \textbf{75.4} & 69.5 \\
-18 & 5 &  463 &  & 8.7 & \textbf{9.2} \\
-19 & 7 &  650 &  & 7.3 & \textbf{7.3} \\
-22 & 7 &  143 &  & 51.0 & \textbf{52.6} \\
-26 & 6 &  442 &  & 26.3 & \textbf{27.2} \\
-27 & 4 &   60 &  & 27.8 & \textbf{28.3} \\
-30 & 3 & 9236 &  & \textbf{60.3} & \textbf{60.3} \\
-32 & 6 & 1020 &  & 79.5 & \textbf{81.1} \\
-33 & 4 &  200 &  & 50.5 & \textbf{68.5} \\
-35 & 4 & 5000 &  & \textbf{21.6} & 14.7 \\
-37 & 7 &  350 &  & 33.7 & \textbf{36.9} \\
-38 & 6 &  600 &  & \textbf{96.4} & 88.8 \\
+Beef & 25.7 $\pm$2.4 & \textbf{35.5 $\pm$2.8} & 34.5 $\pm$2.6 \\
+CBF & 11.1 $\pm$0.2 & 41.0 $\pm$8.4 & \textbf{41.0 $\pm$7.0} \\
+ChlorineConcentration & \textbf{3.9 $\pm$0.0} & 0.2 $\pm$0.1 & 0.2 $\pm$0.1 \\
+CinC\_ECG\_torso & \textbf{37.9 $\pm$0.5} & 24.2 $\pm$1.5 & 24.6 $\pm$1.6 \\
+DiatomSizeReduction & 45.3 $\pm$4.2 & \textbf{79.8 $\pm$6.3} & 77.3 $\pm$4.5 \\
+FaceFour & 49.8 $\pm$4.6 & 72.2 $\pm$8.4 & \textbf{74.9 $\pm$6.3} \\
+Haptics & 3.0 $\pm$0.5 & \textbf{9.7 $\pm$1.3} & 9.4 $\pm$1.2 \\
+InlineSkate & 4.6 $\pm$0.5 & 6.3 $\pm$0.7 & \textbf{6.4 $\pm$0.7} \\
+Lighting7 & 27.6 $\pm$2.7 & 51.0 $\pm$3.1 & \textbf{51.3 $\pm$1.5} \\
+OSULeaf & 22.9 $\pm$0.8 & 22.9 $\pm$2.2 & \textbf{23.0 $\pm$2.5} \\
+OliveOil & 10.6 $\pm$2.2 & \textbf{32.4 $\pm$8.6} & 30.6 $\pm$7.8 \\
+StarLightCurves & 54.3 $\pm$0.0 & \textbf{60.3 $\pm$0.4} & 60.3 $\pm$0.0 \\
+Symbols & 72.0 $\pm$1.7 & 79.1 $\pm$3.8 & \textbf{79.5 $\pm$1.6} \\
+Trace & 13.7 $\pm$4.4 & \textbf{54.5 $\pm$5.1} & 54.3 $\pm$6.3 \\
+Two\_Patterns &   0.2 $\pm$0.0 & \textbf{10.1 $\pm$10.0} &   8.8 $\pm$9.9 \\
+fish & 18.5 $\pm$1.5 & 34.9 $\pm$1.4 & \textbf{35.3 $\pm$1.0} \\
+synthetic\_control & 63.0 $\pm$0.7 & 85.3 $\pm$4.9 & \textbf{89.5 $\pm$0.8} \\
 \end{tabular}
 \end{center}
 \end{table}
@@ -681,34 +683,117 @@ id & classes & objects & & kernel k-means & k-averages \\
 \begin{center}
 \caption{NMI (in percents) of clusterings by kernel k-means and k-averages for datasets of 8 to 50 classes.}
 \label{tab:results-8}
-\begin{tabular}{rrrccc}
-% & nb. & nb. &  & kernel &  \\
-id & classes & objects & & kernel k-means & k-averages \\
-%&  &  & (NMI $\times 0.01$) & (NMI $\times 0.01$) & (NMI $\times 0.01$) \\
+\begin{tabular}{lccc}
+clustering & sc & kkMeans & kaveragesC \\
 \hline
- 1 & 50 &  905 &  & 70.2 & \textbf{71.0} \\
- 2 & 37 &  781 &  & 55.0 & \textbf{58.2} \\
- 8 & 12 &  780 &  & \textbf{28.6} & 26.2 \\
- 9 & 12 &  780 &  & \textbf{33.8} & 33.4 \\
-10 & 12 &  780 &  & 25.6 & \textbf{26.2} \\
-14 & 14 & 2250 &  & \textbf{72.8} & 64.3 \\
-16 & 14 & 2250 &  & \textbf{72.1} & 70.4 \\
-23 &  8 & 2400 &  & \textbf{97.4} & 87.0 \\
-24 & 10 & 1141 &  & 28.3 & \textbf{29.8} \\
-31 & 15 & 1125 &  & 69.2 & \textbf{70.2} \\
-36 & 25 &  905 &  & \textbf{52.5} & 51.2 \\
-39 &  8 & 4478 &  & 46.4 & \textbf{46.9} \\
-40 &  8 & 4478 &  & \textbf{45.2} & 44.2 \\
-41 &  8 & 4478 &  & 42.7 & \textbf{42.8} \\
+50words & 46.9 $\pm$1.0 & 69.6 $\pm$0.8 & \textbf{71.7 $\pm$0.6} \\
+Adiac & 55.0 $\pm$1.0 & 55.7 $\pm$1.0 & \textbf{58.9 $\pm$0.6} \\
+Cricket\_X & 19.2 $\pm$1.1 & 26.1 $\pm$1.8 & \textbf{26.8 $\pm$1.2} \\
+Cricket\_Y & 22.8 $\pm$1.3 & 33.0 $\pm$1.5 & \textbf{33.5 $\pm$1.2} \\
+Cricket\_Z & 19.2 $\pm$1.3 & 25.5 $\pm$2.2 & \textbf{27.3 $\pm$1.3} \\
+FaceAll & 36.4 $\pm$1.2 & \textbf{70.7 $\pm$2.0} & 68.2 $\pm$2.3 \\
+FacesUCR & 36.2 $\pm$1.3 & 70.4 $\pm$2.0 & \textbf{71.5 $\pm$1.6} \\
+MALLAT & 44.5 $\pm$2.0 & \textbf{90.3 $\pm$4.6} & 89.2 $\pm$3.5 \\
+MedicalImages & 19.2 $\pm$1.3 & 29.7 $\pm$1.7 & \textbf{30.4 $\pm$1.6} \\
+SwedishLeaf & 48.7 $\pm$1.4 & 70.3 $\pm$1.9 & \textbf{70.8 $\pm$1.4} \\
+WordsSynonyms & 31.9 $\pm$1.0 & 50.9 $\pm$1.2 & \textbf{52.1 $\pm$0.8} \\
+uWaveGestureLibrary\_X & 24.4 $\pm$0.6 & 46.0 $\pm$1.2 & \textbf{46.2 $\pm$0.5} \\
+uWaveGestureLibrary\_Y & 16.2 $\pm$0.3 & 44.9 $\pm$0.4 & \textbf{45.0 $\pm$0.2} \\
+uWaveGestureLibrary\_Z & 23.2 $\pm$0.6 & \textbf{42.9 $\pm$0.7} & 42.6 $\pm$0.5 \\
 \end{tabular}
 \end{center}
 \end{table}
 
 A first constatation is that most of the bi-class problems (Table~\ref{tab:results-2}) do not seem to lend themselves well to this kind of approach: kernel k-means and k-averages produce quasi-identical results, poor in most cases. Concerning the medium numbers of classes (Table~\ref{tab:results-37}), k-averages outperforms kernel k-means for 11 datasets out of 17, while kernel k-means leads for only 5. For the larger numbers of classes, the results are spread evenly, each method outperforming the other in 7 cases.
 
+
+\subsection{Efficiency}
+
+\begin{table}
+\begin{center}
+\caption{Computation time (in seconds) for several implementations of the evaluated clustering algoritms for datasets of 2 classes.}
+\label{tab:resultSpeed-2}
+\begin{tabular}{lcccc}
+clustering & sc & kkMeans & kkmeansC & kaveragesC \\
+\hline
+Coffee & 0.02 & 0.00 & \textbf{0.00} & 0.00 \\
+ECG200 & 0.03 & 0.00 & 0.00 & \textbf{0.00} \\
+ECGFiveDays & 0.13 & 0.10 & 0.06 & \textbf{0.01} \\
+Gun\_Point & 0.02 & 0.00 & 0.00 & \textbf{0.00} \\
+ItalyPowerDemand & 0.20 & 0.07 & 0.05 & \textbf{0.01} \\
+Lighting2 & 0.02 & 0.00 & 0.00 & \textbf{0.00} \\
+MoteStrain & 0.33 & 0.11 & 0.08 & \textbf{0.01} \\
+SonyAIBORobotSurface & 0.09 & 0.02 & 0.01 & \textbf{0.00} \\
+SonyAIBORobotSurfaceII & 0.09 & 0.01 & 0.02 & \textbf{0.01} \\
+TwoLeadECG & 0.13 & 0.16 & 0.10 & \textbf{0.02} \\
+wafer & 19.62 &  0.72 &  1.04 & \textbf{ 0.39} \\
+yoga & 3.55 & 0.80 & 0.66 & \textbf{0.10} \\
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{table}
+\begin{center}
+\caption{Computation time (in seconds) for several implementations of the evaluated clustering algoritms for datasets of 3 to 7 classes.}
+\label{tab:resultSpeed-37}
+\begin{tabular}{lcccc}
+clustering & sc & kkMeans & kkmeansC & kaveragesC \\
+\hline
+Beef & 0.02 & 0.00 & 0.00 & \textbf{0.00} \\
+CBF & 0.17 & 0.08 & 0.05 & \textbf{0.01} \\
+ChlorineConcentration & 7.15 & 2.74 & 2.09 & \textbf{0.23} \\
+CinC\_ECG\_torso & 0.55 & 0.31 & 0.16 & \textbf{0.04} \\
+DiatomSizeReduction & 0.04 & 0.01 & 0.00 & \textbf{0.00} \\
+FaceFour & 0.02 & 0.00 & 0.00 & \textbf{0.00} \\
+Haptics & 0.07 & 0.04 & 0.01 & \textbf{0.01} \\
+InlineSkate & 0.12 & 0.08 & 0.03 & \textbf{0.01} \\
+Lighting7 & 0.04 & 0.01 & 0.00 & \textbf{0.00} \\
+OSULeaf & 0.08 & 0.04 & 0.01 & \textbf{0.00} \\
+OliveOil & 0.03 & 0.00 & 0.00 & \textbf{0.00} \\
+StarLightCurves & 34.16 &  4.69 &  6.21 & \textbf{ 0.91} \\
+Symbols & 0.26 & 0.15 & 0.06 & \textbf{0.02} \\
+Trace & 0.02 & 0.01 & 0.00 & \textbf{0.00} \\
+Two\_Patterns & 11.99 &  3.99 &  3.71 & \textbf{ 0.40} \\
+fish & 0.06 & 0.02 & 0.01 & \textbf{0.00} \\
+synthetic\_control & 0.09 & 0.03 & 0.01 & \textbf{0.01} \\
+\end{tabular}
+\end{center}
+\end{table}
+
+
+ %% 8-50 classes
+
+\begin{table}
+\begin{center}
+\caption{Computation time (in seconds) for several implementations of the evaluated clustering algoritms for datasets of 8 to 50 classes.}
+\label{tab:resultSpeed-8}
+\begin{tabular}{lcccc}
+clustering & sc & kkMeans & kkmeansC & kaveragesC \\
+\hline
+50words & 0.89 & 0.19 & 0.05 & \textbf{0.03} \\
+Adiac & 0.49 & 0.16 & 0.05 & \textbf{0.03} \\
+Cricket\_X & 0.24 & 0.10 & 0.05 & \textbf{0.02} \\
+Cricket\_Y & 0.22 & 0.09 & 0.05 & \textbf{0.02} \\
+Cricket\_Z & 0.22 & 0.09 & 0.04 & \textbf{0.02} \\
+FaceAll & 2.08 & 0.78 & 0.40 & \textbf{0.11} \\
+FacesUCR & 2.21 & 0.75 & 0.41 & \textbf{0.12} \\
+MALLAT & 2.23 & 0.47 & 0.29 & \textbf{0.12} \\
+MedicalImages & 0.42 & 0.24 & 0.12 & \textbf{0.04} \\
+SwedishLeaf & 0.56 & 0.22 & 0.11 & \textbf{0.04} \\
+WordsSynonyms & 0.44 & 0.16 & 0.08 & \textbf{0.03} \\
+uWaveGestureLibrary\_X & 8.60 & 5.15 & 3.82 & \textbf{0.44} \\
+uWaveGestureLibrary\_Y & 8.94 & 4.48 & 2.65 & \textbf{0.45} \\
+uWaveGestureLibrary\_Z & 8.53 & 4.00 & 2.89 & \textbf{0.47} \\
+\end{tabular}
+\end{center}
+\end{table}
+
+
+
+
 \section{Conclusion}
 
-We have presented k-averages, an iterative flat clustering algorithm that operates on arbitrary similarity matrices by explicitly and directly aiming to optimize the average intra-class similarity. Having established the mathematical foundation of our proposal, including guaranteed convergence, we have thoroughly compared it with the widely used standard method, kernel k-means, showing that our algorithm converges much faster (20 times faster under ordinary conditions) and leading to equivalent or better clustering results for the task of clustering both synthetic data and times series from a wide variety of sources, while also being more sparing in memory use.
+We have presented k-averages, an iterative flat clustering algorithm that operates on arbitrary similarity matrices by explicitly and directly aiming to optimize the average intra-class similarity. Having established the mathematical foundation of our proposal, including guaranteed convergence, we have thoroughly compared it with the widely used standard methods, the kernel k-means and the spectral clustering techniques, showing that our algorithm converges much faster (20 times faster under ordinary conditions) and leading to equivalent or better clustering results for the task of clustering both synthetic data and realistic times series taken from a wide variety of sources, while also being more computationaly efficient and more sparing in memory use.
 
 The linear updates and compensated memory access of the proposed k-average method also provide great potentials for online clustering methods, where time-series data arrive incrementally into the system, and where classes and clusters should be most often reallocated. Explicit reallocation considerations proposed in this paper pave the way for robust online clustering methods that shall be further pursued.
 

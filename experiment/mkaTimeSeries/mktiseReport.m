@@ -6,28 +6,37 @@ function config = mktiseReport(config)
 % Copyright: Mathieu Lagrange
 % Date: 26-Aug-2014
 
-if nargin==0, mkaTimeSeries('report', 'rcv',  'reportName', 'sc'); return; end
+if nargin==0, mkaTimeSeries('report', 'rcv',  'reportName', 'timing'); return; end
 
 [dataSets, nbDataSets] = expFactorValues(config, 'dataSet');
 
 % RERUN BATCH WITH LARGE NUMBER OF ITERATIONS
 % RUN KKMEANS with factor one only
 
-switch config.reportName
-    case 'sc'
           class2 = [7 12 13 17 20 21 25 28 29 34 42 43];
         class37 = [3 4 5 6 11 15 18 19 22 26 27 30 32 33 35 37 38];
         class8 = [1 2 8 9 10 14 16 23 24 31 36 39 40 41];
         classes = {class2 class37 class8};
-        classesNames = {'2', '37', '8'};
-        
-        nbRuns = 4;
-        norm =2;
-            
+       classesNames = {'2', '37', '8'};
+       
+switch config.reportName   
+    case 'timing'
+       for k=1 :length(classes)
+%            config = expExpose(config, 't', 'mask', {classes{k} 1 2 0 0 0 2}, 'step', 1, 'highlight', -1, ...
+%                'obs', [1 3 4], 'caption', 'Morphology of the datasets', 'orientation', 'v', 'precision', 0, 'noFactor', 1);
+           config = expExpose(config, 'l', 'mask', {classes{k}, 1, 2, [1 8 9 11], 3, 1, 0, 3, 1}, 'step', 2, ... % 1 2 [8 9 11] [3] [1] 0 3 1
+               'highlight', 0, 'highlightColor', -1, 'highlightStyle', 'Best', 'obs', 5 ...
+              , 'expand', 'dataSet', 'orientation', 'vi', 'uncertainty', -1, 'orderSetting', [4 2 3 1], 'negativeRank', -2, 'save', ['methodSpeed' classesNames{k}]); % 'orientation', 'vi', 'precision', 1, 'expand', 'dataSet', 'noObservation', 1, 'orderSetting', [2 1], 'mergeDisplay', 'h', 'save', ['methods' classesNames{k}], 'fontSize', 'small');
+      
+          config = expExpose(config, 'l', 'mask', {classes{k}, 1, 2, [1  9 11], 3, 1, 0, 3, 1}, 'step', 2, ... % 1 2 [8 9 11] [3] [1] 0 3 1
+               'highlight', 0, 'highlightColor', -1, 'highlightStyle', 'Best', 'obs', 4, 'percent', 1, 'precision', 3 ...
+              , 'expand', 'dataSet', 'orientation', 'vi', 'orderSetting', [3  2 1], 'save', ['methodNmi' classesNames{k}]); % 'orientation', 'vi', 'precision', 1, 'expand', 'dataSet', 'noObservation', 1, 'orderSetting', [2 1], 'mergeDisplay', 'h', 'save', ['methods' classesNames{k}], 'fontSize', 'small');
+        end
+    case 'sc'            
         for k=1 :length(classes)
            % config = expExpose(config, 'l', 'mask', {classes{k} 1 2 0 0 0 2}, 'step', 1, 'highlight', -1, ...
            %     'obs', [1 3 4], 'caption', 'Morphology of the datasets', 'orientation', 'v', 'precision', 0, 'noFactor', 1);
-            config = expExpose(config, 'l', 'mask', {classes{k} 1 2 [1 2 11] [3] [1] 0 2 1}, 'step', 2, ...
+            config = expExpose(config, 't', 'mask', {classes{k} 1 2 [1 2 8 9 11] [3] [1] 0 3 1}, 'step', 2, ...
                 'highlight', 0, 'highlightColor', -1, 'highlightStyle', 'Best', 'obs', 4, 'percent', 1 ...
                , 'expand', 'dataSet', 'orientation', 'vi'); % 'orientation', 'vi', 'precision', 1, 'expand', 'dataSet', 'noObservation', 1, 'orderSetting', [2 1], 'mergeDisplay', 'h', 'save', ['methods' classesNames{k}], 'fontSize', 'small');
         end

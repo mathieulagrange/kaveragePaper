@@ -11,7 +11,7 @@ function [config, store, obs] = mktise2cluster(config, setting, data)
 % Date: 26-Aug-2014
 
 % Set behavior for debug mode
-if nargin==0, mkaTimeSeries('do', 2, 'mask', {[1], 1, 2, [1], [3], [1], 1, 1}); return; else store=[]; obs=[]; end
+if nargin==0, mkaTimeSeries('do', 2, 'mask', {39 1 2 [1] [3] [1] 0 1 1}); return; else store=[]; obs=[]; end
 
 expRandomSeed();
 % should generate the init now
@@ -28,8 +28,6 @@ else
     S = S-min(S(:));
     S = S/max(S(:));
 end
-
-
 
 if strfind(setting.clustering, 'sC')
     outputFilePrefix = expSave(config, [], 'data') ;
@@ -67,15 +65,16 @@ for k=1:setting.nbRuns
         case 'kkMeans1'
             [clusters, intra, nbIterations] = knkmeans(S, init, setting.nbIterations, 1);
         case 'kkMeans'
+            ticId  = tic;
             [clusters, intra, nbIterations] = knkmeans(S, init, setting.nbIterations);
-            
+            obs.time(k) = toc(ticId);
         case 'kAverages'
             [clusters, nbMoved] = mka(S, data.nbClasses, setting.objective, setting.strategy, init, setting.nbIterations);
             nbIterations = length(nbMoved);
             moved(k, 1:length(nbMoved)) = nbMoved;
-            intra =  energy(S, clusters);
         case 'kAveragesC++'
             [clusters, nbIterations] =  kaverages(S, init, ['s' setting.objective(1), setting.strategy], setting.nbIterations);
+            clusters = double(clusters);
         case 'random'
             clusters = ceil(rand(1, data.nbSamples)*data.nbClasses);
             nbIterations =  NaN;
@@ -86,9 +85,9 @@ for k=1:setting.nbRuns
             
             system(['~/versioned/paperKaverages15/code/cluto-2.1.1/Linux/scluster -clmethod=' setting.cluto ' ' matrixFileName ' ' num2str(data.nbClasses)]);
             clusters = csvread([matrixFileName '.clustering.' num2str(data.nbClasses)]);
-            intra = 0;
             nbIterations = 0;
         case 'sc'
+            ticId = tic;
             [C, L, U] = SpectralClustering(S, data.nbClasses, 3);
             % prepare init
             options = statset();
@@ -98,14 +97,14 @@ for k=1:setting.nbRuns
             end
             
             clusters = kmeans(U, data.nbClasses, 'options', options, 'start', centroids, 'emptyaction', 'singleton');
-         intra =  energy(S, clusters);
-         nbIterations = setting.nbIterations;
+            nbIterations = setting.nbIterations;
+            obs.time(k) = toc(ticId);
         otherwise
             [clusters, log] = simpleClustering(setting.clustering(1:end-1), [outputFilePrefix '.matrix'],data.nbClasses, outputFilePrefix, init, strcmp(setting.objective, 'raw >/dev/null'));
             obs.time(k) = log.time;
             nbIterations = log.iterations;
-             intra =  energy(S, clusters);
     end
+    intra =  energy(S, clusters);
     clusterSet(k, :) = clusters;
     
     metrics = clusteringMetrics(clusters, data.class);
