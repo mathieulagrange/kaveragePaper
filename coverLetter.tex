@@ -43,7 +43,7 @@ $\rightarrow$ Following this comment and the comment of Reviewer II, we added th
 
 \item \emph{in Section 7.3, the run time of the methods should be presented.}
 
-$\rightarrow$
+$\rightarrow$ We made a new section (section 7.4) dedicated to a runtime comparison of the different algorithms.
 
 \end{enumerate}
 
@@ -52,13 +52,9 @@ $\rightarrow$
 
 \begin{enumerate}
 
-\item \emph{The flexibility to use arbitrary similarity measures is a novel contribution.}
+\item \emph{The flexibility to use arbitrary similarity measures is a novel contribution.\\ Exploiting only points that change cluster membership is a clever idea and leads to lower complexity.}
 
-$\rightarrow$
-
-\item \emph{Exploiting only points that change cluster membership is a clever idea and leads to lower complexity.}
-
-$\rightarrow$
+$\rightarrow$ Those are indeed the main contributions of the paper. Hopefully the manuscript now stresses more those contributions.
 
 
 \item \emph{Convergence Issues: Permitting arbitrary similarity measures raises questions about convergence. In case of kernel k-means, the similarity measure is obtained using a positive definite kernel. Such a kernel implicitly assumes a Hilbert space, where Euclidean distances can be computed by virtue of inner products. Such a mapping through kernel functions is the premise for convergence of the basic iterative MSE procedure described in Duda \& Hart Ch 10.8. As arbitrary similarity measures are permitted, it is not clear how the convergence properties are impacted. Intuitively and empirically (based on Fig. 1) it seems that convergence should happen, [...]. Do arbitrary similarity measures always converge?}
@@ -67,13 +63,13 @@ $\rightarrow$ The k-average algorithm converge by design, see Section 3.2: "To e
 
 \item \emph{however, unfortunately the paper does not discuss the similarity measure that is used for experiments in Fig. 1}
 
-$\rightarrow$ The similarity measure is the Dynamic Time Warping (DTW) has it was found to be the best performing measure for those datasets as described in the beginning of Section 7.
+$\rightarrow$ The similarity measure is the Dynamic Time Warping (DTW) has it was found to be the best performing measure for those datasets as described in the beginning of Section 7. The caption of Fig. 1 have been extended to provide this information.
 
 
 \item \emph{Sensitivity to clustering performance:
 Duda \& Hart (in Ch. 10.8) point out that the iterative optimization scheme is more susceptible to local minimum. I expect this effect to be exacerbated when arbitrary similarity measures are used. However, this has not been thoroughly investigated.}
 
-$\rightarrow$ This is indeed a concern. We found experimentally that the k-average algorithm is not more susceptible to local minima than the other studied approaches, see comment below and discussion in Section 7.3.
+$\rightarrow$ This is indeed a concern. We found experimentally that the k-average algorithm is, at least experimentally, not more susceptible to local minima than the other studied approaches, see comment below and discussion in Section 7.3.
 
 \item \emph{Initialization of the algorithm:
 In Alg. 3, the initialization 'L', i.e., the initial point-cluster assignment is done randomly. This is not the case in kernel k-means. It is surprising that despite the random initialization, the performance of k-average clustering matches the kernel k-means in many cases. As in the case of k-means and its iterative version, I would expect that the final solution depends on the initialization. Randomly initializing cluster labels ignores any notion of similarity between points, and are likely to lead to local poor minima in the overall optimization. This fact has been completely ignored and not investigated at all in the paper.}
@@ -90,14 +86,21 @@ In order to evaluate the influence of the initialization, we no longer consider 
 
 $\rightarrow$ Several typos have been corrected and the whole manuscript have been carefully improve for better readability.
 
-\item \emph{Notation and technical errors:
-The notation is not clear. For example, in (1), the notation used for vector multiplication (inner and outer products) is incorrect. On page 7, the statement that $\mathcal{Q}$ is strictly equivalent to the average point to centroid similarity' is not true in general, but only in case when the similarity can be interpreted as an inner product. If this is not the case, I suppose a proof to back this statement up is necessary. $\delta_o$ in (9) is not introduced.}
+\item \emph{in (1), the notation used for vector multiplication (inner and outer products) is incorrect.}
 
-$\rightarrow$ Mathias ?
+$\rightarrow$
+
+\item \emph{On page 7, the statement that $\mathcal{Q}$ is strictly equivalent to the average point to centroid similarity' is not true in general, but only in case when the similarity can be interpreted as an inner product. If this is not the case, I suppose a proof to back this statement up is necessary.}
+
+$\rightarrow$ We removed this sentence as it would indeed require more explanations that is out of the scope of this section.
+
+\item \emph{$\delta_o$ in (9) is not introduced.}
+
+$\rightarrow$ Introduction is now provided.
 
 \item \emph{I would expect that comparisons with spectral clustering in terms of quality of clustering should also be included. Spectral clustering also permits arbitrary similarity measures and thus is directly relevant to the proposed work.}
 
-$\rightarrow$ We added the spectral clustering technique to the reference set and discussed the matter. The main issue with the spectral clustering techniques is that it requires a diagonalization of a matrix with $N^2$ with $N$ being the number of objects, making it difficult to apply to very large datasets.
+$\rightarrow$ We added the spectral clustering technique to the reference set and discussed the matter. The main issue with the spectral clustering techniques is that it requires a diagonalization of a $N^2$ matrix with $N$ being the number of objects, making it difficult to scale to very large datasets.
 
 \end{enumerate}
 
