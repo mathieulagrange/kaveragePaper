@@ -62,11 +62,53 @@ for k=1:setting.nbRuns
                 clusters = init;
             end
             warning on all
-        case 'kkMeans1'
-            [clusters, intra, nbIterations] = knkmeans(S, init, setting.nbIterations, 1);
         case 'kkMeans'
             ticId  = tic;
             [clusters, intra, nbIterations] = knkmeans(S, init, setting.nbIterations);
+            //
+            if nargin<3, nbIterations=500; end
+            if nargin<4, factor=0; end
+            
+            n = size(K,1);
+            if max(size(m)) == 1
+                k = m;
+                %     label = randi(k,1,n);
+                label = ceil(k*rand(1,n));
+            elseif size(m,1) == 1 && size(m,2) == n
+                k = max(m);
+                label = m;
+            else
+                error('ERROR: m is not valid.');
+            end
+            %% version 1: directly implement the formula in [1]
+            last = 0;
+            it=0;
+            S = repmat((1:k)',1,n);
+            t=[];
+            e=[];
+            while any(label ~= last) && it<nbIterations
+                E = double(bsxfun(@eq,S,label));
+                E = bsxfun(@rdivide,E,sum(E,2));
+                T = E*K;
+                if factor==1
+                    Z = -2*T;
+                elseif factor==2
+                    Z = repmat(diag(T*E'),1,n);
+                else
+                    Z = repmat(diag(T*E'),1,n)-2*T;
+                end
+                
+                last = label;
+                [val, label] = min(Z,[],1);
+                SS = repmat(diag(T*E'),1,n);
+                t(end+1, 1) = sum(T(label));
+                t(end, 2) = sum(SS(label));
+                t(end, 3) = (sum(val)+trace(K))/max(K(:));
+                it=it+1;
+            end
+            energy = sum(val)+trace(K);
+            energy = energy/max(K(:));
+            //
             obs.time(k) = toc(ticId);
         case 'kAverages'
             [clusters, nbMoved] = mka(S, data.nbClasses, setting.objective, setting.strategy, init, setting.nbIterations);
@@ -88,7 +130,45 @@ for k=1:setting.nbRuns
             nbIterations = 0;
         case 'sc'
             ticId = tic;
-            [C, L, U] = SpectralClustering(S, data.nbClasses, 3);
+            C=0;
+            % calculate degree matrix
+            degs = sum(W, 2);
+            D    = sparse(1:size(W, 1), 1:size(W, 2), degs);
+            
+            % compute unnormalized Laplacian
+            L = D - W;
+            
+            % compute normalized Laplacian if needed
+            switch Type
+                case 2
+                    % avoid dividing by zero
+                    degs(degs == 0) = eps;
+                    % calculate inverse of D
+                    D = spdiags(1./degs, 0, size(D, 1), size(D, 2));
+                    
+                    % calculate normalized Laplacian
+                    L = D * L;
+                case 3
+                    % avoid dividing by zero
+                    degs(degs == 0) = eps;
+                    % calculate D^(-1/2)
+                    D = spdiags(1./(degs.^0.5), 0, size(D, 1), size(D, 2));
+                    
+                    % calculate normalized Laplacian
+                    L = D * L * D;
+            end
+            
+            % compute the eigenvectors corresponding to the k smallest
+            % eigenvalues
+            diff   = eps;
+            [U, ~] = eigs(L, k, diff);
+            
+            % in case of the Jordan-Weiss algorithm, we need to normalize
+            % the eigenvectors row-wise
+            if Type == 3
+                U = bsxfun(@rdivide, U, sqrt(sum(U.^2, 2)));
+            end
+            U=abs(U);
             % prepare init
             options = statset();
             options.MaxIter =  setting.nbIterations;
