@@ -1,3 +1,4 @@
+
 \documentclass[natbib,smallextended]{svjour3}
 \usepackage{amsmath,amssymb}
 \usepackage{color}
@@ -590,12 +591,12 @@ Having established the interest of our proposed method relative to kernel k-mean
 
 In order to demonstrate the usefulness of k-averages when dealing with real data, we have chosen to focus on the clustering of time series as the evaluation task. Time series, even though represented as vectors and therefore suitable for any kinds of norm-based clustering, are best compared with elastic measures \citep{Ding:2008:QMT:1454159.1454226, Wang:2013:ECR:2429736.2429754}, partly due to their varying length. The Dynamic Time Warping (DTW) measure is an elastic measure widely used in many areas since its introduction for spoken word detection \citep{1163055} and has never been significantly challenged for time series mining \citep{conf/kdd/BerndtC94, Rakthanmanon:2013:ABD:2513092.2500489}.
 
-Effective clustering of time series using the DTW measure require similarity based algorithms such as the k-averages algorithm. With some care, kernel based algorithm can also be considered provided that the resulting similarity matrix is converted into a kernel, \textit{i.e.} the matrix is forced to be semi definite positive, \textit{i.e.} to be a Gram matrix \citep{Lanckriet:2004:LKM:1005332.1005334}.
+Effective clustering of time series using the DTW measure requires similarity based algorithms such as the k-averages algorithm. With some care, kernel based algorithm can also be considered provided that the resulting similarity matrix is converted into a kernel, \textit{i.e.} the matrix is forced to be semi definite positive, \textit{i.e.} to be a Gram matrix \citep{Lanckriet:2004:LKM:1005332.1005334}.
 
 \subsection{Datasets}
 
 To compare quality of clusterings obtained by the considered algorithms, we consider a large collection of 43 time series datasets created by many laboratories all over the world and compiled by Prof. Keogh \footnote{Available at: \url{www.cs.ucr.edu/~eamonn/time_series_data}}. Thus, while all the experiments presented here are performed on time series (chosen for being a good example of a data type requiring similarity-based clustering, as opposed to a simple Euclidean approach), the great variety in the sources and semantics of said series (bio-informatics, linguistics, astronomy, gesture modeling, chemistry\ldots{}) gives this validation a wide foundation. Statistics about the morphology of those datasets are summarized in Table~\ref{tab:dbs}.
-In the results described in the next sections, datasets are refered by a numerical id for the sake of brevity; the correspondence between those ids and the actual names of the datasets is shown on Table \ref{didtNoda1}.
+%In the results described in the next sections, datasets are refered by a numerical id for the sake of brevity; the correspondence between those ids and the actual names of the datasets is shown on Table \ref{didtNoda1}.
 
 \begin{table}
 \center
@@ -609,11 +610,15 @@ time series length & 24 & 372 $\pm$ 400 & 1882 \\
 \end{tabular}
 \end{table}
 
+\subsection{Methods}
+
+Three algorithms are considered: the spectral clustering \cite{von2007tutorial} approach as a higher complexity reference, the kernel k-means algorithm implemented as described in Section \ref{sec:kkmeans} and the proposed k-averages algorithm. The spectral clustering algorithm tested here uses the normalization proposed by Jordan and Weiss \cite{ng2002spectral}. This normalization is chosen over no normalization and the Shi and Malik one \cite{shi2000normalized} as it is found to be the best performing in terms of average NMI over all the datasets. The implementation is done using the Matlab programming language. Even though a C implementation would probably be more efficient, we belive that the gain would be low as the main computational load is the diagonalization of the similarity matrix and the k-means clustering of the eigenvectors which are both efficient builtins Matlab functions. The kernel k-means is implemented both in Matlab using the implementation provided by Mo Chen\footnote{Available at: \url{https://fr.mathworks.com/matlabcentral/fileexchange/26182-kernel-kmeans}} and in the C programming language following Algorithm \ref{algo:kkmeans}. The k-averages method is implemented in C following Algorithm \ref{algo:kaverages}.
+
 \subsection{Evaluation Protocol}
 
 For each dataset, since we perform clustering, and not supervised learning, the training and testing data are joined. DTW similarities are computed using the implementation provided by Prof. Ellis \footnote{Available at: \url{http://www.ee.columbia.edu/~dpwe/resources/matlab/dtw}} with default parameters.
 
-As in our previous experiments with synthetic data, we choose here the normalized mutual information as measure of clustering quality; clustering is done by requesting a number of clusters equal to the actual number of classes in the dataset, and repeated 200 times with varying initial conditions, each algorithm being run with the exact same initial assignments. For the 200 clusterings thus produced, we compute the NMI between them and the ground truth clustering. Average and standard deviation statistics are then computed.
+As in our previous experiments with synthetic data, we choose here the normalized mutual information (NMI) as measure of clustering quality; clustering is done by requesting a number of clusters equal to the actual number of classes in the dataset, and repeated 200 times with varying initial conditions, each algorithm being run with the exact same initial assignments. For the 200 clusterings thus produced, we compute the NMI between them and the ground truth clustering. Average and standard deviation statistics are then computed.
 
 \subsection{Clustering performance}
 
@@ -644,7 +649,7 @@ yoga & \textbf{0.5 $\pm$0.0} & 0.2 $\pm$0.1 & 0.2 $\pm$0.1 \\
 
 For ease of readability and comparison, the presented results are split into 3 tables. Table~\ref{tab:results-2} lists the results obtained on bi-class datasets, \textit{i.e.} the datasets annotated in terms of presence or absence of a given property; Table~\ref{tab:results-37} concerns the datasets with a small number of classes (from 3 to 7); and Table~\ref{tab:results-8} focuses the datasets with a larger number of classes (from 8 to 50).
 
-For each experiment, the result of the best performing method is marked in bold.
+For each experiment, the result of the best performing method is marked in bold. The Matlab and C implementations of the kernel k-means algorithm give exactly the same results in terms of NMI.
 
  %% 3-7 classes
 
@@ -704,10 +709,13 @@ uWaveGestureLibrary\_Z & 23.2 $\pm$0.6 & \textbf{42.9 $\pm$0.7} & 42.6 $\pm$0.5 
 \end{center}
 \end{table}
 
-A first constatation is that most of the bi-class problems (Table~\ref{tab:results-2}) do not seem to lend themselves well to this kind of approach: kernel k-means and k-averages produce quasi-identical results, poor in most cases. Concerning the medium numbers of classes (Table~\ref{tab:results-37}), k-averages outperforms kernel k-means for 11 datasets out of 17, while kernel k-means leads for only 5. For the larger numbers of classes, the results are spread evenly, each method outperforming the other in 7 cases.
+A first constatation is that the spectral clsutering algorithm only performs favorably for only 2 of the 43 dataset. Also, most of the bi-class problems (Table~\ref{tab:results-2}) do not seem to lend themselves well to this kind of approach: kernel k-means and k-averages produce quasi-identical results, poor in most cases. Concerning the medium numbers of classes (Table~\ref{tab:results-37}), k-averages performs best for 8 datasets out of 17. For the larger numbers of classes (Table~\ref{tab:results-8}), k-averages performs best for 11 datasets out of 14.
 
+Considering the standard deviation over the several runs of the algorithm with different initialiezation is helpful to study the sensitivity of the algorithm to its initialization and thus its propension to be stuck into local minima. For most datasets, the standard deviation of the k-averages algorithm is smaller than the one of the kernel k-means one and thus seems experimentally more robust.
 
 \subsection{Efficiency}
+
+Computation time displayed in Tables \ref{tab:resultSpeed-2}, \ref{tab:resultSpeed-37}, and \ref{tab:resultSpeed-8} is the average duration over 100 runs on a single core with no parallelization allowed. For every datasets, the spectral clustering approach is the more time consuming due to the diagonalization of the matrix which is of $O(N^3)$, $N$ being the number of elements. For the kernel k-means algorithm, the C implementation is most of the time more efficient than the Matlab implementation. The k-average algorithm is more efficient for 46 datasets out of the 47 by close to an order of magnitude for the larger datasets.
 
 \begin{table}
 \begin{center}
