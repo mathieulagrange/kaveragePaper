@@ -106,7 +106,7 @@ The kernel k-means algorithm proves to be equally useful when considering arbitr
 
 Despite such improvements, kernel k-means cannot be easily applied to large scale datasets without special treatments because of high algorithmic and memory access costs.
 %Still, the complexity of the algorithm and the cost of memory  access  prevent from using the kernel k-means algorithm for large scale datasets without specific treatments.
-\citet{Chitta:2011:AKK:2020408.2020558} considered sampling of the input data, \citet{1047453} considered block storing of the input matrix, and a preclustering  approach \citet{bradley98scaling} is considered by \citet{Kulis2008} with a coarsening and refining phases as respectively a pre- and post-treatment of the actual clustering phase.
+\citet{Chitta:2011:AKK:2020408.2020558} considered sampling of the input data, \citet{1047453} considered block storing of the input matrix, and a pre-clustering  approach \citet{bradley98scaling} is considered by \citet{Kulis2008} with a coarsening and refining phases as respectively a pre- and post-treatment of the actual clustering phase.
 
 We show in this paper that by using a semantically equivalent variant of the average intra-cluster similarity presented in \citep[Chapter 10.7]{Duda01}, it becomes possible to perform a computationally efficient greedy optimization \citep[Chapter 10.8]{Duda01} with guaranteed convergence for arbitrary similarity measures. Although both of those techniques are well known, combining them is non trivial, and lead to a clustering algorithm, which we call k-averages with the following properties:
 \begin{itemize}
@@ -118,7 +118,7 @@ We show in this paper that by using a semantically equivalent variant of the ave
 
 As such, the main contribution of the paper is to present a clustering algorithm:
 \begin{itemize}
-  \item  that can handle arbitrary affinity matrices, \textit{i.e.} semi-positivness is not a mandatory requirement for guaranteed convergence
+  \item  that can handle arbitrary affinity matrices, \textit{i.e.} semi-positiveness is not a mandatory requirement for guaranteed convergence
   \item thanks to a carefully designed strategy to update the membership of objects to cluster, the algorithm is fast and memory efficient.
 \end{itemize}
 
@@ -131,7 +131,7 @@ The complexity of the two algorithms in terms of arithmetic operations and memor
 
 Since its introduction by \citet{Girolami:2002:MKC:2325785.2326903}, kernel k-means has been an algorithm of choice for flat data clustering with known number of clusters \citep{Kulis2008, Roth:2003:OCP:960254.960291}. It makes use of a mathematical technique known as the \gl{kernel trick} to extend the classical k-means clustering algorithm \citep{macQueenBsmsp67} to criteria beyond simple euclidean distance proximity. Since it constitutes the closest point of comparison with our own work, we dedicate this section to its detailed presentation.
 
-In the case of kernel k-means, the kernel trick consists in considering that the k-means algorithm is operating in an unspecified, possibly very high-dimensional Euclidian space; but instead of specifying the properties of that space and the coordinates of objects, the equations governing the algorithm are modified so that everything can be computed knowing only the scalar products between points. The symmetrical matrix  containing those scalar products is known as a kernel, noted $\mathcal{K}$.
+In the case of kernel k-means, the kernel trick consists in considering that the k-means algorithm is operating in an unspecified, possibly very high-dimensional Euclidean space; but instead of specifying the properties of that space and the coordinates of objects, the equations governing the algorithm are modified so that everything can be computed knowing only the scalar products between points. The symmetrical matrix  containing those scalar products is known as a kernel, noted $\mathcal{K}$.
 
 \subsection{Kernel k-means objective function}
 
@@ -519,7 +519,7 @@ To go further in this analysis, we display on Figure~\ref{fig:totalMoved}  the t
 \begin{figure}
 \center
 \includegraphics[width = .65\textwidth]{figures/iterMove.png}
-\caption{Number of moved objects per iteration when clustering a variety of datasets with the k-averages algorithm, normalized by the total number of objects to cluster. The datasets used to create this figure are the real-life time series data that we employ for experimental validation evalauted under the Dynamic Time Warping (DTW) similarity measure, \textit{cf.} Section~\ref{sec:experiments}.}
+\caption{Number of moved objects per iteration when clustering a variety of datasets with the k-averages algorithm, normalized by the total number of objects to cluster. The datasets used to create this figure are the real-life time series data that we employ for experimental validation evaluated under the Dynamic Time Warping (DTW) similarity measure, \textit{cf.} Section~\ref{sec:experiments}.}
 \label{fig:moved}
 \end{figure}
 
@@ -612,7 +612,7 @@ time series length & 24 & 372 $\pm$ 400 & 1882 \\
 
 \subsection{Methods}
 
-Three algorithms are considered: the spectral clustering \cite{von2007tutorial} approach as a higher complexity reference, the kernel k-means algorithm implemented as described in Section \ref{sec:kkmeans} and the proposed k-averages algorithm. The spectral clustering algorithm tested here uses the normalization proposed by Jordan and Weiss \cite{ng2002spectral}. This normalization is chosen over no normalization and the Shi and Malik one \cite{shi2000normalized} as it is found to be the best performing in terms of average NMI over all the datasets. The implementation is done using the Matlab programming language. Even though a C implementation would probably be more efficient, we belive that the gain would be low as the main computational load is the diagonalization of the similarity matrix and the k-means clustering of the eigenvectors which are both efficient builtins Matlab functions. The kernel k-means is implemented both in Matlab using the implementation provided by Mo Chen\footnote{Available at: \url{https://fr.mathworks.com/matlabcentral/fileexchange/26182-kernel-kmeans}} and in the C programming language following Algorithm \ref{algo:kkmeans}. The k-averages method is implemented in C following Algorithm \ref{algo:kaverages}.
+Three algorithms are considered: the spectral clustering \cite{von2007tutorial} approach as a higher complexity reference, the kernel k-means algorithm implemented as described in Section \ref{sec:kkmeans} and the proposed k-averages algorithm. The spectral clustering algorithm tested here uses the normalization proposed by Jordan and Weiss \cite{ng2002spectral}. This normalization is chosen over no normalization and the Shi and Malik one \cite{shi2000normalized} as it is found to be the best performing in terms of average NMI over all the datasets. The implementation is done using the Matlab programming language. Even though a C implementation would probably be more efficient, we believe that the gain would be low as the main computational load is the diagonalization of the similarity matrix and the k-means clustering of the eigenvectors which are both efficient builtins Matlab functions. The kernel k-means is implemented both in Matlab using the implementation provided by Mo Chen\footnote{Available at: \url{https://fr.mathworks.com/matlabcentral/fileexchange/26182-kernel-kmeans}} and in the C programming language following Algorithm \ref{algo:kkmeans}. The k-averages method is implemented in C following Algorithm \ref{algo:kaverages}.
 
 \subsection{Evaluation Protocol}
 
@@ -709,9 +709,9 @@ uWaveGestureLibrary\_Z & 23.2 $\pm$0.6 & \textbf{42.9 $\pm$0.7} & 42.6 $\pm$0.5 
 \end{center}
 \end{table}
 
-A first constatation is that the spectral clsutering algorithm only performs favorably for only 2 of the 43 dataset. Also, most of the bi-class problems (Table~\ref{tab:results-2}) do not seem to lend themselves well to this kind of approach: kernel k-means and k-averages produce quasi-identical results, poor in most cases. Concerning the medium numbers of classes (Table~\ref{tab:results-37}), k-averages performs best for 8 datasets out of 17. For the larger numbers of classes (Table~\ref{tab:results-8}), k-averages performs best for 11 datasets out of 14.
+A first observation is that the spectral clustering algorithm only performs favorably for 2 of the 43 dataset. Also, most of the bi-class problems (Table~\ref{tab:results-2}) do not seem to lend themselves well to this kind of approach: kernel k-means and k-averages produce quasi-identical results, poor in most cases. Concerning the medium numbers of classes (Table~\ref{tab:results-37}), k-averages performs best for 8 datasets out of 17. For the larger numbers of classes (Table~\ref{tab:results-8}), k-averages performs best for 11 datasets out of 14.
 
-Considering the standard deviation over the several runs of the algorithm with different initialiezation is helpful to study the sensitivity of the algorithm to its initialization and thus its propension to be stuck into local minima. For most datasets, the standard deviation of the k-averages algorithm is smaller than the one of the kernel k-means one and thus seems experimentally more robust.
+Considering the standard deviation over the several runs of the algorithm with different initialization is helpful to study the sensitivity of the algorithm to its initialization and thus its tendency to be stuck into local minima. For most datasets, the standard deviation of the k-averages algorithm is smaller than the one of the kernel k-means one and thus seems experimentally more robust.
 
 \subsection{Efficiency}
 
@@ -719,7 +719,7 @@ Computation time displayed in Tables \ref{tab:resultSpeed-2}, \ref{tab:resultSpe
 
 \begin{table}
 \begin{center}
-\caption{Computation time (in seconds) for several implementations of the evaluated clustering algoritms for datasets of 2 classes.}
+\caption{Computation time (in seconds) for several implementations of the evaluated clustering algorithms for datasets of 2 classes.}
 \label{tab:resultSpeed-2}
 \begin{tabular}{lcccc}
  & \multicolumn{2}{c}{Matlab} & \multicolumn{2}{c}{C} \\
@@ -743,7 +743,7 @@ yoga & 3.55 & 0.80 & 0.66 & \textbf{0.10} \\
 
 \begin{table}
 \begin{center}
-\caption{Computation time (in seconds) for several implementations of the evaluated clustering algoritms for datasets of 3 to 7 classes.}
+\caption{Computation time (in seconds) for several implementations of the evaluated clustering algorithms for datasets of 3 to 7 classes.}
 \label{tab:resultSpeed-37}
 \begin{tabular}{lcccc}
   & \multicolumn{2}{c}{Matlab} & \multicolumn{2}{c}{C} \\
@@ -775,7 +775,7 @@ synthetic\_control & 0.09 & 0.03 & 0.01 & \textbf{0.01} \\
 
 \begin{table}
 \begin{center}
-\caption{Computation time (in seconds) for several implementations of the evaluated clustering algoritms for datasets of 8 to 50 classes.}
+\caption{Computation time (in seconds) for several implementations of the evaluated clustering algorithms for datasets of 8 to 50 classes.}
 \label{tab:resultSpeed-8}
 \begin{tabular}{lcccc}
   & \multicolumn{2}{c}{Matlab} & \multicolumn{2}{c}{C} \\
@@ -800,11 +800,27 @@ uWaveGestureLibrary\_Z & 8.53 & 4.00 & 2.89 & \textbf{0.47} \\
 \end{table}
 
 
+\subsection{Overall results}
 
+To conclude on the performance of the evaluated algorithms on real datasets, Table \ref{tab:resultAverage} displays the NMI and computation time averaged over the 47 datasets. The k-averages method marginally improve the clustering accuracy compared to the kernel k-means approach by using less time to compute.
+
+\begin{table}
+\begin{center}
+\caption{Performance averaged over the 47 datasets. The NMI is expressed in percents and the computation time in seconds.}
+\label{tab:resultAverage}
+\begin{tabular}{lcccc}
+  & \multicolumn{2}{c}{Matlab} & \multicolumn{2}{c}{C} \\
+  & spectral clustering & kk-means & kk-means & k-averages \\
+\hline
+nmi (\%) & 22.1 & 36.6 & 36.6 & \textbf{36.8} \\
+computation time & 2.678 & 0.723 & 0.590 & \textbf{0.096} \\
+\end{tabular}
+\end{center}
+\end{table}
 
 \section{Conclusion}
 
-We have presented k-averages, an iterative flat clustering algorithm that operates on arbitrary similarity matrices by explicitly and directly aiming to optimize the average intra-class similarity. Having established the mathematical foundation of our proposal, including guaranteed convergence, we have thoroughly compared it with the widely used standard methods, the kernel k-means and the spectral clustering techniques, showing that our algorithm converges much faster (20 times faster under ordinary conditions) and leading to equivalent or better clustering results for the task of clustering both synthetic data and realistic times series taken from a wide variety of sources, while also being more computationaly efficient and more sparing in memory use.
+We have presented k-averages, an iterative flat clustering algorithm that operates on arbitrary similarity matrices by explicitly and directly aiming to optimize the average intra-class similarity. Having established the mathematical foundation of our proposal, including guaranteed convergence, we have thoroughly compared it with the widely used standard methods, the kernel k-means and the spectral clustering techniques. We show that the k-averages algorithm converges much faster (20 times faster under ordinary conditions) and leads to equivalent or better clustering results for the task of clustering both synthetic data and realistic times series taken from a wide variety of sources, while also being more computationally efficient and more sparing in memory use.
 
 The linear updates and compensated memory access of the proposed k-average method also provide great potentials for online clustering methods, where time-series data arrive incrementally into the system, and where classes and clusters should be most often reallocated. Explicit reallocation considerations proposed in this paper pave the way for robust online clustering methods that shall be further pursued.
 
@@ -853,52 +869,52 @@ from ANR project Houle (grant ANR-11-JS03-005-01).
 \label{didtNoda1}
 \small
  \setlength{\tabcolsep}{.16667em}
-\begin{tabular}{lccc}
-name & id & number of classes & number of samples \\
+\begin{tabular}{lcc}
+name & number of classes & number of samples \\
 \hline
-50words &  1 & 50 &  905 \\
-Adiac &  2 & 37 &  781 \\
-Beef &  3 &  5 &   60 \\
-CBF &  4 &  3 &  930 \\
-ChlorineConcentration &  5 &  3 & 4307 \\
-CinC\_ECG\_torso &  6 &  4 & 1420 \\
-Coffee &  7 &  2 &   56 \\
-Cricket\_X &  8 & 12 &  780 \\
-Cricket\_Y &  9 & 12 &  780 \\
-Cricket\_Z & 10 & 12 &  780 \\
-DiatomSizeReduction & 11 &  4 &  322 \\
-ECG200 & 12 &  2 &  200 \\
-ECGFiveDays & 13 &  2 &  884 \\
-FaceAll & 14 & 14 & 2250 \\
-FaceFour & 15 &  4 &  112 \\
-FacesUCR & 16 & 14 & 2250 \\
-Gun\_Point & 17 &  2 &  200 \\
-Haptics & 18 &  5 &  463 \\
-InlineSkate & 19 &  7 &  650 \\
-ItalyPowerDemand & 20 &  2 & 1096 \\
-Lighting2 & 21 &  2 &  121 \\
-Lighting7 & 22 &  7 &  143 \\
-MALLAT & 23 &  8 & 2400 \\
-MedicalImages & 24 & 10 & 1141 \\
-MoteStrain & 25 &  2 & 1272 \\
-OSULeaf & 26 &  6 &  442 \\
-OliveOil & 27 &  4 &   60 \\
-SonyAIBORobotSurface & 28 &  2 &  621 \\
-SonyAIBORobotSurfaceII & 29 &  2 &  980 \\
-StarLightCurves & 30 &  3 & 9236 \\
-SwedishLeaf & 31 & 15 & 1125 \\
-Symbols & 32 &  6 & 1020 \\
-Trace & 33 &  4 &  200 \\
-TwoLeadECG & 34 &  2 & 1162 \\
-Two\_Patterns & 35 &  4 & 5000 \\
-WordsSynonyms & 36 & 25 &  905 \\
-fish & 37 &  7 &  350 \\
-synthetic\_control & 38 &  6 &  600 \\
-uWaveGestureLibrary\_X & 39 &  8 & 4478 \\
-uWaveGestureLibrary\_Y & 40 &  8 & 4478 \\
-uWaveGestureLibrary\_Z & 41 &  8 & 4478 \\
-wafer & 42 &  2 & 7164 \\
-yoga & 43 &  2 & 3300 \\
+50words & 50 &  905 \\
+Adiac & 37 &  781 \\
+Beef &  5 &   60 \\
+CBF  &  3 &  930 \\
+ChlorineConcentration  &  3 & 4307 \\
+CinC\_ECG\_torso  &  4 & 1420 \\
+Coffee  &  2 &   56 \\
+Cricket\_X  & 12 &  780 \\
+Cricket\_Y  & 12 &  780 \\
+Cricket\_Z  & 12 &  780 \\
+DiatomSizeReduction  &  4 &  322 \\
+ECG200  &  2 &  200 \\
+ECGFiveDays  &  2 &  884 \\
+FaceAll &  14 & 2250 \\
+FaceFour &   4 &  112 \\
+FacesUCR &  14 & 2250 \\
+Gun\_Point &   2 &  200 \\
+Haptics &   5 &  463 \\
+InlineSkate  &  7 &  650 \\
+ItalyPowerDemand  &  2 & 1096 \\
+Lighting2  &  2 &  121 \\
+Lighting7  &  7 &  143 \\
+MALLAT  &  8 & 2400 \\
+MedicalImages  & 10 & 1141 \\
+MoteStrain  &  2 & 1272 \\
+OSULeaf &   6 &  442 \\
+OliveOil &   4 &   60 \\
+SonyAIBORobotSurface &   2 &  621 \\
+SonyAIBORobotSurfaceII &   2 &  980 \\
+StarLightCurves  &  3 & 9236 \\
+SwedishLeaf & 15 & 1125 \\
+Symbols  &  6 & 1020 \\
+Trace &   4 &  200 \\
+TwoLeadECG  &  2 & 1162 \\
+Two\_Patterns  &  4 & 5000 \\
+WordsSynonyms  & 25 &  905 \\
+fish  &  7 &  350 \\
+synthetic\_control  &  6 &  600 \\
+uWaveGestureLibrary\_X  &  8 & 4478 \\
+uWaveGestureLibrary\_Y  &  8 & 4478 \\
+uWaveGestureLibrary\_Z  &  8 & 4478 \\
+wafer  &  2 & 7164 \\
+yoga  &  2 & 3300 \\
 \end{tabular}
 \end{center}
 \end{table}

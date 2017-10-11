@@ -19,8 +19,13 @@ if nargin==0, mkaTimeSeries('report', 'rcv',  'reportName', 'timing'); return; e
         classes = {class2 class37 class8};
        classesNames = {'2', '37', '8'};
        
-switch config.reportName   
+switch config.reportName  
+     
     case 'timing'
+            config = expExpose(config, 'l', 'mask', {0, 1, 2, [1 8 9 11], 3, 1, 0, 3, 1}, 'step', 2, ... % 1 2 [8 9 11] [3] [1] 0 3 1
+               'highlight', 0, 'highlightColor', -1, 'highlightStyle', 'Best', 'obs', [1 2 3 4 5], 'percent', 1, 'precision', 3 ...
+              , 'integrate', 'dataSet', 'orientation', 'vi', 'uncertainty', -1, 'orderSetting', [4 2 3 1], 'negativeRank', 5, 'save', ['methodSpeedAverage' ]); % 'orientation', 'vi', 'precision', 1, 'expand', 'dataSet', 'noObservation', 1, 'orderSetting', [2 1], 'mergeDisplay', 'h', 'save', ['methods' classesNames{k}], 'fontSize', 'small');
+   return
        for k=1 :length(classes)
 %            config = expExpose(config, 't', 'mask', {classes{k} 1 2 0 0 0 2}, 'step', 1, 'highlight', -1, ...
 %                'obs', [1 3 4], 'caption', 'Morphology of the datasets', 'orientation', 'v', 'precision', 0, 'noFactor', 1);

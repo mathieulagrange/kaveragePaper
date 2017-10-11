@@ -11,7 +11,7 @@ function [config, store, obs] = mktise2cluster(config, setting, data)
 % Date: 26-Aug-2014
 
 % Set behavior for debug mode
-if nargin==0, mkaTimeSeries('do', 2, 'mask', {39 1 2 [1] [3] [1] 0 1 1}); return; else store=[]; obs=[]; end
+if nargin==0, mkaTimeSeries('do', 2, 'mask', {1 1 2 [11] [1] [1] 0 1 1}); return; else store=[]; obs=[]; end
 
 expRandomSeed();
 % should generate the init now
@@ -63,52 +63,23 @@ for k=1:setting.nbRuns
             end
             warning on all
         case 'kkMeans'
-            ticId  = tic;
-            [clusters, intra, nbIterations] = knkmeans(S, init, setting.nbIterations);
-            //
-            if nargin<3, nbIterations=500; end
-            if nargin<4, factor=0; end
-            
-            n = size(K,1);
-            if max(size(m)) == 1
-                k = m;
-                %     label = randi(k,1,n);
-                label = ceil(k*rand(1,n));
-            elseif size(m,1) == 1 && size(m,2) == n
-                k = max(m);
-                label = m;
-            else
-                error('ERROR: m is not valid.');
-            end
+            ticId  = tic;        
+            n = size(S,1);
+            clusters=init;
             %% version 1: directly implement the formula in [1]
             last = 0;
-            it=0;
-            S = repmat((1:k)',1,n);
-            t=[];
-            e=[];
-            while any(label ~= last) && it<nbIterations
-                E = double(bsxfun(@eq,S,label));
+            nbIterations=0;
+            SS = repmat((1:data.nbClasses)',1,n);
+            while any(clusters ~= last) && nbIterations<setting.nbIterations
+                E = double(bsxfun(@eq,SS,clusters));
                 E = bsxfun(@rdivide,E,sum(E,2));
-                T = E*K;
-                if factor==1
-                    Z = -2*T;
-                elseif factor==2
-                    Z = repmat(diag(T*E'),1,n);
-                else
-                    Z = repmat(diag(T*E'),1,n)-2*T;
-                end
-                
-                last = label;
-                [val, label] = min(Z,[],1);
-                SS = repmat(diag(T*E'),1,n);
-                t(end+1, 1) = sum(T(label));
-                t(end, 2) = sum(SS(label));
-                t(end, 3) = (sum(val)+trace(K))/max(K(:));
-                it=it+1;
+                T = E*S;
+                Z = repmat(diag(T*E'),1,n)-2*T;
+                          
+                last = clusters;
+                [val, clusters] = min(Z,[],1);
+                nbIterations=nbIterations+1;
             end
-            energy = sum(val)+trace(K);
-            energy = energy/max(K(:));
-            //
             obs.time(k) = toc(ticId);
         case 'kAverages'
             [clusters, nbMoved] = mka(S, data.nbClasses, setting.objective, setting.strategy, init, setting.nbIterations);
@@ -120,24 +91,14 @@ for k=1:setting.nbRuns
         case 'random'
             clusters = ceil(rand(1, data.nbSamples)*data.nbClasses);
             nbIterations =  NaN;
-        case 'cluto'
-            matrixFileName = ['/tmp/' config.experimentName '_' setting.infoShortString '.csv'];
-            dlmwrite(matrixFileName, data.nbSamples, 'delimiter', ' ');
-            dlmwrite(matrixFileName, S, 'delimiter', ' ', '-append');
-            
-            system(['~/versioned/paperKaverages15/code/cluto-2.1.1/Linux/scluster -clmethod=' setting.cluto ' ' matrixFileName ' ' num2str(data.nbClasses)]);
-            clusters = csvread([matrixFileName '.clustering.' num2str(data.nbClasses)]);
-            nbIterations = 0;
         case 'sc'
+            Type=3;
             ticId = tic;
-            C=0;
             % calculate degree matrix
-            degs = sum(W, 2);
-            D    = sparse(1:size(W, 1), 1:size(W, 2), degs);
-            
+            degs = sum(S, 2);
+            D    = sparse(1:size(S, 1), 1:size(S, 2), degs);           
             % compute unnormalized Laplacian
-            L = D - W;
-            
+            L = D - S;        
             % compute normalized Laplacian if needed
             switch Type
                 case 2
@@ -156,13 +117,10 @@ for k=1:setting.nbRuns
                     
                     % calculate normalized Laplacian
                     L = D * L * D;
-            end
-            
+            end           
             % compute the eigenvectors corresponding to the k smallest
             % eigenvalues
-            diff   = eps;
-            [U, ~] = eigs(L, k, diff);
-            
+            [U, ~] = eigs(L, data.nbClasses, eps);         
             % in case of the Jordan-Weiss algorithm, we need to normalize
             % the eigenvectors row-wise
             if Type == 3
