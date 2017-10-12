@@ -42,7 +42,7 @@ Paris, France \\
 \email mathias.rossignol@gmail.com\\
 \and
  Mathieu Lagrange \at
- IRCCYN\\
+ LS2N\\
 Nantes, France \\
 \email lagrange.mathieu@cnrs.fr
 \and
@@ -83,21 +83,21 @@ from ANR project Houle (grant ANR-11-JS03-005-01).
 
 \section{Introduction}
 
-Clustering collections of objects into classes that bring together similar ones is probably the most common and intuitive tool used both by human cognition and artificial data analysis in an attempt to make that data organized, understandable, manageable. When the studied objects lend themselves to this kind of analysis, it is a powerful way to expose underlying organizations and approximate the data in such a way that the relationships between its members can be statistically understood and modeled. Given a description of objects, we first attempt to quantify which ones are ``\,similar\,'' from a given point of view, then group those $n$ objects into $C$ clusters, so that the similarity between objects within the same cluster is maximized. Finding the actual best possible partition of objects into clusters is, however, an NP-complete problem, intractable for useful data sizes. Many approaches have been proposed to yield an approximate solution: analytic, iterative, flat or hierarchical, agglomerative or divisive, soft or hard clustering algorithms, \textit{etc.}, each with their strengths and weaknesses \citep{jain2010data}, performing better on some classes of problems than others \citep{steinbach2000comparison,thalamuthu2006evaluation}.
+Clustering collections of objects into classes that bring together similar ones is probably the most common and intuitive tool used both by human cognition and artificial data analysis in an attempt to make that data organized, understandable, manageable. When the studied objects lend themselves to this kind of analysis, it is a powerful way to expose underlying organizations and approximate the data in such a way that the relationships between its members can be statistically understood and modeled. Given a description of objects, we first attempt to quantify which ones are ``\,similar\,'' from a given point of view, then group those $n$ objects into $C$ clusters, so that the similarity between objects within the same cluster is maximized. Finding the actual best possible partition of objects into clusters is, however, an NP-complete problem, intractable for useful datasets sizes. Many approaches have been proposed to yield an approximate solution: analytic, iterative, flat or hierarchical, agglomerative or divisive, soft or hard clustering algorithms, \textit{etc.}, each with their strengths and weaknesses \citep{jain2010data}, performing better on some classes of problems than others \citep{steinbach2000comparison,thalamuthu2006evaluation}.
 
-Iterative divisive hard clustering algorithms, such as the ubiquitous \emph{k-means} \citep{macQueenBsmsp67}, usually perform well to identify high-level organization in large data collections in reasonable running time. For that reason, they are a sensible choice in many data mining situations, and constitute our focus in this paper.
+Iterative divisive hard clustering algorithms, usually perform well to identify high-level organization in large data collections in reasonable running time. For that reason, they are a sensible choice in many data mining situations, and constitute our focus in this paper.
 % ; their main drawback being that the number of desired clusters must be specified
-If the data lies in a vector space, \textit{i.e.} an object can be described by a $m$-dimensional feature vector without significant loss of information, the seminal \emph{K-means} algorithm \citep{macQueenBsmsp67} is probably the most efficient approach, since the explicit computation of the cluster centroids ensure both computational efficiency and scalability. This algorithm is  based on the centroid model, and minimizes the intra cluster Euclidean distance. As shown by \citet{Banerjee:2005:CBD:1046920.1194902}, any kind of Bregman divergence, such as the KL-divergence \citep{Dhillon:2003:DIT:944919.944973} or the Itakura-Saito divergence \citep{linde:algorithm}, may also be considered to develop such efficient clustering algorithms.
+If the data lies in a vector space, \textit{i.e.} an object can be described by a $m$-dimensional feature vector without significant loss of information, the seminal \emph{k-means} algorithm \citep{macQueenBsmsp67} is probably the most efficient approach, since the explicit computation of the cluster centroids ensure both computational efficiency and scalability. This algorithm is  based on the centroid model, and minimizes the intra cluster Euclidean distance. As shown by \citet{Banerjee:2005:CBD:1046920.1194902}, any kind of Bregman divergence, such as the KL-divergence \citep{Dhillon:2003:DIT:944919.944973} or the Itakura-Saito divergence \citep{linde:algorithm}, may also be considered to develop such efficient clustering algorithms.
 
 However, for many types of data, the projection of a representational problem into an vector space cannot be done without significant loss of descriptive efficiency. To reduce this loss, specifically tailored measures of similarity are considered. As a result, the input data for clustering is no longer a $n \times m$ matrix storing the $m$-dimensional vectors describing the objects, but a (usually symmetric) square matrix $S$ of size $n \times n$ which numerically encodes some sort of relationship between the objects. In this case, one has to resort to clustering algorithms based on connectivity models, since the cluster centroids cannot be explicitly computed.
 
-Early attempts to solve this issue considered the k-medoids problem, where the goal is to find the $k$ objects that maximize the average similarity with the other objects of their respective clusters, or \emph{medoids}. The Partition Around Medoids (PAM) algorithm \citep{KaufmanRousseeuw90} solves the k-medoids problem but with a high complexity ($O(k(n-k)^2)i$, $n$ being the number of objects) and high number of iterations $i$, due to low convergence rate. In order to scale the approach, the Clustering LARge Applications (CLARA) algorithm \citep{KaufmanRousseeuw90} draws a sample of objects before running the PAM algorithm. This sampling operation is repeated several times and the most satisfying set of medoids is retained. In contrast, CLARANS \citep{Ng:1994:EEC:645920.672827} preserves the whole set of objects but cuts complexity by  drawing a sample of neighbors in each search for the medoids.
+Early attempts to solve this issue considered the k-medoids problem, where the goal is to find the $k$ objects that maximize the average similarity with the other objects of their respective clusters, or \emph{medoids}. The Partition Around Medoids (PAM) algorithm \citep{KaufmanRousseeuw90} solves the k-medoids problem but with a complexity of $O(k(n-k)^2)i$, $n$ being the number of objects and $i$ number of iterations. Due to the high complexity and the low convergence rate, this algorithm cannot be applied to decent size datasets. In order to scale the approach, the Clustering LARge Applications (CLARA) algorithm \citep{KaufmanRousseeuw90} draws a sample of objects before running the PAM algorithm. This sampling operation is repeated several times and the most satisfying set of medoids is retained. In contrast, CLARANS \citep{Ng:1994:EEC:645920.672827} preserves the whole set of objects but cuts complexity by  drawing a sample of neighbors in each search for the medoids.
 %, with two drawbacks: it assumes that all objects fit in main memory, and the result is sensitive to the input order \cite{Zhang:1996:BED:233269.233324}.
 
 
-Another classical approach to the issue is to run a variant of k-means that considers average intra-cluster similarity as the guiding criterion for object-to-class reallocation \citep[Chapter 10.7]{Duda01}. This straightforward technique performs well in may cases, but the complexity of computing anew intra-cluster similarities at each iteration makes it impractical for large datasets.
+Another classical approach to the issue is to run a variant of k-means that considers average intra-cluster similarity as the guiding criterion for object-to-class reallocation \citep[Chapter 10.7]{Duda01}. This straightforward technique performs well in many cases, but the complexity of computing anew intra-cluster similarities at each iteration makes it impractical for large datasets.
 
-Following work on kernel projection \citep{Vapnik:1995:NSL:211359}, that is, the fact that a nonlinear data transformation into some high dimensional feature space increases the probability of the linear separability of patterns within the transformed space, \citet{Girolami:2002:MKC:2325785.2326903} introduced a kernel version of the K-means algorithm, whose input is a kernel matrix $\mathcal{K}$ that must be a Gram matrix, \textit{i.e.} semi definite positive. \citet{Dhillon:2007:WGC:1313055.1313291} linked a weighted version of the kernel K-means objective to the popular spectral clustering, introducing an efficient way of solving the normalized cut objective.
+Following work on kernel projection \citep{Vapnik:1995:NSL:211359}, that is, the fact that a nonlinear data transformation into some high dimensional feature space increases the probability of the linear separability of patterns within the transformed space, \citet{Girolami:2002:MKC:2325785.2326903} introduced a kernel version of the K-means algorithm, whose input is a kernel matrix $\mathcal{K}$ that must be a Gram matrix, \textit{i.e.} semi definite positive. \citet{Dhillon:2007:WGC:1313055.1313291} linked a weighted version of the kernel K-means objective to the popular spectral clustering \cite{von2007tutorial}, introducing an efficient way of solving the normalized cut objective \cite{shi2000normalized}.
 
 The kernel k-means algorithm proves to be equally useful when considering arbitrary similarity problems if special care is taken to ensure definite positiveness of the input matrix \citep{Roth:2003:OCP:960254.960291}. This follows original algorithmic considerations where vector space data is projected into high dimensional spaces using a carefully chosen kernel function.
 
@@ -116,7 +116,7 @@ We show in this paper that by using a semantically equivalent variant of the ave
 \item on a collection of synthetic and natural test data, its results are equivalent to those of kernel k-means, and obtained in a fraction of its computing time, particularly when paged memory is required.
 \end{itemize}
 
-As such, the main contribution of the paper is to present a clustering algorithm:
+To summarize, the main contribution of the paper is to present a clustering algorithm:
 \begin{itemize}
   \item  that can handle arbitrary affinity matrices, \textit{i.e.} semi-positiveness is not a mandatory requirement for guaranteed convergence
   \item thanks to a carefully designed strategy to update the membership of objects to cluster, the algorithm is fast and memory efficient.
@@ -125,22 +125,22 @@ As such, the main contribution of the paper is to present a clustering algorithm
 The remaining of the paper is organized as follows: Section~\ref{sec:kkmeans} presents the kernel k-means objective function and the basic algorithm that minimizes this function, and Section~\ref{sec:kaverages} introduces the concepts behind the k-averages algorithm,
 %before giving a detailed description of it in Section~\ref{sec:algo}.
 followed by a detailed algorithmic description in Section~\ref{sec:algo}.
-The complexity of the two algorithms in terms of arithmetic operations and memory access is then studied in Section \ref{sec:complexity}. The above presented properties of the proposed k-averages algorithm are then validated on synthetic controlled data in Section \ref{sec:validation} and on 43 corpora of time series in Section \ref{sec:experiments}.
+The complexity of the two algorithms in terms of arithmetic operations and memory access is then studied in Section \ref{sec:complexity}. The above presented properties of the proposed k-averages algorithm are then validated on synthetic controlled data in Section \ref{sec:validation} and on 43 datasets of time series issued from various sources in Section \ref{sec:experiments}.
 
 \section{Kernel k-means} \label{sec:kkmeans}
 
 Since its introduction by \citet{Girolami:2002:MKC:2325785.2326903}, kernel k-means has been an algorithm of choice for flat data clustering with known number of clusters \citep{Kulis2008, Roth:2003:OCP:960254.960291}. It makes use of a mathematical technique known as the \gl{kernel trick} to extend the classical k-means clustering algorithm \citep{macQueenBsmsp67} to criteria beyond simple euclidean distance proximity. Since it constitutes the closest point of comparison with our own work, we dedicate this section to its detailed presentation.
 
-In the case of kernel k-means, the kernel trick consists in considering that the k-means algorithm is operating in an unspecified, possibly very high-dimensional Euclidean space; but instead of specifying the properties of that space and the coordinates of objects, the equations governing the algorithm are modified so that everything can be computed knowing only the scalar products between points. The symmetrical matrix  containing those scalar products is known as a kernel, noted $\mathcal{K}$.
+In the case of kernel k-means, the kernel trick allows us to  consider that the k-means algorithm is operating in an unspecified, possibly very high-dimensional Euclidean space; but instead of specifying the properties of that space and the coordinates of objects, the equations governing the algorithm are modified so that everything can be computed knowing only the scalar products between points. The symmetrical matrix  containing those scalar products is known as a kernel, noted $\mathcal{K}$.
 
 \subsection{Kernel k-means objective function}
 
-In this section and the following, we shall adopt the following convention: $N$ is the number of objects to cluster and $C$ the number of clusters; $N_c$ is the number of objects in cluster $c$, and $\mu_c$ is the centroid of that cluster. $z_{cn}$ is the membership function, whose value is $1$ if object $o_n$ is in class $c$, $0$ otherwise.
+In this section and the following, we shall adopt the following convention: $N$ is the number of objects to cluster and $C$ the number of clusters; $N_c$ is the number of objects in cluster $c$, and $\mu_c$ is the centroid of that cluster. $z_{cn}$ is the membership function, whose value is $1$ if object $o_n$ is in class $c$, $0$ otherwise. In the folowing equations, $\mu_c$ and $o_n$ are assumed to be column vectors of equal dimension.
 
 Starting from the objective function minimized by the k-means algorithm, expressing the sum of squared distances of points to the centroids of their respective clusters:
 
 \[
-S = \sum_{c=1}^{C} \sum_{n=1}^{N} z_{cn} \left(o_n-\mu_c\right)\left(o_n-\mu_c\right)^\top \label{eq:S}
+S = \sum_{c=1}^{C} \sum_{n=1}^{N} z_{cn} \left(o_n-\mu_c\right)^\top\left(o_n-\mu_c\right) \label{eq:S}
 \]
 
 And using the definition of centroids as:
@@ -158,12 +158,14 @@ S = \sum_{c=1}^{C} \sum_{n=1}^{N} z_{cn} Y_{cn}
 where
 \begin{align}
 \begin{split}
-Y_{cn} & =  \left(o_n-\mu_c\right)\left(o_n-\mu_c\right)^\top \\
-       & =  o_no_n - 2 o_n\mu_c + \mu_c\mu_c \\
-       & =  o_no_n - 2 o_n\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i +
-       	 \left(\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i\right)^2 \\ %.\left(\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i\right) \\
-       & =  o_no_n - \frac{2}{N_c} \sum_{i=1}^{N} z_{ci} o_no_i +
-       	 \frac{1}{N_c^2} \sum_{i=1}^{N} \sum_{j=1}^{N} z_{ki} z_{kj} o_io_j \\
+Y_{cn} & =  \left(o_n-\mu_c\right)^\top\left(o_n-\mu_c\right) \\
+       & =  o_no_n - 2 o_n^\top \mu_c + \mu_c^\top \mu_c \\
+       & =  o_n^\top o_n - 2 o_n^\top \frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i +
+       	 \left(\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i\right)^\top
+         \left(\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i\right)\\
+        %  \left(\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i\right)^2\\ %.\left(\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i\right) \\
+       & =  o_n^\top o_n - \frac{2}{N_c} \sum_{i=1}^{N} z_{ci} o_n^\top o_i +
+       	 \frac{1}{N_c^2} \sum_{i=1}^{N} \sum_{j=1}^{N} z_{ki} z_{kj} o_i^\top o_j \\
        & =  \mathcal{K}_{nn} - \frac{2}{N_c} \sum_{i=1}^{N} z_{ci} \mathcal{K}_{ni} +
          \frac{1}{N_c^2} \sum_{i=1}^{N} \sum_{j=1}^{N} z_{ki} z_{kj} \mathcal{K}_{ij} \label{eq:yki}
 \end{split}
@@ -184,11 +186,11 @@ Y_{cn} & =  \left(o_n-\mu_c\right)\left(o_n-\mu_c\right)^\top \\
 % what does "mostly bounded" mean?
 % The second half going to "similarity matrix processing" can be further explained.. this means that K_nn will become similarity measures.. right?
 
-Since the sum of $K_{nn}$ over all points remains constant, and the sum of squared centroid norms (third, quadratic, term of Equation~\ref{eq:yki}) is mostly bounded by the general geometry of the cloud of objects, we can see that minimizing this value implies maximizing the sum of the central terms, which are the average scalar products of points with other points belonging to the same class. Therefore, given a matrix gathering similarities between objects, if that matrix possesses the necessary properties to be considered as a kernel (positive semidefinite), then the kernel k-means algorithm can be applied to it in order to create clusters that locally maximize the average intra-cluster similarity.
+Since the sum of $K_{nn}$ over all points remains constant, and the sum of squared centroid norms (third, quadratic, term of Equation~\ref{eq:yki}) is mostly bounded by the general geometry of the cloud of objects, we can see that minimizing this value implies maximizing the sum of the central terms, which are the average scalar products of points with other points belonging to the same class. Therefore, given a matrix gathering similarities between objects, if that matrix possesses the necessary properties to be considered as a kernel (positive semidefinitness), then the kernel k-means algorithm can be applied to it in order to create clusters that locally maximize the average intra-cluster similarity.
 
 \subsection{Algorithm}
 
-Finding the configuration that absolutely minimizes S (eq~\ref{eq:S}) is an NP-complete problem. However, several approaches allow finding an acceptable approximation. We shall only focus here on the fastest and most popular, an iterative assignment\,/\,update procedure commonly referred to as the \gl{k-means algorithm} \citep{macQueenBsmsp67}, or as a discrete version of Lloyd's algorithm, detailed in Algorithm~\ref{algo:kkmeans}.
+Finding the configuration that globally minimizes S (eq~\ref{eq:S}) is an NP-complete problem. However, several approaches allow finding an acceptable approximation. We shall only focus here on the fastest and most popular, an iterative assignment\,/\,update procedure commonly referred to as the \gl{k-means algorithm} \citep{macQueenBsmsp67}, or as a discrete version of Lloyd's algorithm, detailed in Algorithm~\ref{algo:kkmeans}.
 
 \begin{algorithm}
 	\label{algo:kkmeans}
@@ -222,7 +224,7 @@ Due to its simplicity, however, the objective function cannot be simply \gl{plug
 
 \subsection{Conventions and objective function}
 
-In addition to the notations presented above, we index hereon the set of elements belonging to a given cluster $c_k$ as $c_k = \left\{o_{k1}, \ldots, o_{kN_k}\right\}$.
+In addition to the notations presented above, we index here the set of elements belonging to a given cluster $c_k$ as $c_k = \left\{o_{k1}, \ldots, o_{kN_k}\right\}$.
 For simplicity, we omit the first index and note $c = \left\{o_1, \ldots, o_{N_c}\right\}$ when considering a single class.
 %To simplify below, when we're simply considering one class, no matter
 %which, we shall omit the first index and write $c = \left\{o_1, \ldots, o_{N_c}\right\}$.
@@ -251,9 +253,9 @@ Let us call the \gl{quality} of a class the average intra-class object-to-object
 \mathcal{Q}\left(c\right) = \frac{1}{N_c} \sum_{i=1}^{n_c} s\left(o_i, c\right)
 \]
 
-In our framework, we do not explicitly refer to class centroids, preferring to directly consider averages of similarity values between individuals within clusters. Indeed, we never refer to a geometrical interpretation of the data. However, it should be noted that since in k-means (and kernel k-means) the centroid of a class is defined as an average of all points in that class, $\mathcal{Q}$ is strictly equivalent to the average point to centroid similarity.
+%Indeed, we never refer to a geometrical interpretation of the data. However, it should be noted that since in k-means (and kernel k-means) the centroid of a class is defined as an average of all points in that class, $\mathcal{Q}$ is strictly equivalent to the average point to centroid similarity.
 
-Using the notations above, we define our objective function as the average class quality, normalized with class sizes:
+In our framework, we do not explicitly refer to class centroids, preferring to directly consider averages of similarity values between individuals within clusters. Using the notations above, we define our objective function as the average class quality, normalized with class sizes:
 
 \[
 O_2 = \frac{1}{N} \sum_{i=1}^{C} N_i \mathcal{Q}(c_i)
@@ -291,7 +293,7 @@ Algorithm~\ref{algo:naive-kaverages} presents a method that simply moves each ob
 	\caption{The naive k-averages algorithm.}
 \end{algorithm}
 
-To ensure global convergence, we need to compute the impact on the global objective function of moving one object from one class to another. Using such formulation and performing only reallocation that have a positive impact, the convergence of such an iterative algorithm is guaranteed.
+To ensure convergence, we need to compute the impact on the objective function of moving one object from one class to another. Using such formulation and performing only reallocation that have a positive impact, the convergence of such an iterative algorithm is guaranteed.
 
 \subsection{Impact of object reallocation on class quality}
 
@@ -404,7 +406,7 @@ As can be seen, computing this impact is a fixed-cost operation. We can therefor
 \section{K-averages algorithm}
 \label{sec:algo}
 
-Our approach does not allow us to benefit, like kernel k-means, from the convergence guarantee brought by the geometric foundation of k-means. In consequence, we cannot apply a \gl{batch} approach where at each iteration all elements are moved to their new class, and all distances (or similarities) are computed at once. Therefore, for each considered object, after finding its ideal new class, we must update the class properties for the two modified classes (source and destination), as well as recompute the average class-object similarities for them. This is the principle of the \gl{greedy} k-means algorithm \citep[Chapter10.8]{Duda01}, but whereas for k-means that approach increases complexity (and even more so for kernel k-means), in this case it allows for much improved computational performance.
+Our approach does not allow us to benefit, like kernel k-means, from the convergence guarantee brought by the geometric foundation of k-means. In consequence, we cannot apply a \gl{batch} approach where at each iteration all elements are moved to their new class, and all distances (or similarities) are computed at once. To guarantee convergence, we must update the class properties for the two modified classes (source and destination), as well as recompute the average class-object similarities for them for each considered object, after finding its ideal new class. This is the principle of the \gl{greedy} k-means algorithm \citep[Chapter10.8]{Duda01}, but whereas for k-means that approach increases complexity (and even more so for kernel k-means), in this case it leads to a much improved computational performance.
 
 Indeed, at a first glance, dynamically updating objectives as a result of object reallocation might seem to have negative performance impact. However, our simple non-quadratic updates make such dynamic changes easily tractable. New class qualities are thus given by Equations~\ref{eq:newQual_remove} and \ref{eq:newQual_add}, and new object-class similarities can be computed by:
 
@@ -457,7 +459,7 @@ The full description of k-averages is given in Algorithm~\ref{algo:kaverages}.
 \section{Complexity analysis}
 \label{sec:complexity}
 
-In this section, we study the complexity of the two approaches presented above, first form the point of view of raw complexity, then focusing on memory access.
+In this section, we study the complexity of the two approaches presented above, first from the point of view of raw complexity, second by focusing on memory access.
 
 \subsection{Computational complexity}
 
@@ -514,7 +516,7 @@ For the k-averages method presented as Algorithm~\ref{algo:kaverages}, the compl
 In the worst case scenario, $M = N$, and the complexity for one iteration of the algorithm remains the same as for the optimized kernel k-means algorithm, $O(N^2)$. In practice, however, as can be seen on Figure~\ref{fig:moved}, the number of objects moving from one class to another decreases sharply after the first iteration, meaning that the complexity of one iteration becomes quickly much lower than $O(N^2)$. Thus, while the first iteration of k-averages has a similar complexity with kernel k-means, the overall cost of a typical run of the algorithm (from 10 to 50 iterations) is much lower.
 
 
-To go further in this analysis, we display on Figure~\ref{fig:totalMoved}  the total number of object reallocation over a full run of the k-averages algorithm. As can be seen, the correlation is clearly linear with the number of objects to cluster. In fact, the number of reallocations is roughly equal to the number of objects to cluster, which allows us to reach for k-averages a (statistical) total complexity of $O(N^2)$, instead of $O(N^2)$ per iteration.
+To go further in this analysis, we display on Figure~\ref{fig:totalMoved}  the total number of object reallocation over a full run of the k-averages algorithm for several datatsets. The datasets used to create this figure are the real-life time series data that we employ for experimental validation evaluated under the Dynamic Time Warping (DTW) similarity measure, \textit{cf.} Section~\ref{sec:experiments}. As can be seen, the correlation is roughly linear with the number of objects to cluster. In fact, the number of reallocations is roughly equal to the number of objects to cluster, which allows us to reach for k-averages a (statistical) total complexity of $O(N^2)$, instead of $O(N^2)$ per iteration.
 
 \begin{figure}
 \center
@@ -541,7 +543,7 @@ To illustrate and confirm the theoretical complexity computed here, the next sec
 \section{Validation}
 \label{sec:validation}
 
-In order to reliably compare the clustering quality and execution speed between the two approaches, we have written plain C implementations of Algorithms~\ref{algo:kkmeans_optim} and~\ref{algo:kaverages}, with minimal operational overhead: reading the similarity matrix from a binary file where all matrix values are stored sequentially in standard reading order, line by line, and writing out the result of the clustering as a label text file. Both implementations use reasonably efficient code, but without advanced optimizations or parallel processing; C and Matlab implementations can be found at\\ \url{https://bitbucket.org/mlagrange/kaverages/downloads}.	%% Arshia: remove \footnote{}
+In order to reliably compare the clustering quality and execution speed between the two approaches, we have written plain C implementations of Algorithms~\ref{algo:kkmeans_optim} and~\ref{algo:kaverages}, with minimal operational overhead: reading the similarity matrix from a binary file where all matrix values are stored sequentially in standard reading order, line by line, and writing out the result of the clustering as a label text file. Both implementations use reasonably efficient code, but without advanced optimizations or parallel processing\footnote{The C and Matlab implementations can be found at\\ \url{https://bitbucket.org/mlagrange/kaverages}.}.	%% Arshia: remove \footnote{}
 
 The figures presented in this section were obtained on synthetic datasets, created in order to give precise control on the features of the analyzed data: for $n$ points split between $C$ classes, $C$ centroids are generated at random in two dimensional space, and point coordinates are generated following a Gaussian distribution around class centroids. In addition to the numbers of objects and classes, the variance of Gaussian distributions are adjusted to modulate how clearly separable clusters are. Similarities are computed as inverse Euclidean distances between points. %This clearly simplified example is useful as a first control test bench; the next section is dedicated to experiments on more realistic datasets.
 
@@ -556,7 +558,7 @@ Another metric of choice is the Normalized Mutual Information (NMI) criterion. B
 
 where $I(X;Y)=H(X)−H(X|Y)$ is the mutual information between the random variables $X$ and $Y$, $H(X)$ is the Shannon entropy of $X$,and $H(X|Y)$ is the conditional entropy of $X$ given $Y$. Thanks to the normalization, the metric stays between $0$ and $1$, $1$ indicating a perfect match, and can be used to compare clustering with different numbers of clusters. Interestingly, random prediction gives an NMI close to $0$, whereas the accuracy of a random prediction on a balanced bi-class problem is as high as 50\,\%.
 
-In this paper, for simplicity and accessibility, only the NMI is considered for validations as in \citep{Kulis2008}. However, it shall be noted that most statements hereafter in terms of performance ranking of the different algorithms still hold while considering the accuracy metric as reference.
+In this paper, for simplicity sake, only the NMI is considered for validations. However, we found that most statements hereafter in terms of performance ranking of the different algorithms still hold while considering the accuracy metric as reference.
 
 \begin{figure}
 \center
@@ -565,11 +567,11 @@ In this paper, for simplicity and accessibility, only the NMI is considered for 
 \label{fig:synth_perf}
 \end{figure}
 
-Figure~\ref{fig:synth_perf} presents the quality of clusterings obtained using kernel k-means (dotted line) and k-averages (solid line) on two series of datasets: one featuring 5 classes, the other 40 classes. On the x-axis is the variance of the Gaussian distribution used to generate the point cloud for each class: the higher that value, the more the classes are spread out and overlap each other, thus making the clustering harder.
+Figure~\ref{fig:synth_perf} presents the quality of clusterings obtained using kernel k-means and k-averages on two series of datasets: one featuring 5 classes, the other 40 classes. On the x-axis is the variance of the Gaussian distribution used to generate the point cloud for each class: the higher that value, the more the classes are spread out and overlap each other, thus making the clustering harder.
 
 The question of choosing the proper number of clusters for a given dataset without \textit{a priori} is a well known and hard problem, and beyond the scope of this article. Therefore, for the purpose of evaluation, clustering is done by requesting a number of clusters equal to the actual number of classes in the dataset. In order to obtain stable and reliable figures, clustering is repeated 500 times with varying initial conditions, \textit{i.e.} the initial assignment of points to clusters is randomly determined, and only the average performance is given. For fairness of comparison, each algorithm is run with the exact same initial assignments.
 
-As can be seen on the figure, in the case of a 5-class problem, k-averages outperforms kernel k-means in the \gl{easy} cases (low class spread), before converging to equivalent results. For the more complex 40-class datasets, k-averages consistently yields a better result than kernel k-means, especially for higher values of the variance. The lower values of NMI for 5-class experiments is in fact an artifact introduced by the normalization of NMI, and is not significant here; we only focus, for each series of experiments, on the relative performances of kernel k-means and k-averages.
+As can be seen on the figure, in the case of a 5-class problem, k-averages outperforms kernel k-means in the \gl{easy} cases (low class spread), before converging to equivalent results. For the more complex 40-class datasets, k-averages consistently yields a better result than kernel k-means, especially for higher values of the variance. The lower values of NMI for 5-class experiments is in fact an artifact introduced by the normalization of NMI, and is not important here; we only focus, for each series of experiments, on the relative performances of kernel k-means and k-averages.
 
 \subsection{Time efficiency}
 
@@ -582,20 +584,20 @@ Figure~\ref{fig:timing} shows the average time spent by kernel k-means and k-ave
 \label{fig:timing}
 \end{figure}
 
-These figures confirm the theoretical complexity analysis presented in Section~\ref{sec:complexity}: k-averages runs at least 20 times faster on average than kernel k-means in ordinary conditions, when  available memory is not an issue. When the matrix size exceeds what can be stored in RAM and the system has to resort to paged memory, as in the presented experiments when the matrix reaches about 1500MB, both algorithms suffer from a clear performance hit; however, kernel k-means is much more affected, and the difference becomes even more significant: with a 2000MB similarity matrix on a memory-limited computer, k-averages runs about 100 times faster than kernel k-means.
+These figures confirm the theoretical complexity analysis presented in Section~\ref{sec:complexity}: k-averages runs at least 20 times faster on average than kernel k-means in ordinary conditions, when  available memory is not an issue. When the matrix size exceeds what can be stored in RAM and the system has to resort to paged memory, as in the presented experiments when the matrix reaches about 1500MB, both algorithms suffer from a clear performance hit; however, kernel k-means is much more affected, and the difference becomes even more important: with a 2000MB similarity matrix on a memory-limited computer, k-averages runs about 100 times faster than kernel k-means.
 
 Having established the interest of our proposed method relative to kernel k-means on synthetic object collections, we now proceed to a thorough evaluation on real data.
 
 \section{Experiments}
 \label{sec:experiments}
 
-In order to demonstrate the usefulness of k-averages when dealing with real data, we have chosen to focus on the clustering of time series as the evaluation task. Time series, even though represented as vectors and therefore suitable for any kinds of norm-based clustering, are best compared with elastic measures \citep{Ding:2008:QMT:1454159.1454226, Wang:2013:ECR:2429736.2429754}, partly due to their varying length. The Dynamic Time Warping (DTW) measure is an elastic measure widely used in many areas since its introduction for spoken word detection \citep{1163055} and has never been significantly challenged for time series mining \citep{conf/kdd/BerndtC94, Rakthanmanon:2013:ABD:2513092.2500489}.
+In order to demonstrate the usefulness of k-averages when dealing with real data, we have chosen to focus on the clustering of time series as the evaluation task. Time series, even though represented as vectors and therefore suitable for any kinds of norm-based clustering, are best compared with elastic measures \citep{Ding:2008:QMT:1454159.1454226, Wang:2013:ECR:2429736.2429754}, partly due to their varying length. The Dynamic Time Warping (DTW) measure is an elastic measure widely used in many areas since its introduction for spoken word detection \citep{1163055} and has never been challenged for time series mining \citep{conf/kdd/BerndtC94, Rakthanmanon:2013:ABD:2513092.2500489}.
 
-Effective clustering of time series using the DTW measure requires similarity based algorithms such as the k-averages algorithm. With some care, kernel based algorithm can also be considered provided that the resulting similarity matrix is converted into a kernel, \textit{i.e.} the matrix is forced to be semi definite positive, \textit{i.e.} to be a Gram matrix \citep{Lanckriet:2004:LKM:1005332.1005334}.
+Effective clustering of time series using the DTW measure requires similarity based algorithms such as the k-averages algorithm. With some care, kernel based algorithm can also be considered provided that the resulting similarity matrix is converted into a kernel, \textit{i.e.} the matrix is forced to be semi definite positive, \textit{i.e.} to be a Gram matrix \citep{Lanckriet:2004:LKM:1005332.1005334} in order to guarantee convergence.
 
 \subsection{Datasets}
 
-To compare quality of clusterings obtained by the considered algorithms, we consider a large collection of 43 time series datasets created by many laboratories all over the world and compiled by Prof. Keogh \footnote{Available at: \url{www.cs.ucr.edu/~eamonn/time_series_data}}. Thus, while all the experiments presented here are performed on time series (chosen for being a good example of a data type requiring similarity-based clustering, as opposed to a simple Euclidean approach), the great variety in the sources and semantics of said series (bio-informatics, linguistics, astronomy, gesture modeling, chemistry\ldots{}) gives this validation a wide foundation. Statistics about the morphology of those datasets are summarized in Table~\ref{tab:dbs}.
+To compare quality of clusterings obtained by the considered algorithms, we consider a large collection of 43 time series datasets made publicly available by many laboratories worldwide and compiled by Prof. Keogh \footnote{Available at: \url{www.cs.ucr.edu/~eamonn/time_series_data}}. Thus, while all the experiments presented here are performed on time series (chosen for being a good example of a data type requiring similarity-based clustering, as opposed to a simple Euclidean approach), the great variety in the sources and semantics of said series (bio-informatics, linguistics, astronomy, gesture modeling, chemistry\ldots{}) gives this validation a wide foundation. Statistics about the morphology of those datasets are summarized in Table~\ref{tab:dbs}. Individual details can be found in Appendix \ref{sec:appendix}.
 %In the results described in the next sections, datasets are refered by a numerical id for the sake of brevity; the correspondence between those ids and the actual names of the datasets is shown on Table \ref{didtNoda1}.
 
 \begin{table}
@@ -612,13 +614,13 @@ time series length & 24 & 372 $\pm$ 400 & 1882 \\
 
 \subsection{Methods}
 
-Three algorithms are considered: the spectral clustering \cite{von2007tutorial} approach as a higher complexity reference, the kernel k-means algorithm implemented as described in Section \ref{sec:kkmeans} and the proposed k-averages algorithm. The spectral clustering algorithm tested here uses the normalization proposed by Jordan and Weiss \cite{ng2002spectral}. This normalization is chosen over no normalization and the Shi and Malik one \cite{shi2000normalized} as it is found to be the best performing in terms of average NMI over all the datasets. The implementation is done using the Matlab programming language. Even though a C implementation would probably be more efficient, we believe that the gain would be low as the main computational load is the diagonalization of the similarity matrix and the k-means clustering of the eigenvectors which are both efficient builtins Matlab functions. The kernel k-means is implemented both in Matlab using the implementation provided by Mo Chen\footnote{Available at: \url{https://fr.mathworks.com/matlabcentral/fileexchange/26182-kernel-kmeans}} and in the C programming language following Algorithm \ref{algo:kkmeans}. The k-averages method is implemented in C following Algorithm \ref{algo:kaverages}.
+Three algorithms are considered: the spectral clustering \cite{von2007tutorial} approach as a high complexity reference, the kernel k-means algorithm implemented as described in Section \ref{sec:kkmeans} and the proposed k-averages algorithm. The spectral clustering algorithm tested here uses the normalization proposed by Jordan and Weiss \cite{ng2002spectral}. This normalization is chosen over no normalization and the Shi and Malik one \cite{shi2000normalized} as it is found to be the best performing in terms of average NMI over all the datasets. The implementation is done using the Matlab programming language. Even though a C implementation would probably be more efficient, we believe that the gain would be low as the main computational load is the diagonalization of the similarity matrix and the k-means clustering of the eigenvectors which are both efficient builtins Matlab functions. The kernel k-means is implemented both in Matlab using the implementation provided by Mo Chen\footnote{Available at: \url{https://fr.mathworks.com/matlabcentral/fileexchange/26182-kernel-kmeans}} and in the C programming language following Algorithm \ref{algo:kkmeans}. The k-averages method is implemented in C following Algorithm \ref{algo:kaverages}.
 
 \subsection{Evaluation Protocol}
 
-For each dataset, since we perform clustering, and not supervised learning, the training and testing data are joined. DTW similarities are computed using the implementation provided by Prof. Ellis \footnote{Available at: \url{http://www.ee.columbia.edu/~dpwe/resources/matlab/dtw}} with default parameters.
+For each dataset, since we perform clustering, and not supervised learning, the training and testing data are joined together. DTW similarities are computed using the implementation provided by Prof. Ellis \footnote{Available at: \url{http://www.ee.columbia.edu/~dpwe/resources/matlab/dtw}} with default parameters.
 
-As in our previous experiments with synthetic data, we choose here the normalized mutual information (NMI) as measure of clustering quality; clustering is done by requesting a number of clusters equal to the actual number of classes in the dataset, and repeated 200 times with varying initial conditions, each algorithm being run with the exact same initial assignments. For the 200 clusterings thus produced, we compute the NMI between them and the ground truth clustering. Average and standard deviation statistics are then computed.
+As in our previous experiments with synthetic data, we choose here the normalized mutual information (NMI) as the measure of clustering quality; clustering is done by requesting a number of clusters equal to the actual number of classes in the dataset, and repeated 200 times with varying initial conditions, each algorithm being run with the exact same initial assignments. For the 200 clusterings thus produced, we compute the NMI between them and the ground truth clustering. Average and standard deviation statistics are then computed.
 
 \subsection{Clustering performance}
 
@@ -649,7 +651,7 @@ yoga & \textbf{0.5 $\pm$0.0} & 0.2 $\pm$0.1 & 0.2 $\pm$0.1 \\
 
 For ease of readability and comparison, the presented results are split into 3 tables. Table~\ref{tab:results-2} lists the results obtained on bi-class datasets, \textit{i.e.} the datasets annotated in terms of presence or absence of a given property; Table~\ref{tab:results-37} concerns the datasets with a small number of classes (from 3 to 7); and Table~\ref{tab:results-8} focuses the datasets with a larger number of classes (from 8 to 50).
 
-For each experiment, the result of the best performing method is marked in bold. The Matlab and C implementations of the kernel k-means algorithm give exactly the same results in terms of NMI.
+For each experiment, the result of the best performing method is marked in bold. The Matlab and C implementations of the kernel k-means algorithm give exactly the same results in terms of NMI, thus only one column is used to display their performance.
 
  %% 3-7 classes
 
@@ -715,7 +717,7 @@ Considering the standard deviation over the several runs of the algorithm with d
 
 \subsection{Efficiency}
 
-Computation time displayed in Tables \ref{tab:resultSpeed-2}, \ref{tab:resultSpeed-37}, and \ref{tab:resultSpeed-8} is the average duration over 100 runs on a single core with no parallelization allowed. For every datasets, the spectral clustering approach is the more time consuming due to the diagonalization of the matrix which is of $O(N^3)$, $N$ being the number of elements. For the kernel k-means algorithm, the C implementation is most of the time more efficient than the Matlab implementation. The k-average algorithm is more efficient for 46 datasets out of the 47 by close to an order of magnitude for the larger datasets.
+Computation time displayed in Tables \ref{tab:resultSpeed-2}, \ref{tab:resultSpeed-37}, and \ref{tab:resultSpeed-8} is the average duration over 100 runs on a single core with no parallelization capabilities. For every datasets, the spectral clustering approach is the more time consuming due to the diagonalization of the matrix which is of $O(N^3)$. For the kernel k-means algorithm, the C implementation is most of the time more efficient than the Matlab implementation. The k-average algorithm is more efficient for 46 datasets out of the 47 by close to an order of magnitude for the larger datasets.
 
 \begin{table}
 \begin{center}
@@ -806,7 +808,7 @@ To conclude on the performance of the evaluated algorithms on real datasets, Tab
 
 \begin{table}
 \begin{center}
-\caption{Performance averaged over the 47 datasets. The NMI is expressed in percents and the computation time in seconds.}
+\caption{Performances averaged over the 47 datasets. The NMI is expressed in percents and the computation time in seconds.}
 \label{tab:resultAverage}
 \begin{tabular}{lcccc}
   & \multicolumn{2}{c}{Matlab} & \multicolumn{2}{c}{C} \\
@@ -820,9 +822,9 @@ computation time & 2.678 & 0.723 & 0.590 & \textbf{0.096} \\
 
 \section{Conclusion}
 
-We have presented k-averages, an iterative flat clustering algorithm that operates on arbitrary similarity matrices by explicitly and directly aiming to optimize the average intra-class similarity. Having established the mathematical foundation of our proposal, including guaranteed convergence, we have thoroughly compared it with the widely used standard methods, the kernel k-means and the spectral clustering techniques. We show that the k-averages algorithm converges much faster (20 times faster under ordinary conditions) and leads to equivalent or better clustering results for the task of clustering both synthetic data and realistic times series taken from a wide variety of sources, while also being more computationally efficient and more sparing in memory use.
+We have presented k-averages, an iterative flat clustering algorithm that operates on arbitrary similarity matrices by explicitly and directly aiming to optimize the average intra-class similarity. Having established the mathematical foundation of our proposal, including guaranteed convergence, we have thoroughly compared it with widely used standard methods: the kernel k-means and the spectral clustering techniques. We show that the k-averages algorithm converges much faster (20 times faster under ordinary conditions) and leads to equivalent or better clustering results for the task of clustering both synthetic data and realistic times series taken from a wide variety of sources, while also being more computationally efficient and more sparing in memory use.
 
-The linear updates and compensated memory access of the proposed k-average method also provide great potentials for online clustering methods, where time-series data arrive incrementally into the system, and where classes and clusters should be most often reallocated. Explicit reallocation considerations proposed in this paper pave the way for robust online clustering methods that shall be further pursued.
+%The linear updates and compensated memory access of the proposed k-average method also provide great potentials for online clustering methods, where time-series data arrive incrementally into the system, and where classes and clusters should be most often reallocated. Explicit reallocation considerations proposed in this paper pave the way for robust online clustering methods that shall be further pursued.
 
 %Implementations of k-averages in Matlab and C are freely available as mature code ready for general use, at <url>. That repository also contains the reference C implementation of kernel k-means which we have used for the experiments reported in this article.
 
