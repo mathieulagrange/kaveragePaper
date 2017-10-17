@@ -1,0 +1,9 @@
+Welcome to the repository hosting the experiment and supporting documentation of the k-average project.
+
+In order to reproduce the results, please run the command mkaTimeSeries('do', 0, 'report', 'rcv') in a Matlab prompt under the directory experiments/mkaTimeseries.
+
+You will need to have beforehand the data available in the inputPath, see the config file of the expLanes project.
+
+More informations about the expLanes framework can be found at: http://mathieulagrange.github.io/expLanes
+
+Please contact mathieu.lagrange@cnrs.fr for any issues.
