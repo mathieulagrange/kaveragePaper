@@ -1,4 +1,0 @@
- - step cluster, factors with fixed modalities: dataSet: Beef, distance: dtw, normalizeData: 1, clustering: kAverages, nbRuns: 1, nbIterations: 200
-     4 settings with the factors: objective, strategy
-
-

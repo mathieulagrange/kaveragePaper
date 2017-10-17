@@ -1,4 +1,0 @@
- - step cluster, factors with fixed modalities: distance: dtw, normalizeData: 1, clustering: kAverages, nbRuns: 20, nbIterations: 200
-     172 settings with the factors: dataSet, objective, strategy
-
-
