@@ -1,7 +1,7 @@
 %DIF 1a1
 %DIF LATEXDIFF DIFFERENCE FILE
 %DIF DEL kaverages_paperV1.tex   Thu Oct  5 10:35:22 2017
-%DIF ADD kaverages_paper.tex     Tue Oct 17 12:04:54 2017
+%DIF ADD kaverages_paper.tex     Tue Oct 17 15:27:45 2017
  %DIF > 
 %DIF -------
 \documentclass[natbib,smallextended]{svjour3}
@@ -102,8 +102,8 @@ Paris, France
 
 
 \begin{abstract}% Comment apparently necessary
-We present an iterative flat hard clustering algorithm designed to operate on arbitrary similarity matrices, with the only constraint that these matrices be symmetrical. Although functionally very close to kernel k-means, our proposal performs \DIFdelbegin \DIFdel{an }\DIFdelend \DIFaddbegin \DIFadd{a }\DIFaddend maximization of average intra-class similarity, instead of a squared distance minimization, in order to remain closer to the semantics of similarities. We show that this approach \DIFdelbegin \DIFdel{allows relaxing the }\DIFdelend \DIFaddbegin \DIFadd{permits the relaxing of some }\DIFaddend conditions on usable \DIFdelbegin \DIFdel{matrices}\DIFdelend \DIFaddbegin \DIFadd{affinity matrices like semi-positiveness}\DIFaddend , as well as opening \DIFdelbegin \DIFdel{better optimization possibilities }\DIFdelend \DIFaddbegin \DIFadd{possibilities for computational optimization required for large datasets}\DIFaddend . Systematic evaluation on a variety of data sets shows that compared with kernel k-means \DIFaddbegin \DIFadd{and the spectral clustering methods}\DIFaddend , the proposed approach gives equivalent or better performance, while running much faster. Most notably, it significantly reduces memory access, which makes it a good choice for large data collections.
-\end{abstract}
+We present an iterative flat hard clustering algorithm designed to operate on arbitrary similarity matrices, with the only constraint that these matrices be symmetrical. Although functionally very close to kernel k-means, our proposal performs \DIFdelbegin \DIFdel{an }\DIFdelend \DIFaddbegin \DIFadd{a }\DIFaddend maximization of average intra-class similarity, instead of a squared distance minimization, in order to remain closer to the semantics of similarities. We show that this approach \DIFdelbegin \DIFdel{allows relaxing the }\DIFdelend \DIFaddbegin \DIFadd{permits the relaxing of some }\DIFaddend conditions on usable \DIFdelbegin \DIFdel{matrices}\DIFdelend \DIFaddbegin \DIFadd{affinity matrices like semi-positiveness}\DIFaddend , as well as opening \DIFdelbegin \DIFdel{better optimization possibilities }\DIFdelend \DIFaddbegin \DIFadd{possibilities for computational optimization required for large datasets}\DIFaddend . Systematic evaluation on a variety of data sets shows that compared with kernel k-means \DIFaddbegin \DIFadd{and the spectral clustering methods}\DIFaddend , the proposed approach gives equivalent or better performance, while running much faster. Most notably, it significantly reduces memory access, which makes it a good choice for large data collections. \DIFaddbegin \DIFadd{Material enabling the reproducibility of the results is made available online.
+}\DIFaddend \end{abstract}
 
 \keywords{clustering, similarity, non-metric data representation, time series clustering}
 
@@ -598,11 +598,17 @@ To illustrate and confirm the theoretical complexity computed here, the next sec
 \label{sec:validation}
 
 In order to reliably compare the clustering quality and execution speed between the two approaches, we have written plain C implementations of Algorithms~\ref{algo:kkmeans_optim} and~\ref{algo:kaverages}, with minimal operational overhead: reading the similarity matrix from a binary file where all matrix values are stored sequentially in standard reading order, line by line, and writing out the result of the clustering as a label text file. Both implementations use reasonably efficient code, but without advanced optimizations or parallel processing\DIFdelbegin \DIFdel{; C and Matlab implementations can be found at}%DIFDELCMD < \\ \url{https://bitbucket.org/mlagrange/kaverages/downloads}%%%
-\DIFdelend \DIFaddbegin \footnote{\DIFadd{The C and Matlab implementations can be found at}\\ \url{https://bitbucket.org/mlagrange/kaverages}\DIFadd{.}}\DIFaddend .	%% Arshia: remove \footnote{}
+\DIFdelend .	%% Arshia: remove \footnote{}
 
 The figures presented in this section were obtained on synthetic datasets, created in order to give precise control on the features of the analyzed data: for $n$ points split between $C$ classes, $C$ centroids are generated at random in two dimensional space, and point coordinates are generated following a Gaussian distribution around class centroids. In addition to the numbers of objects and classes, the variance of Gaussian distributions are adjusted to modulate how clearly separable clusters are. Similarities are computed as inverse Euclidean distances between points. %This clearly simplified example is useful as a first control test bench; the next section is dedicated to experiments on more realistic datasets.
 
-\subsection{Clustering performance}
+\DIFaddbegin \subsection{\DIFadd{Reproducibility}}
+
+\DIFadd{In order to ease reproducibility of the results, the data is taken from a public repository of several benchmark datasets used in academia}\footnote{\DIFadd{Available at: }\url{www.cs.ucr.edu/~eamonn/time_series_data}} \DIFadd{and the code of the proposed method}\footnote{\DIFadd{The C and Matlab implementations can be found at}\\ \url{https://bitbucket.org/mlagrange/kaverages}\DIFadd{.}} \DIFadd{as well as the experimental code used for generated the figures is publicly available}\footnote{\DIFadd{Available at: }\url{https://bitbucket.org/MathiasR/papier_kaverages}}\DIFadd{.
+}
+
+
+\DIFaddend \subsection{Clustering performance}
 
 Several metrics are available to evaluate the performance of a clustering algorithm. The one closest to the actual target application is the raw accuracy, that is the average number of items labeled correctly after an alignment phase of the estimated labeling with the reference \citep{Kuhn1955Hungarian}.
 
@@ -654,7 +660,10 @@ Effective clustering of time series using the DTW measure \DIFdelbegin \DIFdel{r
 
 \subsection{Datasets}
 
-To compare quality of clusterings obtained by the considered algorithms, we consider a large collection of 43 time series datasets \DIFdelbegin \DIFdel{created }\DIFdelend \DIFaddbegin \DIFadd{made publicly available }\DIFaddend by many laboratories \DIFdelbegin \DIFdel{all over the world }\DIFdelend \DIFaddbegin \DIFadd{worldwide }\DIFaddend and compiled by Prof. Keogh \footnote{Available at: \url{www.cs.ucr.edu/~eamonn/time_series_data}}. Thus, while all the experiments presented here are performed on time series (chosen for being a good example of a data type requiring similarity-based clustering, as opposed to a simple Euclidean approach), the great variety in the sources and semantics of said series (bio-informatics, linguistics, astronomy, gesture modeling, chemistry\ldots{}) gives this validation a wide foundation. Statistics about the morphology of those datasets are summarized in Table~\ref{tab:dbs}. \DIFdelbegin \DIFdel{In the results described in the next sections, datasets are refered by a numerical id for the sake of brevity; the correspondence between those ids and the actual names of the datasets is shown on Table \ref{didtNoda1}.
+To compare quality of clusterings obtained by the considered algorithms, we consider a large collection of 43 time series datasets \DIFdelbegin \DIFdel{created }\DIFdelend \DIFaddbegin \DIFadd{made publicly available }\DIFaddend by many laboratories \DIFdelbegin \DIFdel{all over the world }\DIFdelend \DIFaddbegin \DIFadd{worldwide }\DIFaddend and compiled by Prof. Keogh\DIFdelbegin \footnote{\DIFdel{Available at: }%DIFDELCMD < \url{www.cs.ucr.edu/~eamonn/time_series_data}%%%
+}%DIFAUXCMD
+\addtocounter{footnote}{-1}%DIFAUXCMD
+\DIFdelend . Thus, while all the experiments presented here are performed on time series (chosen for being a good example of a data type requiring similarity-based clustering, as opposed to a simple Euclidean approach), the great variety in the sources and semantics of said series (bio-informatics, linguistics, astronomy, gesture modeling, chemistry\ldots{}) gives this validation a wide foundation. Statistics about the morphology of those datasets are summarized in Table~\ref{tab:dbs}. \DIFdelbegin \DIFdel{In the results described in the next sections, datasets are refered by a numerical id for the sake of brevity; the correspondence between those ids and the actual names of the datasets is shown on Table \ref{didtNoda1}.
 }\DIFdelend \DIFaddbegin \DIFadd{Individual details can be found in Appendix \ref{sec:appendix}.
 %DIF > In the results described in the next sections, datasets are refered by a numerical id for the sake of brevity; the correspondence between those ids and the actual names of the datasets is shown on Table \ref{didtNoda1}.
 }\DIFaddend 
@@ -747,11 +756,12 @@ As in our previous experiments with synthetic data, we choose here the normalize
 \DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.0 $\pm$0.2 }\DIFaddendFL \\
 \DIFdelbeginFL \DIFdelFL{42 }%DIFDELCMD < & %%%
 \DIFdelFL{2 }%DIFDELCMD < & %%%
-\DIFdelFL{7164 }%DIFDELCMD < &  & %%%
-\textbf{\DIFdelFL{0.0}} %DIFAUXCMD
-\DIFdelendFL \DIFaddbeginFL \DIFaddFL{wafer }\DIFaddendFL & \textbf{0.0} \DIFdelbeginFL %DIFDELCMD < \\
+\DIFdelFL{7164 }%DIFDELCMD < &  %%%
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{wafer }\DIFaddendFL & \textbf{0.0} & \DIFdelbeginFL \textbf{\DIFdelFL{0.0}} %DIFAUXCMD
+%DIFDELCMD < \\
 %DIFDELCMD < %%%
-\DIFdelFL{43 }\DIFdelendFL & \DIFdelbeginFL \DIFdelFL{2 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.0 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{3300 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.0 }\\
+\DIFdelFL{43 }%DIFDELCMD < & %%%
+\DIFdelFL{2 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.0 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{3300 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.0 }\\
 \DIFaddFL{yoga }\DIFaddendFL & \DIFaddbeginFL \textbf{\DIFaddFL{0.5 $\pm$0.0}} \DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{0.3}} %DIFAUXCMD
 \DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.2 $\pm$0.1 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{0.0 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.2 $\pm$0.1 }\DIFaddendFL \\
 \end{tabular}
