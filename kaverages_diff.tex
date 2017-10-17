@@ -1,0 +1,1181 @@
+%DIF 1a1
+%DIF LATEXDIFF DIFFERENCE FILE
+%DIF DEL kaverages_paperV1.tex   Thu Oct  5 10:35:22 2017
+%DIF ADD kaverages_paper.tex     Tue Oct 17 12:04:54 2017
+ %DIF > 
+%DIF -------
+\documentclass[natbib,smallextended]{svjour3}
+\usepackage{amsmath,amssymb}
+\usepackage{color}
+\usepackage[linesnumbered]{algorithm2e}
+\usepackage[hidelinks, colorlinks=true, linkcolor=black, citecolor=blue]{hyperref}
+
+\newcommand{\cad}{---} % tiret cadratin
+\newcommand{\gl}[1]{``\,#1\,''} % Guillemets standard
+\newcommand{\ms}[1]{\texttt{#1}} %racccourci pour ``monospaced''
+\newcommand{\lat}{\emph} %pour les mots latins
+
+\newcommand{\ml}[1]{\textcolor{red}{ML : #1}}
+\newcommand{\mr}[1]{\textcolor{magenta}{MR : #1}}
+
+\smartqed  % flush right qed marks, e.g. at end of proof
+%
+\usepackage{graphicx}
+
+%\jmlrheading{1}{2000}{1-48}{05/2015}{00/00}{M. Rossignol, M. Lagrange and A. Cont}
+
+%\ShortHeadings{Similarity-based data clustering by optimal object to cluster reallocation}{Rossignol, Lagrange and Cont}
+
+%\firstpageno{1}
+%DIF PREAMBLE EXTENSION ADDED BY LATEXDIFF
+%DIF UNDERLINE PREAMBLE %DIF PREAMBLE
+\RequirePackage[normalem]{ulem} %DIF PREAMBLE
+\RequirePackage{color}\definecolor{RED}{rgb}{1,0,0}\definecolor{BLUE}{rgb}{0,0,1} %DIF PREAMBLE
+\providecommand{\DIFaddtex}[1]{{\protect\color{blue}\uwave{#1}}} %DIF PREAMBLE
+\providecommand{\DIFdeltex}[1]{{\protect\color{red}\sout{#1}}}                      %DIF PREAMBLE
+%DIF SAFE PREAMBLE %DIF PREAMBLE
+\providecommand{\DIFaddbegin}{} %DIF PREAMBLE
+\providecommand{\DIFaddend}{} %DIF PREAMBLE
+\providecommand{\DIFdelbegin}{} %DIF PREAMBLE
+\providecommand{\DIFdelend}{} %DIF PREAMBLE
+%DIF FLOATSAFE PREAMBLE %DIF PREAMBLE
+\providecommand{\DIFaddFL}[1]{\DIFadd{#1}} %DIF PREAMBLE
+\providecommand{\DIFdelFL}[1]{\DIFdel{#1}} %DIF PREAMBLE
+\providecommand{\DIFaddbeginFL}{} %DIF PREAMBLE
+\providecommand{\DIFaddendFL}{} %DIF PREAMBLE
+\providecommand{\DIFdelbeginFL}{} %DIF PREAMBLE
+\providecommand{\DIFdelendFL}{} %DIF PREAMBLE
+%DIF END PREAMBLE EXTENSION ADDED BY LATEXDIFF
+%DIF PREAMBLE EXTENSION ADDED BY LATEXDIFF
+%DIF HYPERREF PREAMBLE %DIF PREAMBLE
+\providecommand{\DIFadd}[1]{\texorpdfstring{\DIFaddtex{#1}}{#1}} %DIF PREAMBLE
+\providecommand{\DIFdel}[1]{\texorpdfstring{\DIFdeltex{#1}}{}} %DIF PREAMBLE
+%DIF END PREAMBLE EXTENSION ADDED BY LATEXDIFF
+
+\begin{document}
+
+\title{Efficient similarity-based data clustering by optimal object to cluster reallocation}
+
+\author{ Mathias Rossignol      \and
+        Mathieu Lagrange  \and
+        Arshia Cont
+}
+%\author{}
+\authorrunning{} % if too long for running head
+
+\institute{
+ Mathias Rossignol
+\at IRCAM\\
+1, place Igor Stravinski\\
+Paris, France \\
+\email mathias.rossignol@gmail.com\\
+\and
+ Mathieu Lagrange \at
+ \DIFdelbegin \DIFdel{IRCCYN}\DIFdelend \DIFaddbegin \DIFadd{LS2N}\DIFaddend \\
+Nantes, France \\
+\email lagrange.mathieu@cnrs.fr
+\and
+ Arshia Cont \at IRCAM\\
+1, place Igor Stravinski\\
+Paris, France
+ \email arshia.cont@ircam.fr\\
+ }
+
+%
+%
+%F. Author \at
+%              first address \\
+%              Tel.: +123-45-678910\\
+%              Fax: +123-45-678910\\
+%              \email{fauthor@example.com}           %  \\
+%%             \emph{Present address:} of F. Author  %  if needed
+%           \and
+%           S. Author \at
+%              second address
+%}
+
+
+
+%\editor{}
+
+\maketitle
+
+
+\begin{abstract}% Comment apparently necessary
+We present an iterative flat hard clustering algorithm designed to operate on arbitrary similarity matrices, with the only constraint that these matrices be symmetrical. Although functionally very close to kernel k-means, our proposal performs \DIFdelbegin \DIFdel{an }\DIFdelend \DIFaddbegin \DIFadd{a }\DIFaddend maximization of average intra-class similarity, instead of a squared distance minimization, in order to remain closer to the semantics of similarities. We show that this approach \DIFdelbegin \DIFdel{allows relaxing the }\DIFdelend \DIFaddbegin \DIFadd{permits the relaxing of some }\DIFaddend conditions on usable \DIFdelbegin \DIFdel{matrices}\DIFdelend \DIFaddbegin \DIFadd{affinity matrices like semi-positiveness}\DIFaddend , as well as opening \DIFdelbegin \DIFdel{better optimization possibilities }\DIFdelend \DIFaddbegin \DIFadd{possibilities for computational optimization required for large datasets}\DIFaddend . Systematic evaluation on a variety of data sets shows that compared with kernel k-means \DIFaddbegin \DIFadd{and the spectral clustering methods}\DIFaddend , the proposed approach gives equivalent or better performance, while running much faster. Most notably, it significantly reduces memory access, which makes it a good choice for large data collections.
+\end{abstract}
+
+\keywords{clustering, similarity, non-metric data representation, time series clustering}
+
+We would like to acknowledge support for this project
+from ANR project Houle (grant ANR-11-JS03-005-01).
+
+\section{Introduction}
+
+Clustering collections of objects into classes that bring together similar ones is probably the most common and intuitive tool used both by human cognition and artificial data analysis in an attempt to make that data organized, understandable, manageable. When the studied objects lend themselves to this kind of analysis, it is a powerful way to expose underlying organizations and approximate the data in such a way that the relationships between its members can be statistically understood and modeled. Given a description of objects, we first attempt to quantify which ones are ``\,similar\,'' from a given point of view, then group those $n$ objects into $C$ clusters, so that the similarity between objects within the same cluster is maximized. Finding the actual best possible partition of objects into clusters is, however, an NP-complete problem, intractable for useful \DIFdelbegin \DIFdel{data }\DIFdelend \DIFaddbegin \DIFadd{datasets }\DIFaddend sizes. Many approaches have been proposed to yield an approximate solution: analytic, iterative, flat or hierarchical, agglomerative or divisive, soft or hard clustering algorithms, \textit{etc.}, each with their strengths and weaknesses \citep{jain2010data}, performing better on some classes of problems than others \citep{steinbach2000comparison,thalamuthu2006evaluation}.
+
+Iterative divisive hard clustering algorithms, \DIFdelbegin \DIFdel{such as the ubiquitous }\emph{\DIFdel{k-means}} %DIFAUXCMD
+\DIFdel{\mbox{%DIFAUXCMD
+\citep{macQueenBsmsp67}}%DIFAUXCMD
+, }\DIFdelend usually perform well to identify high-level organization in large data collections in reasonable running time. For that reason, they are a sensible choice in many data mining situations, and constitute our focus in this paper.
+% ; their main drawback being that the number of desired clusters must be specified
+If the data lies in a vector space, \textit{i.e.} an object can be described by a $m$-dimensional feature vector without significant loss of information, the seminal \emph{\DIFdelbegin \DIFdel{K-means}\DIFdelend \DIFaddbegin \DIFadd{k-means}\DIFaddend } algorithm \citep{macQueenBsmsp67} is probably the most efficient approach, since the explicit computation of the cluster centroids ensure both computational efficiency and scalability. This algorithm is  based on the centroid model, and minimizes the intra cluster Euclidean distance. As shown by \citet{Banerjee:2005:CBD:1046920.1194902}, any kind of Bregman divergence, such as the KL-divergence \citep{Dhillon:2003:DIT:944919.944973} or the Itakura-Saito divergence \citep{linde:algorithm}, may also be considered to develop such efficient clustering algorithms.
+
+However, for many types of data, the projection of a representational problem into an vector space cannot be done without significant loss of descriptive efficiency. To reduce this loss, specifically tailored measures of similarity are considered. As a result, the input data for clustering is no longer a $n \times m$ matrix storing the $m$-dimensional vectors describing the objects, but a (usually symmetric) square matrix $S$ of size $n \times n$ which numerically encodes some sort of relationship between the objects. In this case, one has to resort to clustering algorithms based on connectivity models, since the cluster centroids cannot be explicitly computed.
+
+Early attempts to solve this issue considered the k-medoids problem, where the goal is to find the $k$ objects that maximize the average similarity with the other objects of their respective clusters, or \emph{medoids}. The Partition Around Medoids (PAM) algorithm \citep{KaufmanRousseeuw90} solves the k-medoids problem but with a \DIFdelbegin \DIFdel{high complexity (}\DIFdelend \DIFaddbegin \DIFadd{complexity of }\DIFaddend $O(k(n-k)^2)i$, $n$ being the number of objects \DIFdelbegin \DIFdel{) and high }\DIFdelend \DIFaddbegin \DIFadd{and $i$ }\DIFaddend number of iterations\DIFdelbegin \DIFdel{$i$, due to }\DIFdelend \DIFaddbegin \DIFadd{. Due to the high complexity and the }\DIFaddend low convergence rate\DIFaddbegin \DIFadd{, this algorithm cannot be applied to decent size datasets}\DIFaddend . In order to scale the approach, the Clustering LARge Applications (CLARA) algorithm \citep{KaufmanRousseeuw90} draws a sample of objects before running the PAM algorithm. This sampling operation is repeated several times and the most satisfying set of medoids is retained. In contrast, CLARANS \citep{Ng:1994:EEC:645920.672827} preserves the whole set of objects but cuts complexity by  drawing a sample of neighbors in each search for the medoids.
+%, with two drawbacks: it assumes that all objects fit in main memory, and the result is sensitive to the input order \cite{Zhang:1996:BED:233269.233324}.
+
+
+Another classical approach to the issue is to run a variant of k-means that considers average intra-cluster similarity as the guiding criterion for object-to-class reallocation \citep[Chapter 10.7]{Duda01}. This straightforward technique performs well in \DIFdelbegin \DIFdel{may }\DIFdelend \DIFaddbegin \DIFadd{many }\DIFaddend cases, but the complexity of computing anew intra-cluster similarities at each iteration makes it impractical for large datasets.
+
+Following work on kernel projection \citep{Vapnik:1995:NSL:211359}, that is, the fact that a nonlinear data transformation into some high dimensional feature space increases the probability of the linear separability of patterns within the transformed space, \citet{Girolami:2002:MKC:2325785.2326903} introduced a kernel version of the K-means algorithm, whose input is a kernel matrix $\mathcal{K}$ that must be a Gram matrix, \textit{i.e.} semi definite positive. \citet{Dhillon:2007:WGC:1313055.1313291} linked a weighted version of the kernel K-means objective to the popular spectral clustering \DIFaddbegin \DIFadd{\mbox{%DIFAUXCMD
+\cite{von2007tutorial}}%DIFAUXCMD
+}\DIFaddend , introducing an efficient way of solving the normalized cut objective \DIFaddbegin \DIFadd{\mbox{%DIFAUXCMD
+\cite{shi2000normalized}}%DIFAUXCMD
+}\DIFaddend .
+
+The kernel k-means algorithm proves to be equally useful when considering arbitrary similarity problems if special care is taken to ensure definite positiveness of the input matrix \citep{Roth:2003:OCP:960254.960291}. This follows original algorithmic considerations where vector space data is projected into high dimensional spaces using a carefully chosen kernel function.
+
+%% Long sentence! rewritten above
+%Originally thought as considering data lying initially in a given vector space then projected in an high dimensional features space thanks to a carefully chosen kernel function, the kernel k-means algorithm proved to be equally useful when considering arbitrary similarity problems if some special care is taken to ensure definite positiveness of the input matrix (\cite{Roth:2003:OCP:960254.960291}).
+
+Despite such improvements, kernel k-means cannot be easily applied to large scale datasets without special treatments because of high algorithmic and memory access costs.
+%Still, the complexity of the algorithm and the cost of memory  access  prevent from using the kernel k-means algorithm for large scale datasets without specific treatments.
+\citet{Chitta:2011:AKK:2020408.2020558} considered sampling of the input data, \citet{1047453} considered block storing of the input matrix, and a \DIFdelbegin \DIFdel{preclustering  }\DIFdelend \DIFaddbegin \DIFadd{pre-clustering  }\DIFaddend approach \citet{bradley98scaling} is considered by \citet{Kulis2008} with a coarsening and refining phases as respectively a pre- and post-treatment of the actual clustering phase.
+
+We show in this paper that by using a semantically equivalent variant of the average intra-cluster similarity presented in \citep[Chapter 10.7]{Duda01}, it becomes possible to perform a computationally efficient greedy optimization \citep[Chapter 10.8]{Duda01} with guaranteed convergence \DIFaddbegin \DIFadd{for arbitrary similarity measures}\DIFaddend . Although both of those techniques are well known, combining them is non trivial, and \DIFdelbegin \DIFdel{allows us to propose a novel hard }\DIFdelend \DIFaddbegin \DIFadd{lead to a }\DIFaddend clustering algorithm, which we call \DIFdelbegin \emph{\DIFdel{k-averages}}%DIFAUXCMD
+\DIFdel{, }\DIFdelend \DIFaddbegin \DIFadd{k-averages }\DIFaddend with the following properties:
+ \begin{itemize} 
+\item input data can be arbitrary symmetric similarity matrices,
+\item it has fast and guaranteed convergence, with a number of object to clusters reallocations \DIFaddbegin \DIFadd{experimentally found to be }\DIFaddend roughly equal to the number of objects,
+\item it provides good scalability thanks to a reduced need for memory access, and
+\item on a collection of synthetic and natural test data, its results are equivalent to those of kernel k-means, and obtained in a fraction of its computing time, particularly when paged memory is required.
+ \end{itemize} 
+
+\DIFaddbegin \DIFadd{To summarize, the main contribution of the paper is to present a clustering algorithm:
+} \begin{itemize} 
+  \item  \DIFadd{that can handle arbitrary affinity matrices, }\textit{\DIFadd{i.e.}} \DIFadd{semi-positiveness is not a mandatory requirement for guaranteed convergence
+  }\item \DIFadd{thanks to a carefully designed strategy to update the membership of objects to cluster, the algorithm is fast and memory efficient.
+} \end{itemize} 
+
+\DIFaddend The remaining of the paper is organized as follows: Section~\ref{sec:kkmeans} presents the kernel k-means objective function and the basic algorithm that minimizes this function, and Section~\ref{sec:kaverages} introduces the concepts behind the k-averages algorithm,
+%before giving a detailed description of it in Section~\ref{sec:algo}.
+followed by a detailed algorithmic description in Section~\ref{sec:algo}.
+The complexity of the two algorithms in terms of arithmetic operations and memory access is then studied in Section \ref{sec:complexity}. The above presented properties of the proposed k-averages algorithm are then validated on synthetic controlled data in Section \ref{sec:validation} and on 43 \DIFdelbegin \DIFdel{corpora }\DIFdelend \DIFaddbegin \DIFadd{datasets }\DIFaddend of time series \DIFaddbegin \DIFadd{issued from various sources }\DIFaddend in Section \ref{sec:experiments}.
+
+\section{Kernel k-means} \label{sec:kkmeans}
+
+Since its introduction by \citet{Girolami:2002:MKC:2325785.2326903}, kernel k-means has been an algorithm of choice for flat data clustering with known number of clusters \citep{Kulis2008, Roth:2003:OCP:960254.960291}. It makes use of a mathematical technique known as the \gl{kernel trick} to extend the classical k-means clustering algorithm \citep{macQueenBsmsp67} to criteria beyond simple euclidean distance proximity. Since it constitutes the closest point of comparison with our own work, we dedicate this section to its detailed presentation.
+
+In the case of kernel k-means, the kernel trick \DIFdelbegin \DIFdel{consists in considering }\DIFdelend \DIFaddbegin \DIFadd{allows us to  consider }\DIFaddend that the k-means algorithm is operating in an unspecified, possibly very high-dimensional \DIFdelbegin \DIFdel{Euclidian }\DIFdelend \DIFaddbegin \DIFadd{Euclidean }\DIFaddend space; but instead of specifying the properties of that space and the coordinates of objects, the equations governing the algorithm are modified so that everything can be computed knowing only the scalar products between points. The symmetrical matrix  containing those scalar products is known as a kernel, noted $\mathcal{K}$.
+
+\subsection{Kernel k-means objective function}
+
+In this section and the following, we shall adopt the following convention: $N$ is the number of objects to cluster and $C$ the number of clusters; $N_c$ is the number of objects in cluster $c$, and $\mu_c$ is the centroid of that cluster. $z_{cn}$ is the membership function, whose value is $1$ if object $o_n$ is in class $c$, $0$ otherwise. \DIFaddbegin \DIFadd{In the folowing equations, $\mu_c$ and $o_n$ are assumed to be column vectors of equal dimension.
+}\DIFaddend 
+
+Starting from the objective function minimized by the k-means algorithm, expressing the sum of squared distances of points to the centroids of their respective clusters:
+
+\[
+S = \sum_{c=1}^{C} \sum_{n=1}^{N} z_{cn} \left(o_n-\mu_c\right)\DIFaddbegin \DIFadd{^\top}\DIFaddend \left(o_n-\mu_c\right) \DIFdelbegin \DIFdel{^\top }\DIFdelend \label{eq:S}
+\]
+
+And using the definition of centroids as:
+
+\[
+\mu_c = \frac{1}{N_c}\sum_{n=1}^{N}z_{cn}o_n
+\]
+
+$S$ can be developed and rewritten in a way that does not explicitly refer to the centroid positions, since those cannot be computed:
+
+\[
+S = \sum_{c=1}^{C} \sum_{n=1}^{N} z_{cn} Y_{cn}
+\]
+
+where
+\begin{align}
+\DIFdelbegin %DIFDELCMD < \begin{split}
+%DIFDELCMD < Y_{cn} & =  \left(o_n-\mu_c\right)\left(o_n-\mu_c\right)^\top \\
+%DIFDELCMD <        & =  o_no_n - 2 o_n\mu_c + \mu_c\mu_c \\
+%DIFDELCMD <        & =  o_no_n - 2 o_n\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i +
+%DIFDELCMD <        	 \left(\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i\right)^2 \\ %.\left(\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i\right) \\
+%DIFDELCMD <        & =  o_no_n - \frac{2}{N_c} \sum_{i=1}^{N} z_{ci} o_no_i +
+%DIFDELCMD <        	 \frac{1}{N_c^2} \sum_{i=1}^{N} \sum_{j=1}^{N} z_{ki} z_{kj} o_io_j \\
+%DIFDELCMD <        & =  \mathcal{K}_{nn} - \frac{2}{N_c} \sum_{i=1}^{N} z_{ci} \mathcal{K}_{ni} +
+%DIFDELCMD <          \frac{1}{N_c^2} \sum_{i=1}^{N} \sum_{j=1}^{N} z_{ki} z_{kj} \mathcal{K}_{ij} %DIFDELCMD < \label{eq:yki}%%%
+%DIFDELCMD < \end{split}
+%DIFDELCMD < %%%
+\DIFdelend \DIFaddbegin \begin{split}
+Y_{cn} & =  \left(o_n-\mu_c\right)^\top\left(o_n-\mu_c\right) \\
+       & =  o_no_n - 2 o_n^\top \mu_c + \mu_c^\top \mu_c \\
+       & =  o_n^\top o_n - 2 o_n^\top \frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i +
+       	 \left(\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i\right)^\top
+         \left(\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i\right)\\
+        %  \left(\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i\right)^2\\ %.\left(\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i\right) \\
+       & =  o_n^\top o_n - \frac{2}{N_c} \sum_{i=1}^{N} z_{ci} o_n^\top o_i +
+       	 \frac{1}{N_c^2} \sum_{i=1}^{N} \sum_{j=1}^{N} z_{ki} z_{kj} o_i^\top o_j \\
+       & =  \mathcal{K}_{nn} - \frac{2}{N_c} \sum_{i=1}^{N} z_{ci} \mathcal{K}_{ni} +
+         \frac{1}{N_c^2} \sum_{i=1}^{N} \sum_{j=1}^{N} z_{ki} z_{kj} \mathcal{K}_{ij} \label{eq:yki}
+\end{split}
+\DIFaddend \end{align}
+
+%\begin{eqnarray}
+%Y_{cn} & = & \left(o_n-\mu_c\right)\left(o_n-\mu_c\right)^\top \\
+%       & = & o_n.o_n - 2 o_n.\mu_c + \mu_c.\mu_c \\
+%       & = & o_n.o_n - 2 o_n.\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i +
+%       	 \left(\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i\right).\left(\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i\right) \\
+%       & = & o_n.o_n - \frac{2}{N_c} \sum_{i=1}^{N} z_{ci} o_n.o_i +
+%       	 \frac{1}{N_c^2} \sum_{i=1}^{N} \sum_{j=1}^{N} z_{ki} z_{kj} o_i.o_j \\
+%       & = & \mathcal{K}_{nn} - \frac{2}{N_c} \sum_{i=1}^{N} z_{ci} \mathcal{K}_{ni} +
+%         \frac{1}{N_c^2} \sum_{i=1}^{N} \sum_{j=1}^{N} z_{ki} z_{kj} \mathcal{K}_{ij} \label{eq:yki}
+%\end{eqnarray}
+
+%% Comment by Arshia: The following paragraph is too fast!
+% what does "mostly bounded" mean?
+% The second half going to "similarity matrix processing" can be further explained.. this means that K_nn will become similarity measures.. right?
+
+Since the sum of $K_{nn}$ over all points remains constant, and the sum of squared centroid norms (third, quadratic, term of Equation~\ref{eq:yki}) is mostly bounded by the general geometry of the cloud of objects, we can see that minimizing this value implies maximizing the sum of the central terms, which are the average scalar products of points with other points belonging to the same class. Therefore, given a matrix gathering similarities between objects, if that matrix possesses the necessary properties to be considered as a kernel (positive \DIFdelbegin \DIFdel{semidefinite}\DIFdelend \DIFaddbegin \DIFadd{semidefinitness}\DIFaddend ), then the kernel k-means algorithm can be applied to it in order to create clusters that locally maximize the average intra-cluster similarity.
+
+\subsection{Algorithm}
+
+Finding the configuration that \DIFdelbegin \DIFdel{absolutely }\DIFdelend \DIFaddbegin \DIFadd{globally }\DIFaddend minimizes S (eq~\ref{eq:S}) is an NP-complete problem. However, several approaches allow finding an acceptable approximation. We shall only focus here on the fastest and most popular, an iterative assignment\,/\,update procedure commonly referred to as the \gl{k-means algorithm} \citep{macQueenBsmsp67}, or as a discrete version of Lloyd's algorithm, detailed in Algorithm~\ref{algo:kkmeans}.
+
+\begin{algorithm}
+	\label{algo:kkmeans}
+	\SetAlgoLined
+	\KwData{number of objects $N$, number of classes $C$, kernel matrix $\mathcal{K}$}
+	\KwResult{label vector $L$ defining a partition of the objects into $C$ classes}
+	\BlankLine
+	\textbf{Initialization:} fill L with random values in $[1..C]$\;
+	\BlankLine
+	\While {$L$ is modified} {
+		\For {$n \leftarrow 1$ to $N$} {
+			\For {$c \leftarrow 1$ to $C$} {
+				Compute $Y_{cn}$ following eq~\ref{eq:yki} \label{algline:kkmeans_cplx1}
+				(note: $z_{cn} = (L_n == c)\,?\,1\;:\;0$)
+			}
+			$L_n = \textrm{argmin}_c (Y_{cn})$\;
+		}
+	}
+	\BlankLine
+	\caption{Lloyd's algorithm applied to minimizing the kernel k-means objective.}
+\end{algorithm}
+
+The version given here is the most direct algorithmic translation of the mathematical foundations developed above, and as we shall see in section~\ref{sec:complexity}, it can easily become more efficient. Before that, we introduce our proposed k-averages algorithm.
+
+
+\section{Foundations of the k-averages algorithm} \label{sec:kaverages}
+
+In our proposal, we adopt an alternative objective function which, unlike kernel k-means, does not rely on a geometric interpretation but an explicit account of the similarity matrix. The goal is to maximize the average intra-cluster similarity between points, a commonly used metric to evaluate clustering quality, and one whose computation is direct\cad{}linear in time.
+
+Due to its simplicity, however, the objective function cannot be simply \gl{plugged into} the standard kernel k-means algorithm: it lacks the geometric requisites to ensure convergence. We must therefore propose a specifically tailored algorithmic framework to exploit it: first, we show here that it is possible to easily compute the impact on the global objective function of moving a single point from one class to another; this allows us to develop a greedy optimization algorithm taking advantage of that formula.
+
+\subsection{Conventions and objective function}
+
+In addition to the notations presented above, we index \DIFdelbegin \DIFdel{hereon }\DIFdelend \DIFaddbegin \DIFadd{here }\DIFaddend the set of elements belonging to a given cluster $c_k$ as $c_k = \left\{o_{k1}, \ldots, o_{kN_k}\right\}$.
+For simplicity, we omit the first index and note $c = \left\{o_1, \ldots, o_{N_c}\right\}$ when considering a single class.
+%To simplify below, when we're simply considering one class, no matter
+%which, we shall omit the first index and write $c = \left\{o_1, \ldots, o_{N_c}\right\}$.
+
+The similarity between objects shall be written $s\left(o_i, o_j\right)$.
+%Let us
+We extend the notation $s$ to the \emph{similarity of an object to a
+  class} defined as the average similarity of an object
+with all objects of the class. $s(o,c)$ accepts two definitions,
+depending on whether or not $o$ is a member of $c$:
+
+If $o \notin c$,
+\begin{equation}
+  s\left(o,c\right) = \frac{1}{N_c} \sum_{i=1}^{n_c}s\left(o, o_i\right)
+   \label{eq:soc_notinclass}
+\end{equation}
+
+If $o \in c$, then necessarily $\exists i \mid o = o_i$
+\begin{equation}
+  s\left(o,c\right) = s\left(o_i, c\right) = \frac{1}{N_c-1} \sum_{j=1 \ldots n_c, j \neq i} s\left(o_i, o_j\right)
+  	 \label{eq:soc_inclass}
+\end{equation}
+
+Let us call the \gl{quality} of a class the average intra-class object-to-object similarity, and write it $\mathcal{Q}$:
+\[
+\mathcal{Q}\left(c\right) = \frac{1}{N_c} \sum_{i=1}^{n_c} s\left(o_i, c\right)
+\]
+
+%DIF > Indeed, we never refer to a geometrical interpretation of the data. However, it should be noted that since in k-means (and kernel k-means) the centroid of a class is defined as an average of all points in that class, $\mathcal{Q}$ is strictly equivalent to the average point to centroid similarity.
+\DIFaddbegin 
+
+\DIFaddend In our framework, we do not explicitly refer to class centroids, preferring to directly consider averages of similarity values between individuals within clusters. \DIFdelbegin \DIFdel{Indeed, we never refer to a geometrical interpretation of the data. However, it should be noted that since in k-means (and kernel k-means) the centroid of a class is defined as an average of all points in that class, $\mathcal{Q}$ is strictly equivalent to the average point to centroid similarity.
+}%DIFDELCMD < 
+
+%DIFDELCMD < %%%
+\DIFdelend Using the notations above, we define our objective function as the average class quality, normalized with class sizes:
+
+\[
+O_2 = \frac{1}{N} \sum_{i=1}^{C} N_i \mathcal{Q}(c_i)
+\]
+
+Since, informally, our goal is to bring together objects that share high similarity, a first idea would be to simply repeatedly move each object to the class with whose members it has the highest average similarity. This is what we call the \gl{naive k-averages} algorithm.
+
+\subsection{Naive k-averages algorithm}
+
+Algorithm~\ref{algo:naive-kaverages} presents a method that simply moves each object to the class with which it has the highest average similarity, until convergence is reached. The algorithm is straightforward and simple; however, experiments show that while it can often produce interesting results, it also sometimes cannot reach convergence because the decision to move an object to a different cluster is taken without considering the impact of the move on the quality of the source cluster.
+
+\begin{algorithm}
+	\label{algo:naive-kaverages}
+	\SetAlgoLined
+	\KwData{number of objects $N$, number of classes $C$, similarity matrix $\mathcal{S}$}
+	\KwResult{label vector $L$ defining a partition of the objects into $C$ classes}
+	\BlankLine
+	\textbf{Initialization:}
+		Fill L with random values in $[1..C]$\;
+		Compute initial object-class similarities $S$ following eq~\ref{eq:soc_inclass} or eq~\ref{eq:soc_notinclass}\;
+	\BlankLine
+	\While {$L$ is modified} {
+		\For {$i \leftarrow 1$ to $N$} {
+			previousClass $\leftarrow L_i$\;
+			nextClass $\leftarrow \mathrm{argmin}_k\, S(i, k)$
+			\If {nextClass $\ne$ previousClass} {
+				$L_i \leftarrow \mathrm{nextClass}$\;
+				\For {$j \leftarrow 1$ to $N$}{
+					Update $S(j,nextClass)$ and $S(j,previousClass)$
+				}
+			}
+		}
+	}
+	\BlankLine
+	\caption{The naive k-averages algorithm.}
+\end{algorithm}
+
+To ensure \DIFdelbegin \DIFdel{global }\DIFdelend convergence, we need to compute the impact on the \DIFdelbegin \DIFdel{global }\DIFdelend objective function of moving one object from one class to another. Using such formulation and performing only reallocation that have a positive impact, the convergence of such an iterative algorithm is guaranteed.
+
+\subsection{Impact of object reallocation on class quality}
+
+Considering a class $c$, let us develop the expression of $\mathcal{Q}(c)$ into a more useful form. Since all objects are in $c$, we use the formula in (\ref{eq:soc_inclass}) to get:
+
+\begin{equation*}
+  \begin{aligned}
+    \mathcal{Q}\left(c\right) & = \frac{1}{N_c} \sum_{i=1}^{N_c} \frac{1}{N_c-1} \sum_{\substack{j=1 \ldots N_c\\j \neq i}} s\left(o_i, o_j\right) \\
+                              & = \frac{1}{N_c(N_c-1)} \sum_{i=1}^{N_c} \sum_{\substack{j=1 \ldots N_c\\j \neq i}} s\left(o_i, o_j\right)
+  \end{aligned}
+\end{equation*}
+
+Using the assumption that the similarity matrix is symmetrical, we can reach: % (this is an indispensable transformation for future calculations):
+\begin{equation}
+    \mathcal{Q}\left(c\right) = \frac{2}{N_c(N_c-1)} \sum_{i=2}^{N_c} \sum_{j=1}^{i-1} s\left(o_i, o_j\right)
+    \label{eq:classQuality}
+\end{equation}
+
+For future use and given the importance of the above transformation, we define:
+\[
+  \Sigma(c) = \sum_{i=2}^{N_c} \sum_{j=1}^{i-1} s\left(o_i, o_j\right)
+\]
+
+Thus:
+\[
+\mathcal{Q}\left(c\right) = \frac{2}{N_c(N_c-1)}\Sigma(c) \phantom{XX}\mathrm{and}\phantom{XX} \Sigma(c) = \frac{N_c(N_c-1)\mathcal{Q}\left(c\right)}{2}
+\]
+
+\subsubsection{Removing an object from a class}
+
+Assuming that $o \in c$, necessarily $\exists i \mid o=o_i$. Since the numbering of objects is arbitrary, we can first simplify the following equation by considering that $o = o_{N_c}$, in order to reach a formula that is independent from that numbering.
+
+\begin{equation*}
+  \begin{aligned}
+    \mathcal{Q}\left(c \smallsetminus o_{N_c}\right) & = \frac{2}{(N_c-1)(N_c-2)} \sum_{i=2}^{N_c-1} \sum_{j=1}^{i-1} s\left(o_i, o_j\right) \\
+                                                   & = \frac{2}{(N_c-1)(N_c-2)} \left[\Sigma(c) - \sum_{j=1}^{N_c-1} s\left(o_{N_c}, o_j\right) \right] \\
+                                                   & = \frac{2}{(N_c-1)(N_c-2)} \left[\Sigma(c) - (N_c-1)s\left(o_{N_c}, c\right) \right] \\
+                                                   & = \frac{2N_c(N_c-1)\mathcal{Q}(c)}{2(N_c-1)(N_c-2)} - \frac{2(N_c-1)s\left(o_{N_c}, c\right)}{(N_c-1)(N_c-2)}\\
+                                                   & = \frac{N_c \mathcal{Q}(c)  - 2s\left(o_{N_c}, c\right)}{N_c-2}
+  \end{aligned}
+\end{equation*}
+
+The quality of a class after removal of an object is thus:
+
+\begin{equation}
+  \mathcal{Q}\left(c \smallsetminus o\right) = \frac{N_c \mathcal{Q}(c)  - 2s\left(o, c\right)}{N_c-2}
+  \label{eq:newQual_remove}
+\end{equation}
+
+And the change in quality from its previous value:
+
+\begin{equation} \label{deltaRemove}
+  \begin{aligned}
+    \mathcal{Q}\left(c \smallsetminus o\right) - \mathcal{Q}\left(c\right) & = \frac{N_c \mathcal{Q}(c)  - (N_c-2) \mathcal{Q}(c)  - 2s\left(o, c\right)}{N_c-2} \\
+                                                                           & = \frac{2\left( \mathcal{Q}(c) - s\left(o, c\right)\right)}{N_c-2}
+    \end{aligned}
+\end{equation}
+
+
+\subsubsection{Adding an object to a class}
+
+Assuming that $o \notin c$, we can similarly to what has been done previously (numbering is arbitrary) consider for the sake of simplicity that $o$ becomes $o_{N_c+1}$ in the modified class $c$. Following a path similar to above, we get:
+
+\begin{equation*}
+  \begin{aligned}
+    \mathcal{Q}(c \cup o_{N_c+1}) & = \frac{2}{N_c(N_c+1)} \sum_{i=2}^{N_c+1} \sum_{j=1}^{i-1} s\left(o_i, o_j\right) \\
+                                & = \frac{2}{N_c(N_c+1)} \left[\Sigma(c) + N_c s\left(o_{N_c+1}, c\right)\right] \\
+                                & = \frac{(N_c-1) \mathcal{Q}(c)  + 2s\left(o_{N_c+1}, c\right)}{N_c+1}
+  \end{aligned}
+\end{equation*}
+
+\noindent The quality of a class $c$ after adding an object $o$ is thus:
+
+\begin{equation}
+  \mathcal{Q}\left(c \cup o\right) = \frac{(N_c-1) \mathcal{Q}(c)  + 2s\left(o, c\right)}{N_c+1}
+  \label{eq:newQual_add}
+\end{equation}
+
+\noindent And the change in quality from its previous value:
+
+\begin{equation} \label{deltaAdd}
+    \mathcal{Q}\left(c \cup o\right) - \mathcal{Q}\left(c\right)  = \frac{2\left(s\left(o, c\right)-\mathcal{Q}(c)\right)}{N_c+1}
+\end{equation}
+
+%\begin{equation} \label{deltaAdd}
+%  \begin{aligned}
+%    \mathcal{Q}\left(c \cup o\right) - \mathcal{Q}\left(c\right) & = \frac{(N_c-1) \mathcal{Q}(c)  - (N_c+1) \mathcal{Q}(c)  + 2s\left(o, c\right)}{N_c+1} \\
+%                                                                           & = \frac{2\left(s\left(o, c\right)-\mathcal{Q}(c)\right)}{N_c+1}
+%    \end{aligned}
+%\end{equation}
+
+\subsection{Impact of object reallocation on the global objective function}
+
+When moving an object $o$ from class $c_s$ (\gl{source}), to whom it belongs, to a
+distinct class $c_t$ (\gl{target}), $(N_s-1)$ objects are affected
+by the variation in (\ref{deltaRemove}), and $N_t$ are affected
+by that in (\ref{deltaAdd}); in addition, one object $o$ moves from a class whose quality is $\mathcal{Q}(c_s)$ to one whose quality is $\mathcal{Q}\left(c_t \cup o\right)$, as expressed by equation~\ref{eq:newQual_add}\DIFaddbegin \DIFadd{, which leads to an impact of moving object $o$ from class $c_s$ to class $c_t$ wich can be computed as follows}\DIFaddend :
+
+\begin{align}
+\begin{split}
+  \delta_o(c_s, c_t) = & \frac{2N_t \left(s\left(o, c_t\right)-\mathcal{Q}(c_t)\right)}{N_t+1} + \\
+&  \frac{2(N_s-1)\left( \mathcal{Q}(c_s) - s\left(o, c_s\right)\right)}{N_s-2}  + \\
+ &  \frac{(N_t-1) \mathcal{Q}(c_t)  + 2s\left(o, c_t\right)}{N_t+1} - \mathcal{Q}(c_s) \\
+\end{split}
+  \label{eq:impact_classnorm}
+\end{align}
+
+As can be seen, computing this impact is a fixed-cost operation. We can therefore use the formula as the basis for an efficient iterative algorithm.
+
+\section{K-averages algorithm}
+\label{sec:algo}
+
+Our approach does not allow us to benefit, like kernel k-means, from the convergence guarantee brought by the geometric foundation of k-means. In consequence, we cannot apply a \gl{batch} approach where at each iteration all elements are moved to their new class, and all distances (or similarities) are computed at once. \DIFdelbegin \DIFdel{Therefore, for each considered object, after finding its ideal new class}\DIFdelend \DIFaddbegin \DIFadd{To guarantee convergence}\DIFaddend , we must update the class properties for the two modified classes (source and destination), as well as recompute the average class-object similarities for them \DIFaddbegin \DIFadd{for each considered object, after finding its ideal new class}\DIFaddend . This is the principle of the \gl{greedy} k-means algorithm \citep[Chapter10.8]{Duda01}, but whereas for k-means that approach increases complexity (and even more so for kernel k-means), in this case it \DIFdelbegin \DIFdel{allows for }\DIFdelend \DIFaddbegin \DIFadd{leads to a }\DIFaddend much improved computational performance.
+
+Indeed, at a first glance, dynamically updating objectives as a result of object reallocation might seem to have negative performance impact. However, our simple non-quadratic updates \DIFdelbegin \DIFdel{makes }\DIFdelend \DIFaddbegin \DIFadd{make }\DIFaddend such dynamic changes easily tractable. New class qualities are thus given by Equations~\ref{eq:newQual_remove} and \ref{eq:newQual_add}, and new object-class similarities can be computed by:
+
+%% Rewritten above.. feel free to modify!!! (Arshia)
+%Although this seems at first like systematically updating everything at each object re-allocation should have a huge performance impact, our reliance on simple averages without any quadratic terms makes it possible to have very simple update formulas: new class qualities are given by Equations~\ref{eq:newQual_remove} and \ref{eq:newQual_add}, and new object-class similarities can be computed by:
+
+\begin{equation}
+	\begin{aligned}
+    s(i, c_s(t+1)) &= \frac{N_s(t).s(i, c_s(t)) + s(i,n)}{N_s(t)+1} \\
+    s(i, c_t(t+1)) &= \frac{N_t(t).s(i, c_s(t)) - s(i,n)}{N_t(t)-1}
+   	\end{aligned}
+  \label{eq:newSimilNewC}
+\end{equation}
+
+\noindent where $i$ is any object index, $n$ is the recently reallocated object, $c_s$ the \gl{source} class that object $i$ was removed from, and $c_t$ the \gl{target} class that object $n$ was added to.
+
+The full description of k-averages is given in Algorithm~\ref{algo:kaverages}.
+
+\begin{algorithm}
+	\label{algo:kaverages}
+	\SetAlgoLined
+	\KwData{number of objects $N$, number of classes $C$, similarity matrix $\mathcal{S}$}
+	\KwResult{label vector $L$ defining a partition of the objects into $C$ classes}
+	\BlankLine
+	\textbf{Initialization:}
+		Fill L with random values in $[1..C]$\;
+		Compute initial object-class similarities $S$ following eq~\ref{eq:soc_inclass} or eq~\ref{eq:soc_notinclass}\;
+		Compute initial class qualities $\mathcal{Q}$ following eq~\ref{eq:classQuality}\;
+	\BlankLine
+	\While {$L$ is modified} {
+		\For {$i \leftarrow 1$ to $N$} {
+			previousClass $\leftarrow L_i$\;
+			nextClass $\leftarrow \mathrm{argmin}_k\,\delta_i(\mathrm{previousClass}, k)$ \label{algline:kaverages_search}
+			(following the definition of $\delta$ in  \ref{eq:impact_classnorm})\; % eq~\ref{eq:impact_objnorm} or
+			\If {nextClass $\ne$ previousClass} {
+				$L_i \leftarrow \mathrm{nextClass}$\;
+				Update $\mathcal{Q}_\mathrm{previousClass}$ following eq~\ref{eq:newQual_remove}\;
+				Update $\mathcal{Q}_\mathrm{nextClass}$ following eq~\ref{eq:newQual_add}\;
+				\For {$j \leftarrow 1$ to $N$}{
+					Update $S(j,nextClass)$ and $S(j,previousClass)$ \label{algline:kaverages_recompute} \\ following eq~\ref{eq:newSimilNewC}\;
+				}
+			}
+		}
+	}
+	\BlankLine
+	\caption{The K-averages algorithm.}
+\end{algorithm}
+
+
+\section{Complexity analysis}
+\label{sec:complexity}
+
+In this section, we study the complexity of the two approaches presented above, first \DIFdelbegin \DIFdel{form }\DIFdelend \DIFaddbegin \DIFadd{from }\DIFaddend the point of view of raw complexity, \DIFdelbegin \DIFdel{then }\DIFdelend \DIFaddbegin \DIFadd{second by }\DIFaddend focusing on memory access.
+
+\subsection{Computational complexity}
+
+\subsubsection{Kernel k-means}
+
+As can be seen in Algorithm~\ref{algo:kkmeans}, the operation on line~\ref{algline:kkmeans_cplx1} is the most costly part of the algorithm: for each object $n$ and class $c$, at each iteration, it is necessary to compute $Y_{cn}$ from Equation~\ref{eq:yki}\cad{}an $O(N^2)$ operation in itself, per object. The impossibility of simply computing the distances to a known centroid as done in the k-means algorithm leads to a much higher complexity for the kernel k-means algorithm, globally $O(N^3)$ per iteration, independent of how many objects are moved for that iteration.
+
+It is however possible to improve the performance of kernel k-means by noting than in Equation~\ref{eq:yki}, the third term of the equation, which has the highest complexity, is only dependent on class definitions and not on the considered object. We can therefore rewrite Equation~\ref{eq:yki} as:
+
+\begin{eqnarray}
+Y_{cn} & = & \mathcal{K}_{nn} - \frac{2}{N_c} \sum_{i=1}^{N} z_{ci} \mathcal{K}_{ni} + M_c \label{eq:yki_improved}
+\end{eqnarray}
+where
+\begin{eqnarray}
+M_c    & = & \frac{1}{N_c^2} \sum_{i=1}^{N} \sum_{j=1}^{N} z_{ki} z_{kj} \mathcal{K}_{ij} \label{eq:mc}
+\end{eqnarray}
+
+Algorithm~\ref{algo:kkmeans} thus becomes Algorithm~\ref{algo:kkmeans_optim}, where the values of $M_c$ are computed once at the beginning of each loop (line~\ref{algline:kkmeans_imp_mc}) then reused on line~\ref{algline:kkmeans_imp_cplx1}, thus reducing the overall complexity to $O(n^2)$ per iteration. This optimized version of kernel k-means is the one we shall consider for performance comparison in the remainder of this article.
+
+\begin{algorithm}
+	\label{algo:kkmeans_optim}
+	\SetAlgoLined
+	\KwData{number of objects $N$, number of classes $C$, kernel matrix $\mathcal{K}$}
+	\KwResult{label vector $L$ defining a partition of the objects into $C$ classes}
+	\BlankLine
+	\textbf{Initialization:}
+	fill L with random values in $[1..C]$\;
+	\BlankLine
+	\While {$L$ is modified} {
+	    \For {$c \leftarrow 1$ to $C$} {
+	        Compute $M_c$ following eq~\ref{eq:mc} \label{algline:kkmeans_imp_mc}
+	    }
+		\For {$n \leftarrow 1$ to $N$} {
+			\For {$c \leftarrow 1$ to $C$} {
+				Compute $Y_{cn}$ following eq~\ref{eq:yki_improved} \label{algline:kkmeans_imp_cplx1}
+				(note: $z_{cn} = (L_n == c)\,?\,1\;:\;0$)
+			}
+			$L_n = \textrm{argmin}_c (Y_{cn})$\;
+		}
+	}
+	\BlankLine
+	\caption{Lloyd's algorithm applied to minimizing the kernel k-means objective, optimized version.}
+\end{algorithm}
+
+
+\subsubsection{K-averages}
+
+For the k-averages method presented as Algorithm~\ref{algo:kaverages}, the complexity of each iteration is
+ \begin{itemize} 
+\item $O(NC)$ corresponding to the best class search at line~\ref{algline:kaverages_search}
+\item  $O(NM)$ corresponding to the object-to-class similarity update at line~\ref{algline:kaverages_recompute}, where $M$ is the number of objects moved at a given iteration.
+ \end{itemize} 
+
+In the worst case scenario, $M = N$, and the complexity for one iteration of the algorithm remains the same as for the optimized kernel k-means algorithm, $O(N^2)$. In practice, however, as can be seen on Figure~\ref{fig:moved}, the number of objects moving from one class to another decreases sharply after the first iteration, meaning that the complexity of one iteration becomes quickly much lower than $O(N^2)$. Thus, while the first iteration of k-averages has a similar complexity with kernel k-means, the overall cost of a typical run of the algorithm (from 10 to 50 iterations) is much lower.
+
+
+To go further in this analysis, we display on Figure~\ref{fig:totalMoved}  the total number of object reallocation over a full run of the k-averages algorithm \DIFaddbegin \DIFadd{for several datatsets. The datasets used to create this figure are the real-life time series data that we employ for experimental validation evaluated under the Dynamic Time Warping (DTW) similarity measure, }\textit{\DIFadd{cf.}} \DIFadd{Section~\ref{sec:experiments}}\DIFaddend . As can be seen, the correlation is \DIFdelbegin \DIFdel{clearly }\DIFdelend \DIFaddbegin \DIFadd{roughly }\DIFaddend linear with the number of objects to cluster. In fact, the number of reallocations is roughly equal to the number of objects to cluster, which allows us to reach for k-averages a (statistical) total complexity of $O(N^2)$, instead of $O(N^2)$ per iteration.
+
+\begin{figure}
+\center
+\includegraphics[width = .65\textwidth]{figures/iterMove.png}
+\caption{Number of moved objects per iteration when clustering a variety of datasets with the k-averages algorithm, normalized by the total number of objects to cluster. The datasets used to create this figure are the real-life time series data that we employ for experimental validation \DIFaddbeginFL \DIFaddFL{evaluated under the Dynamic Time Warping (DTW) similarity measure}\DIFaddendFL , \textit{cf.} Section~\ref{sec:experiments}.}
+\label{fig:moved}
+\end{figure}
+
+\begin{figure}
+\center
+\includegraphics[width = .65\textwidth]{figures/sampleMove.png}
+\caption{Total number of object reallocations over a run of the k-averages algorithm, plotted against the number of objects to be clustered. The datasets used to create this figure are the real-life time series data that we employ for experimental validation, \textit{cf.} Section~\ref{sec:experiments}.}
+\label{fig:totalMoved}
+\end{figure}
+
+\subsection{Memory access}
+
+The lowered computational costs is also accompanied by a decrease in memory access: as can be seen from Equation~\ref{eq:newSimilNewC}, in order to compute the new object-to-class similarities after moving an object $n$, only line $n$ of the similarity matrix needs to be read. For the remaining of the algorithm, only the (much smaller) object-to-class similarity matrix is used. By contrast, in the case of kernel k-means, the computation of $M_c$ values at each iteration require that the whole similarity matrix be read, which can be a serious performance bottleneck in the case of large object collections.
+
+Moreover, the similarity update function of k-averages, by reading one line of the matrix at a time, presents good data locality properties, which make it play well with standard memory paging strategies.
+
+To illustrate and confirm the theoretical complexity computed here, the next section proposes some performance figures measured on controlled datasets.
+
+\section{Validation}
+\label{sec:validation}
+
+In order to reliably compare the clustering quality and execution speed between the two approaches, we have written plain C implementations of Algorithms~\ref{algo:kkmeans_optim} and~\ref{algo:kaverages}, with minimal operational overhead: reading the similarity matrix from a binary file where all matrix values are stored sequentially in standard reading order, line by line, and writing out the result of the clustering as a label text file. Both implementations use reasonably efficient code, but without advanced optimizations or parallel processing\DIFdelbegin \DIFdel{; C and Matlab implementations can be found at}%DIFDELCMD < \\ \url{https://bitbucket.org/mlagrange/kaverages/downloads}%%%
+\DIFdelend \DIFaddbegin \footnote{\DIFadd{The C and Matlab implementations can be found at}\\ \url{https://bitbucket.org/mlagrange/kaverages}\DIFadd{.}}\DIFaddend .	%% Arshia: remove \footnote{}
+
+The figures presented in this section were obtained on synthetic datasets, created in order to give precise control on the features of the analyzed data: for $n$ points split between $C$ classes, $C$ centroids are generated at random in two dimensional space, and point coordinates are generated following a Gaussian distribution around class centroids. In addition to the numbers of objects and classes, the variance of Gaussian distributions are adjusted to modulate how clearly separable clusters are. Similarities are computed as inverse Euclidean distances between points. %This clearly simplified example is useful as a first control test bench; the next section is dedicated to experiments on more realistic datasets.
+
+\subsection{Clustering performance}
+
+Several metrics are available to evaluate the performance of a clustering algorithm. The one closest to the actual target application is the raw accuracy, that is the average number of items labeled correctly after an alignment phase of the estimated labeling with the reference \citep{Kuhn1955Hungarian}.
+
+Another metric of choice is the Normalized Mutual Information (NMI) criterion. Based on information theoretic principles, it measures the amount of statistical information shared by the random variables representing the predicted cluster distribution and the reference class distribution of the data points. If $P$ is the random variable denoting the cluster assignments of the points, and $C$ is the random variable denoting the underlying class labels on the points then the NMI measure is defined as:
+\[
+\textbf{NMI} = \frac{ 2\- I(C;K) }{H(C)+H(K)}
+\]
+
+where $I(X;Y)=H(X)−H(X|Y)$ is the mutual information between the random variables $X$ and $Y$, $H(X)$ is the Shannon entropy of $X$,and $H(X|Y)$ is the conditional entropy of $X$ given $Y$. Thanks to the normalization, the metric stays between $0$ and $1$, $1$ indicating a perfect match, and can be used to compare clustering with different numbers of clusters. Interestingly, random prediction gives an NMI close to $0$, whereas the accuracy of a random prediction on a balanced bi-class problem is as high as 50\,\%.
+
+In this paper, for simplicity \DIFdelbegin \DIFdel{and accessibility}\DIFdelend \DIFaddbegin \DIFadd{sake}\DIFaddend , only the NMI is considered for validations\DIFdelbegin \DIFdel{as in \mbox{%DIFAUXCMD
+\citep{Kulis2008}}%DIFAUXCMD
+}\DIFdelend . However, \DIFdelbegin \DIFdel{it shall be noted }\DIFdelend \DIFaddbegin \DIFadd{we found }\DIFaddend that most statements hereafter in terms of performance ranking of the different algorithms still hold while considering the accuracy metric as reference.
+
+\begin{figure}
+\center
+\includegraphics[width=.7\textwidth]{figures/synthetic.pdf}
+\caption{NMI of kernel k-means (*) and k-averages (o) clustering relative to ground truth as a function of the \gl{spread} of those classes for synthetic data sets of 5 and 40 classes, displayed in dashed and solid lines, respectively.}
+\label{fig:synth_perf}
+\end{figure}
+
+Figure~\ref{fig:synth_perf} presents the quality of clusterings obtained using kernel k-means \DIFdelbegin \DIFdel{(dotted line) }\DIFdelend and k-averages \DIFdelbegin \DIFdel{(solid line) }\DIFdelend on two series of datasets: one featuring 5 classes, the other 40 classes. On the x-axis is the variance of the Gaussian distribution used to generate the point cloud for each class: the higher that value, the more the classes are spread out and overlap each other, thus making the clustering harder.
+
+The question of choosing the proper number of clusters for a given dataset without \textit{a priori} is a well known and hard problem, and beyond the scope of this article. Therefore, for the purpose of evaluation, clustering is done by requesting a number of clusters equal to the actual number of classes in the dataset. In order to obtain stable and reliable figures, clustering is repeated 500 times with varying initial conditions, \textit{i.e.} the initial assignment of points to clusters is randomly determined, and only the average performance is given. For fairness of comparison, each algorithm is run with the exact same initial assignments.
+
+As can be seen on the figure, in the case of a 5-class problem, k-averages outperforms kernel k-means in the \gl{easy} cases (low class spread), before converging to equivalent results. For the more complex 40-class datasets, k-averages consistently yields a better result than kernel k-means, especially for higher values of the variance. The lower values of NMI for 5-class experiments is in fact an artifact introduced by the normalization of NMI, and is not \DIFdelbegin \DIFdel{significant }\DIFdelend \DIFaddbegin \DIFadd{important }\DIFaddend here; we only focus, for each series of experiments, on the relative performances of kernel k-means and k-averages.
+
+\subsection{Time efficiency}
+
+Figure~\ref{fig:timing} shows the average time spent by kernel k-means and k-averages to cluster synthetic datasets or varying sizes. As previously, initial conditions on each run are identical for both algorithms. The reported run time is the one measured on a 64 bits Intel$^\circledR$ Core\texttrademark   \, i7 runnning at 3.6 GHz with 32 Gb of RAM and standard Hard Disk Drive (HDD)  operated by standard Linux distribution. For results with 2 GB of RAM, the same machine is used with a memory limitation specified to the kernel at boot time.
+
+\begin{figure}
+\center
+\includegraphics[width= .7\textwidth]{figures/simpleSwap.png}
+\caption{Average computation time of the kernel k-means (*) and kaverages (o) algorithms on computers with 2 GB (solid line) and 32 GB (dashed line) of RAM, respectively. The \gl{running time} axis follows a logarithmic scale.}
+\label{fig:timing}
+\end{figure}
+
+These figures confirm the theoretical complexity analysis presented in Section~\ref{sec:complexity}: k-averages runs at least 20 times faster on average than kernel k-means in ordinary conditions, when  available memory is not an issue. When the matrix size exceeds what can be stored in RAM and the system has to resort to paged memory, as in the presented experiments when the matrix reaches about 1500MB, both algorithms suffer from a clear performance hit; however, kernel k-means is much more affected, and the difference becomes even more \DIFdelbegin \DIFdel{significant}\DIFdelend \DIFaddbegin \DIFadd{important}\DIFaddend : with a 2000MB similarity matrix on a memory-limited computer, k-averages runs about 100 times faster than kernel k-means.
+
+Having established the interest of our proposed method relative to kernel k-means on synthetic object collections, we now proceed to a thorough evaluation on real data.
+
+\section{Experiments}
+\label{sec:experiments}
+
+In order to demonstrate the usefulness of k-averages when dealing with real data, we have chosen to focus on the clustering of \DIFdelbegin \DIFdel{times }\DIFdelend \DIFaddbegin \DIFadd{time }\DIFaddend series as the evaluation task. Time series, even though represented as vectors and therefore suitable for any kinds of norm-based clustering, are best compared with elastic measures \citep{Ding:2008:QMT:1454159.1454226, Wang:2013:ECR:2429736.2429754}, partly due to their varying length. The Dynamic Time Warping (DTW) measure is an elastic measure widely used in many areas since its introduction for spoken word detection \citep{1163055} and has never been \DIFdelbegin \DIFdel{significantly }\DIFdelend challenged for time series mining \citep{conf/kdd/BerndtC94, Rakthanmanon:2013:ABD:2513092.2500489}.
+
+Effective clustering of time series using the DTW measure \DIFdelbegin \DIFdel{require }\DIFdelend \DIFaddbegin \DIFadd{requires }\DIFaddend similarity based algorithms such as the k-averages algorithm. With some care, kernel based algorithm can also be considered provided that the resulting similarity matrix is converted into a kernel, \textit{i.e.} the matrix is forced to be semi definite positive, \textit{i.e.} to be a Gram matrix \citep{Lanckriet:2004:LKM:1005332.1005334} \DIFaddbegin \DIFadd{in order to guarantee convergence}\DIFaddend .
+
+\subsection{Datasets}
+
+To compare quality of clusterings obtained by the considered algorithms, we consider a large collection of 43 time series datasets \DIFdelbegin \DIFdel{created }\DIFdelend \DIFaddbegin \DIFadd{made publicly available }\DIFaddend by many laboratories \DIFdelbegin \DIFdel{all over the world }\DIFdelend \DIFaddbegin \DIFadd{worldwide }\DIFaddend and compiled by Prof. Keogh \footnote{Available at: \url{www.cs.ucr.edu/~eamonn/time_series_data}}. Thus, while all the experiments presented here are performed on time series (chosen for being a good example of a data type requiring similarity-based clustering, as opposed to a simple Euclidean approach), the great variety in the sources and semantics of said series (bio-informatics, linguistics, astronomy, gesture modeling, chemistry\ldots{}) gives this validation a wide foundation. Statistics about the morphology of those datasets are summarized in Table~\ref{tab:dbs}. \DIFdelbegin \DIFdel{In the results described in the next sections, datasets are refered by a numerical id for the sake of brevity; the correspondence between those ids and the actual names of the datasets is shown on Table \ref{didtNoda1}.
+}\DIFdelend \DIFaddbegin \DIFadd{Individual details can be found in Appendix \ref{sec:appendix}.
+%DIF > In the results described in the next sections, datasets are refered by a numerical id for the sake of brevity; the correspondence between those ids and the actual names of the datasets is shown on Table \ref{didtNoda1}.
+}\DIFaddend 
+
+\begin{table}
+\center
+\caption{\label{tab:dbs} Statistics of the datasets. The length of the times series is expressed in samples.}
+\begin{tabular}{l|ccc}
+& min & average $\pm$ variance & max \\
+\hline
+number of classes & 2 & 8 $\pm$ 9 & 50 \\
+number of time series & 56 & 1626 $\pm$ 2023 & 9236 \\
+time series length & 24 & 372 $\pm$ 400 & 1882 \\
+\end{tabular}
+\end{table}
+
+\DIFaddbegin \subsection{\DIFadd{Methods}}
+
+\DIFadd{Three algorithms are considered: the spectral clustering \mbox{%DIFAUXCMD
+\cite{von2007tutorial} }%DIFAUXCMD
+approach as a high complexity reference, the kernel k-means algorithm implemented as described in Section \ref{sec:kkmeans} and the proposed k-averages algorithm. The spectral clustering algorithm tested here uses the normalization proposed by Jordan and Weiss \mbox{%DIFAUXCMD
+\cite{ng2002spectral}}%DIFAUXCMD
+. This normalization is chosen over no normalization and the Shi and Malik one \mbox{%DIFAUXCMD
+\cite{shi2000normalized} }%DIFAUXCMD
+as it is found to be the best performing in terms of average NMI over all the datasets. The implementation is done using the Matlab programming language. Even though a C implementation would probably be more efficient, we believe that the gain would be low as the main computational load is the diagonalization of the similarity matrix and the k-means clustering of the eigenvectors which are both efficient builtins Matlab functions. The kernel k-means is implemented both in Matlab using the implementation provided by Mo Chen}\footnote{\DIFadd{Available at: }\url{https://fr.mathworks.com/matlabcentral/fileexchange/26182-kernel-kmeans}} \DIFadd{and in the C programming language following Algorithm \ref{algo:kkmeans}. The k-averages method is implemented in C following Algorithm \ref{algo:kaverages}.
+}
+
+\DIFaddend \subsection{Evaluation Protocol}
+
+For each dataset, since we perform clustering, and not supervised learning, the training and testing data are joined \DIFaddbegin \DIFadd{together}\DIFaddend . DTW similarities are computed using the implementation provided by Prof. Ellis \footnote{Available at: \url{http://www.ee.columbia.edu/~dpwe/resources/matlab/dtw}} with default parameters.
+
+As in our previous experiments with synthetic data, we choose here the normalized mutual information \DIFdelbegin \DIFdel{as }\DIFdelend \DIFaddbegin \DIFadd{(NMI) as the }\DIFaddend measure of clustering quality; clustering is done by requesting a number of clusters equal to the actual number of classes in the dataset, and repeated 200 times with varying initial conditions, each algorithm being run with the exact same initial assignments. \DIFdelbegin \DIFdel{Of }\DIFdelend \DIFaddbegin \DIFadd{For }\DIFaddend the 200 clusterings thus produced, we \DIFdelbegin \DIFdel{keep the one that shows the best convergence (}\emph{\DIFdel{i.e.}} %DIFAUXCMD
+\DIFdel{has the maximum final value of its objective function, as reported by the algorithm) and }\DIFdelend compute the NMI \DIFdelbegin \DIFdel{of that result with }\DIFdelend \DIFaddbegin \DIFadd{between them and }\DIFaddend the ground truth \DIFaddbegin \DIFadd{clustering. Average and standard deviation statistics are then computed}\DIFaddend .
+
+\subsection{\DIFdelbegin \DIFdel{Results}\DIFdelend \DIFaddbegin \DIFadd{Clustering performance}\DIFaddend }
+
+%% BI-CLASS
+
+\begin{table}
+\begin{center}
+\caption{NMI (in percents) of clusterings by kernel k-means and k-averages for bi-class datasets.}
+\label{tab:results-2}
+\DIFdelbeginFL %DIFDELCMD < \begin{tabular}{rrrccc}
+%DIFDELCMD < %%%
+%DIF <  & nb. & nb. &  & kernel &  \\
+\DIFdelFL{id }%DIFDELCMD < & %%%
+\DIFdelFL{classes }%DIFDELCMD < & %%%
+\DIFdelFL{objects }\DIFdelendFL \DIFaddbeginFL \begin{tabular}{lccc}
+ \DIFaddendFL & \DIFaddbeginFL \DIFaddFL{spectral clustering }\DIFaddendFL & kernel k-means & k-averages \\
+%DIF < &  &  & (NMI $\times 0.01$) & (NMI $\times 0.01$) & (NMI $\times 0.01$) \\
+\hline
+\DIFdelbeginFL \DIFdelFL{7 }%DIFDELCMD < & %%%
+\DIFdelFL{2 }%DIFDELCMD < &   %%%
+\DIFdelFL{56 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Coffee }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{3.4 $\pm$0.0 }\DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{4.0}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{6.9 $\pm$4.1 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{4.0}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{7.8 $\pm$3.6}\DIFaddendFL } \\
+\DIFdelbeginFL \DIFdelFL{12 }%DIFDELCMD < & %%%
+\DIFdelFL{2 }%DIFDELCMD < &  %%%
+\DIFdelFL{200 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{ECG200 }\DIFaddendFL &  \DIFaddbeginFL \DIFaddFL{9.9 $\pm$0.0 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{14.6}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{14.8 $\pm$1.0}\DIFaddendFL } & 14.6 \DIFaddbeginFL \DIFaddFL{$\pm$0.0 }\DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{13 }%DIFDELCMD < & %%%
+\DIFdelFL{2 }%DIFDELCMD < &  %%%
+\DIFdelFL{884 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{ECGFiveDays }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{0.1 $\pm$0.0 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{2.5}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{3.3 $\pm$0.3}\DIFaddendFL } & 2.5 \DIFaddbeginFL \DIFaddFL{$\pm$0.0 }\DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{17 }%DIFDELCMD < & %%%
+\DIFdelFL{2 }%DIFDELCMD < &  %%%
+\DIFdelFL{200 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Gun\_Point }\DIFaddendFL & \DIFaddbeginFL \textbf{\DIFaddFL{14.8 $\pm$1.3}} \DIFaddendFL &  \DIFdelbeginFL \textbf{\DIFdelFL{0.0}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.0 $\pm$0.0 }\DIFaddendFL &  \DIFdelbeginFL \textbf{\DIFdelFL{0.0}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.0 $\pm$0.0 }\DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{20 }%DIFDELCMD < & %%%
+\DIFdelFL{2 }%DIFDELCMD < & %%%
+\DIFdelFL{1096 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{ItalyPowerDemand }\DIFaddendFL & \DIFaddbeginFL \textbf{\DIFaddFL{1.1}} \DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{0.9}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.9 }\DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{0.9}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.9 }\DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{21 }%DIFDELCMD < & %%%
+\DIFdelFL{2 }%DIFDELCMD < &  %%%
+\DIFdelFL{121 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Lighting2 }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{4.1 $\pm$0.3 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{11.1}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{4.9 $\pm$3.7}\DIFaddendFL } & \DIFdelbeginFL \textbf{\DIFdelFL{11.1}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{4.3 $\pm$4.2 }\DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{25 }%DIFDELCMD < & %%%
+\DIFdelFL{2 }%DIFDELCMD < & %%%
+\DIFdelFL{1272 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{MoteStrain }\DIFaddendFL &  \DIFaddbeginFL \DIFaddFL{0.0 $\pm$0.0 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{49.3}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{48.9 $\pm$0.6}\DIFaddendFL } & \DIFdelbeginFL \DIFdelFL{48.2 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{48.8 $\pm$0.6 }\DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{28 }%DIFDELCMD < & %%%
+\DIFdelFL{2 }%DIFDELCMD < &  %%%
+\DIFdelFL{621 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{SonyAIBORobotSurface }\DIFaddendFL &   \DIFaddbeginFL \DIFaddFL{3.4 $\pm$0.0 }\DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{56.2}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{45.0 $\pm$20.7 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{56.2}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{45.1 $\pm$20.5}\DIFaddendFL } \\
+\DIFdelbeginFL \DIFdelFL{29 }%DIFDELCMD < & %%%
+\DIFdelFL{2 }%DIFDELCMD < &  %%%
+\DIFdelFL{980 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{SonyAIBORobotSurfaceII }\DIFaddendFL &  \DIFaddbeginFL \DIFaddFL{2.5 $\pm$0.0 }\DIFaddendFL & \textbf{21.4 \DIFaddbeginFL \DIFaddFL{$\pm$0.0}\DIFaddendFL } & \textbf{21.4 \DIFaddbeginFL \DIFaddFL{$\pm$0.0}\DIFaddendFL } \\
+\DIFdelbeginFL \DIFdelFL{34 }%DIFDELCMD < & %%%
+\DIFdelFL{2 }%DIFDELCMD < & %%%
+\DIFdelFL{1162 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{TwoLeadECG }\DIFaddendFL & \DIFaddbeginFL \textbf{\DIFaddFL{1.4 $\pm$0.0}} \DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{0.0}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.1 $\pm$0.6 }\DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{0.0}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.0 $\pm$0.2 }\DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{42 }%DIFDELCMD < & %%%
+\DIFdelFL{2 }%DIFDELCMD < & %%%
+\DIFdelFL{7164 }%DIFDELCMD < &  & %%%
+\textbf{\DIFdelFL{0.0}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{wafer }\DIFaddendFL & \textbf{0.0} \DIFdelbeginFL %DIFDELCMD < \\
+%DIFDELCMD < %%%
+\DIFdelFL{43 }\DIFdelendFL & \DIFdelbeginFL \DIFdelFL{2 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.0 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{3300 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.0 }\\
+\DIFaddFL{yoga }\DIFaddendFL & \DIFaddbeginFL \textbf{\DIFaddFL{0.5 $\pm$0.0}} \DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{0.3}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.2 $\pm$0.1 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{0.0 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.2 $\pm$0.1 }\DIFaddendFL \\
+\end{tabular}
+\end{center}
+\end{table}
+
+For ease of readability and comparison, the presented results are split into 3 tables. Table~\ref{tab:results-2} lists the results obtained on bi-class datasets, \textit{i.e.} the datasets annotated in terms of presence or absence of a given property; Table~\ref{tab:results-37} concerns the datasets with a small number of classes (from 3 to 7); and Table~\ref{tab:results-8} focuses the datasets with a larger number of classes (from 8 to 50).
+
+For each experiment, the result of the best performing method is marked in bold. \DIFaddbegin \DIFadd{The Matlab and C implementations of the kernel k-means algorithm give exactly the same results in terms of NMI, thus only one column is used to display their performance.
+}\DIFaddend 
+
+ %% 3-7 classes
+
+\begin{table}
+\begin{center}
+\caption{NMI (in percents) of clusterings by kernel k-means and k-averages for datasets of 3 to 7 classes.}
+\label{tab:results-37}
+\DIFdelbeginFL %DIFDELCMD < \begin{tabular}{rrrccc}
+%DIFDELCMD < %%%
+%DIF <  & nb. & nb. &  & kernel &  \\
+\DIFdelFL{id }%DIFDELCMD < & %%%
+\DIFdelFL{classes }%DIFDELCMD < & %%%
+\DIFdelFL{objects }\DIFdelendFL \DIFaddbeginFL \begin{tabular}{lccc}
+ \DIFaddendFL & \DIFaddbeginFL \DIFaddFL{spectral clustering }\DIFaddendFL & kernel k-means & k-averages \\
+%DIF < &  &  & (NMI $\times 0.01$) & (NMI $\times 0.01$) & (NMI $\times 0.01$) \\
+\hline
+\DIFdelbeginFL \DIFdelFL{3 }%DIFDELCMD < & %%%
+\DIFdelFL{5 }%DIFDELCMD < &   %%%
+\DIFdelFL{60 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Beef }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{25.7 $\pm$2.4 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{35.1 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{35.5 $\pm$2.8}} \DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{38.3}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{34.5 $\pm$2.6 }\DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{4 }%DIFDELCMD < & %%%
+\DIFdelFL{3 }%DIFDELCMD < &  %%%
+\DIFdelFL{930 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{CBF }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{11.1 $\pm$0.2 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{34.2 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{41.0 $\pm$8.4 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{54.8}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{41.0 $\pm$7.0}\DIFaddendFL } \\
+\DIFdelbeginFL \DIFdelFL{5 }%DIFDELCMD < & %%%
+\DIFdelFL{3 }%DIFDELCMD < & %%%
+\DIFdelFL{4307 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{ChlorineConcentration }\DIFaddendFL & \DIFaddbeginFL \textbf{\DIFaddFL{3.9 $\pm$0.0}} \DIFaddendFL & \DIFaddbeginFL \DIFaddFL{0.2 $\pm$}\DIFaddendFL 0.1 & \DIFdelbeginFL \textbf{\DIFdelFL{0.4}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.2 $\pm$0.1 }\DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{6 }%DIFDELCMD < & %%%
+\DIFdelFL{4 }%DIFDELCMD < & %%%
+\DIFdelFL{1420 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{CinC\_ECG\_torso }\DIFaddendFL & \DIFaddbeginFL \textbf{\DIFaddFL{37.9 $\pm$0.5}} \DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{25.2}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{24.2 $\pm$1.5 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{22.5 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{24.6 $\pm$1.6 }\DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{11 }%DIFDELCMD < & %%%
+\DIFdelFL{4 }%DIFDELCMD < &  %%%
+\DIFdelFL{322 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{DiatomSizeReduction }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{45.3 $\pm$4.2 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{85.0}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{79.8 $\pm$6.3}\DIFaddendFL } & \DIFdelbeginFL \DIFdelFL{83.2 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{77.3 $\pm$4.5 }\DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{15 }%DIFDELCMD < & %%%
+\DIFdelFL{4 }%DIFDELCMD < &  %%%
+\DIFdelFL{112 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{FaceFour }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{49.8 $\pm$4.6 }\DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{75.4}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{72.2 $\pm$8.4 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{69.5 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{74.9 $\pm$6.3}} \DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{18 }%DIFDELCMD < & %%%
+\DIFdelFL{5 }%DIFDELCMD < &  %%%
+\DIFdelFL{463 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Haptics }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{3.0 $\pm$0.5 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{8.7 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{9.7 $\pm$1.3}} \DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{9.2}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{9.4 $\pm$1.2 }\DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{19 }%DIFDELCMD < & %%%
+\DIFdelFL{7 }%DIFDELCMD < &  %%%
+\DIFdelFL{650 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{InlineSkate }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{4.6 $\pm$0.5 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{7.3 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{6.3 $\pm$0.7 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{7.3}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{6.4 $\pm$0.7}\DIFaddendFL } \\
+\DIFdelbeginFL \DIFdelFL{22 }%DIFDELCMD < & %%%
+\DIFdelFL{7 }%DIFDELCMD < &  %%%
+\DIFdelFL{143 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Lighting7 }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{27.6 $\pm$2.7 }\DIFaddendFL & 51.0 \DIFaddbeginFL \DIFaddFL{$\pm$3.1 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{52.6}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{51.3 $\pm$1.5}\DIFaddendFL } \\
+\DIFdelbeginFL \DIFdelFL{26 }%DIFDELCMD < & %%%
+\DIFdelFL{6 }%DIFDELCMD < &  %%%
+\DIFdelFL{442 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{OSULeaf }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{22.9 $\pm$0.8 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{26.3 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{22.9 $\pm$2.2 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{27.2}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{23.0 $\pm$2.5}\DIFaddendFL } \\
+\DIFdelbeginFL \DIFdelFL{27 }%DIFDELCMD < & %%%
+\DIFdelFL{4 }%DIFDELCMD < &   %%%
+\DIFdelFL{60 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{OliveOil }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{10.6 $\pm$2.2 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{27.8 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{32.4 $\pm$8.6}} \DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{28.3}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{30.6 $\pm$7.8 }\DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{30 }%DIFDELCMD < & %%%
+\DIFdelFL{3 }%DIFDELCMD < & %%%
+\DIFdelFL{9236 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{StarLightCurves }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{54.3 $\pm$0.0 }\DIFaddendFL & \textbf{60.3 \DIFaddbeginFL \DIFaddFL{$\pm$0.4}\DIFaddendFL } & \DIFdelbeginFL \textbf{\DIFdelFL{60.3}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{60.3 $\pm$0.0 }\DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{32 }%DIFDELCMD < & %%%
+\DIFdelFL{6 }%DIFDELCMD < & %%%
+\DIFdelFL{1020 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Symbols }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{72.0 $\pm$1.7 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{79.5 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{79.1 $\pm$3.8 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{81.1}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{79.5 $\pm$1.6}\DIFaddendFL } \\
+\DIFdelbeginFL \DIFdelFL{33 }%DIFDELCMD < & %%%
+\DIFdelFL{4 }%DIFDELCMD < &  %%%
+\DIFdelFL{200 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Trace }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{13.7 $\pm$4.4 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{50.5 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{54.5 $\pm$5.1}} \DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{68.5}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{54.3 $\pm$6.3 }\DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{35 }%DIFDELCMD < & %%%
+\DIFdelFL{4 }%DIFDELCMD < & %%%
+\DIFdelFL{5000 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Two\_Patterns }\DIFaddendFL &   \DIFaddbeginFL \DIFaddFL{0.2 $\pm$0.0 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{21.6}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{10.1 $\pm$10.0}\DIFaddendFL } &   \DIFdelbeginFL \DIFdelFL{14.7 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{8.8 $\pm$9.9 }\DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{37 }%DIFDELCMD < & %%%
+\DIFdelFL{7 }%DIFDELCMD < &  %%%
+\DIFdelFL{350 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{fish }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{18.5 $\pm$1.5 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{33.7 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{34.9 $\pm$1.4 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{36.9}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{35.3 $\pm$1.0}\DIFaddendFL } \\
+\DIFdelbeginFL \DIFdelFL{38 }%DIFDELCMD < & %%%
+\DIFdelFL{6 }%DIFDELCMD < &  %%%
+\DIFdelFL{600 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{synthetic\_control }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{63.0 $\pm$0.7 }\DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{96.4}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{85.3 $\pm$4.9 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{88.8 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{89.5 $\pm$0.8}} \DIFaddendFL \\
+\end{tabular}
+\end{center}
+\end{table}
+
+
+ %% 8-50 classes
+
+\begin{table}
+\begin{center}
+\caption{NMI (in percents) of clusterings by kernel k-means and k-averages for datasets of 8 to 50 classes.}
+\label{tab:results-8}
+\DIFdelbeginFL %DIFDELCMD < \begin{tabular}{rrrccc}
+%DIFDELCMD < %%%
+%DIF <  & nb. & nb. &  & kernel &  \\
+\DIFdelFL{id }%DIFDELCMD < & %%%
+\DIFdelFL{classes }%DIFDELCMD < & %%%
+\DIFdelFL{objects }\DIFdelendFL \DIFaddbeginFL \begin{tabular}{lccc}
+ \DIFaddendFL & \DIFaddbeginFL \DIFaddFL{spectral clustering }\DIFaddendFL & kernel k-means & k-averages \\
+%DIF < &  &  & (NMI $\times 0.01$) & (NMI $\times 0.01$) & (NMI $\times 0.01$) \\
+\hline
+\DIFdelbeginFL \DIFdelFL{1 }%DIFDELCMD < & %%%
+\DIFdelFL{50 }%DIFDELCMD < &  %%%
+\DIFdelFL{905 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{50words }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{46.9 $\pm$1.0 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{70.2 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{69.6 $\pm$0.8 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{71.0}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{71.7 $\pm$0.6}\DIFaddendFL } \\
+\DIFdelbeginFL \DIFdelFL{2 }%DIFDELCMD < & %%%
+\DIFdelFL{37 }%DIFDELCMD < &  %%%
+\DIFdelFL{781 }%DIFDELCMD < &  %%%
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Adiac }\DIFaddendFL & 55.0 \DIFaddbeginFL \DIFaddFL{$\pm$1.0 }\DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{58.2}} %DIFAUXCMD
+%DIFDELCMD < \\
+%DIFDELCMD <  %%%
+\DIFdelFL{8 }%DIFDELCMD < & %%%
+\DIFdelFL{12 }%DIFDELCMD < &  %%%
+\DIFdelFL{780 }%DIFDELCMD < &  & %%%
+\textbf{\DIFdelFL{28.6}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{55.7 $\pm$1.0 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{26.2 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{58.9 $\pm$0.6}} \DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{9 }%DIFDELCMD < & %%%
+\DIFdelFL{12 }%DIFDELCMD < &  %%%
+\DIFdelFL{780 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Cricket\_X }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{19.2 $\pm$1.1 }\DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{33.8}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{26.1 $\pm$1.8 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{33.4 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{26.8 $\pm$1.2}} \DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{10 }%DIFDELCMD < & %%%
+\DIFdelFL{12 }%DIFDELCMD < &  %%%
+\DIFdelFL{780 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Cricket\_Y }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{22.8 $\pm$1.3 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{25.6 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{33.0 $\pm$1.5 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{26.2}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{33.5 $\pm$1.2}\DIFaddendFL } \\
+\DIFdelbeginFL \DIFdelFL{14 }%DIFDELCMD < & %%%
+\DIFdelFL{14 }%DIFDELCMD < & %%%
+\DIFdelFL{2250 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Cricket\_Z }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{19.2 $\pm$1.3 }\DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{72.8}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{25.5 $\pm$2.2 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{64.3 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{27.3 $\pm$1.3}} \DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{16 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{FaceAll }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{14 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{36.4 $\pm$1.2 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{2250 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{70.7 $\pm$2.0}} \DIFaddendFL & \DIFaddbeginFL \DIFaddFL{68.2 $\pm$2.3 }\\
+\DIFaddFL{FacesUCR }\DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{72.1}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{36.2 $\pm$1.3 }\DIFaddendFL & 70.4 \DIFdelbeginFL %DIFDELCMD < \\
+%DIFDELCMD < %%%
+\DIFdelFL{23 }%DIFDELCMD < &  %%%
+\DIFdelFL{8 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{$\pm$2.0 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{2400 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{71.5 $\pm$1.6}} \\
+\DIFaddFL{MALLAT }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{44.5 $\pm$2.0 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{97.4}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{90.3 $\pm$4.6}\DIFaddendFL } & \DIFdelbeginFL \DIFdelFL{87.0 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{89.2 $\pm$3.5 }\DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{24 }%DIFDELCMD < & %%%
+\DIFdelFL{10 }%DIFDELCMD < & %%%
+\DIFdelFL{1141 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{MedicalImages }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{19.2 $\pm$1.3 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{28.3 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{29.7 $\pm$1.7 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{29.8}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{30.4 $\pm$1.6}\DIFaddendFL } \\
+\DIFdelbeginFL \DIFdelFL{31 }%DIFDELCMD < & %%%
+\DIFdelFL{15 }%DIFDELCMD < & %%%
+\DIFdelFL{1125 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{SwedishLeaf }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{48.7 $\pm$1.4 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{69.2 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{70.3 $\pm$1.9 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{70.2}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{70.8 $\pm$1.4}\DIFaddendFL } \\
+\DIFdelbeginFL \DIFdelFL{36 }%DIFDELCMD < & %%%
+\DIFdelFL{25 }%DIFDELCMD < &  %%%
+\DIFdelFL{905 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{WordsSynonyms }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{31.9 $\pm$1.0 }\DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{52.5}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{50.9 $\pm$1.2 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{51.2 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{52.1 $\pm$0.8}} \DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{39 }%DIFDELCMD < &  %%%
+\DIFdelFL{8 }%DIFDELCMD < & %%%
+\DIFdelFL{4478 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{uWaveGestureLibrary\_X }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{24.4 $\pm$0.6 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{46.4 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{46.0 $\pm$1.2 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{46.9}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{46.2 $\pm$0.5}\DIFaddendFL } \\
+\DIFdelbeginFL \DIFdelFL{40 }%DIFDELCMD < &  %%%
+\DIFdelFL{8 }%DIFDELCMD < & %%%
+\DIFdelFL{4478 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{uWaveGestureLibrary\_Y }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{16.2 $\pm$0.3 }\DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{45.2}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{44.9 $\pm$0.4 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{44.2 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{45.0 $\pm$0.2}} \DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{41 }%DIFDELCMD < &  %%%
+\DIFdelFL{8 }%DIFDELCMD < & %%%
+\DIFdelFL{4478 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{uWaveGestureLibrary\_Z }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{23.2 $\pm$0.6 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{42.7 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{42.9 $\pm$0.7}} \DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{42.8}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{42.6 $\pm$0.5 }\DIFaddendFL \\
+\end{tabular}
+\end{center}
+\end{table}
+
+A first \DIFdelbegin \DIFdel{constatation is that }\DIFdelend \DIFaddbegin \DIFadd{observation is that the spectral clustering algorithm only performs favorably for 2 of the 43 dataset. Also, }\DIFaddend most of the bi-class problems (Table~\ref{tab:results-2}) do not seem to lend themselves well to this kind of approach: kernel k-means and k-averages produce quasi-identical results, poor in most cases. Concerning the medium numbers of classes (Table~\ref{tab:results-37}), k-averages \DIFdelbegin \DIFdel{outperforms kernel k-means }\DIFdelend \DIFaddbegin \DIFadd{performs best for 8 datasets out of 17. For the larger numbers of classes (Table~\ref{tab:results-8}), k-averages performs best }\DIFaddend for 11 datasets out of \DIFdelbegin \DIFdel{17, while }\DIFdelend \DIFaddbegin \DIFadd{14.
+}
+
+\DIFadd{Considering the standard deviation over the several runs of the algorithm with different initialization is helpful to study the sensitivity of the algorithm to its initialization and thus its tendency to be stuck into local minima. For most datasets, the standard deviation of the k-averages algorithm is smaller than the one of the }\DIFaddend kernel k-means \DIFdelbegin \DIFdel{leads for only 5. For the larger numbers of classes, the results are spread evenly, each method outperforming the other in 7 cases}\DIFdelend \DIFaddbegin \DIFadd{one and thus seems experimentally more robust.
+}
+
+\subsection{\DIFadd{Efficiency}}
+
+\DIFadd{Computation time displayed in Tables \ref{tab:resultSpeed-2}, \ref{tab:resultSpeed-37}, and \ref{tab:resultSpeed-8} is the average duration over 100 runs on a single core with no parallelization capabilities. For every datasets, the spectral clustering approach is the more time consuming due to the diagonalization of the matrix which is of $O(N^3)$. For the kernel k-means algorithm, the C implementation is most of the time more efficient than the Matlab implementation. The k-average algorithm is more efficient for 46 datasets out of the 47 by close to an order of magnitude for the larger datasets.
+}
+
+\begin{table}
+\begin{center}
+\caption{\DIFaddFL{Computation time (in seconds) for several implementations of the evaluated clustering algorithms for datasets of 2 classes.}}
+\label{tab:resultSpeed-2}
+\begin{tabular}{lcccc}
+ & \multicolumn{2}{c}{Matlab} & \multicolumn{2}{c}{C} \\
+ & \DIFaddFL{spectral clustering }& \DIFaddFL{kk-means }& \DIFaddFL{kk-means }& \DIFaddFL{k-averages }\\
+\hline
+\DIFaddFL{Coffee }& \DIFaddFL{0.02 }& \DIFaddFL{0.00 }& \textbf{\DIFaddFL{0.00}} & \DIFaddFL{0.00 }\\
+\DIFaddFL{ECG200 }& \DIFaddFL{0.03 }& \DIFaddFL{0.00 }& \DIFaddFL{0.00 }& \textbf{\DIFaddFL{0.00}} \\
+\DIFaddFL{ECGFiveDays }& \DIFaddFL{0.13 }& \DIFaddFL{0.10 }& \DIFaddFL{0.06 }& \textbf{\DIFaddFL{0.01}} \\
+\DIFaddFL{Gun\_Point }& \DIFaddFL{0.02 }& \DIFaddFL{0.00 }& \DIFaddFL{0.00 }& \textbf{\DIFaddFL{0.00}} \\
+\DIFaddFL{ItalyPowerDemand }& \DIFaddFL{0.20 }& \DIFaddFL{0.07 }& \DIFaddFL{0.05 }& \textbf{\DIFaddFL{0.01}} \\
+\DIFaddFL{Lighting2 }& \DIFaddFL{0.02 }& \DIFaddFL{0.00 }& \DIFaddFL{0.00 }& \textbf{\DIFaddFL{0.00}} \\
+\DIFaddFL{MoteStrain }& \DIFaddFL{0.33 }& \DIFaddFL{0.11 }& \DIFaddFL{0.08 }& \textbf{\DIFaddFL{0.01}} \\
+\DIFaddFL{SonyAIBORobotSurface }& \DIFaddFL{0.09 }& \DIFaddFL{0.02 }& \DIFaddFL{0.01 }& \textbf{\DIFaddFL{0.00}} \\
+\DIFaddFL{SonyAIBORobotSurfaceII }& \DIFaddFL{0.09 }& \DIFaddFL{0.01 }& \DIFaddFL{0.02 }& \textbf{\DIFaddFL{0.01}} \\
+\DIFaddFL{TwoLeadECG }& \DIFaddFL{0.13 }& \DIFaddFL{0.16 }& \DIFaddFL{0.10 }& \textbf{\DIFaddFL{0.02}} \\
+\DIFaddFL{wafer }& \DIFaddFL{19.62 }&  \DIFaddFL{0.72 }&  \DIFaddFL{1.04 }& \textbf{ \DIFaddFL{0.39}} \\
+\DIFaddFL{yoga }& \DIFaddFL{3.55 }& \DIFaddFL{0.80 }& \DIFaddFL{0.66 }& \textbf{\DIFaddFL{0.10}} \\
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{table}
+\begin{center}
+\caption{\DIFaddFL{Computation time (in seconds) for several implementations of the evaluated clustering algorithms for datasets of 3 to 7 classes.}}
+\label{tab:resultSpeed-37}
+\begin{tabular}{lcccc}
+  & \multicolumn{2}{c}{Matlab} & \multicolumn{2}{c}{C} \\
+  & \DIFaddFL{spectral clustering }& \DIFaddFL{kk-means }& \DIFaddFL{kk-means }& \DIFaddFL{k-averages }\\
+\hline
+\DIFaddFL{Beef }& \DIFaddFL{0.02 }& \DIFaddFL{0.00 }& \DIFaddFL{0.00 }& \textbf{\DIFaddFL{0.00}} \\
+\DIFaddFL{CBF }& \DIFaddFL{0.17 }& \DIFaddFL{0.08 }& \DIFaddFL{0.05 }& \textbf{\DIFaddFL{0.01}} \\
+\DIFaddFL{ChlorineConcentration }& \DIFaddFL{7.15 }& \DIFaddFL{2.74 }& \DIFaddFL{2.09 }& \textbf{\DIFaddFL{0.23}} \\
+\DIFaddFL{CinC\_ECG\_torso }& \DIFaddFL{0.55 }& \DIFaddFL{0.31 }& \DIFaddFL{0.16 }& \textbf{\DIFaddFL{0.04}} \\
+\DIFaddFL{DiatomSizeReduction }& \DIFaddFL{0.04 }& \DIFaddFL{0.01 }& \DIFaddFL{0.00 }& \textbf{\DIFaddFL{0.00}} \\
+\DIFaddFL{FaceFour }& \DIFaddFL{0.02 }& \DIFaddFL{0.00 }& \DIFaddFL{0.00 }& \textbf{\DIFaddFL{0.00}} \\
+\DIFaddFL{Haptics }& \DIFaddFL{0.07 }& \DIFaddFL{0.04 }& \DIFaddFL{0.01 }& \textbf{\DIFaddFL{0.01}} \\
+\DIFaddFL{InlineSkate }& \DIFaddFL{0.12 }& \DIFaddFL{0.08 }& \DIFaddFL{0.03 }& \textbf{\DIFaddFL{0.01}} \\
+\DIFaddFL{Lighting7 }& \DIFaddFL{0.04 }& \DIFaddFL{0.01 }& \DIFaddFL{0.00 }& \textbf{\DIFaddFL{0.00}} \\
+\DIFaddFL{OSULeaf }& \DIFaddFL{0.08 }& \DIFaddFL{0.04 }& \DIFaddFL{0.01 }& \textbf{\DIFaddFL{0.00}} \\
+\DIFaddFL{OliveOil }& \DIFaddFL{0.03 }& \DIFaddFL{0.00 }& \DIFaddFL{0.00 }& \textbf{\DIFaddFL{0.00}} \\
+\DIFaddFL{StarLightCurves }& \DIFaddFL{34.16 }&  \DIFaddFL{4.69 }&  \DIFaddFL{6.21 }& \textbf{ \DIFaddFL{0.91}} \\
+\DIFaddFL{Symbols }& \DIFaddFL{0.26 }& \DIFaddFL{0.15 }& \DIFaddFL{0.06 }& \textbf{\DIFaddFL{0.02}} \\
+\DIFaddFL{Trace }& \DIFaddFL{0.02 }& \DIFaddFL{0.01 }& \DIFaddFL{0.00 }& \textbf{\DIFaddFL{0.00}} \\
+\DIFaddFL{Two\_Patterns }& \DIFaddFL{11.99 }&  \DIFaddFL{3.99 }&  \DIFaddFL{3.71 }& \textbf{ \DIFaddFL{0.40}} \\
+\DIFaddFL{fish }& \DIFaddFL{0.06 }& \DIFaddFL{0.02 }& \DIFaddFL{0.01 }& \textbf{\DIFaddFL{0.00}} \\
+\DIFaddFL{synthetic\_control }& \DIFaddFL{0.09 }& \DIFaddFL{0.03 }& \DIFaddFL{0.01 }& \textbf{\DIFaddFL{0.01}} \\
+\end{tabular}
+\end{center}
+\end{table}
+
+
+ %DIF > % 8-50 classes
+
+\begin{table}
+\begin{center}
+\caption{\DIFaddFL{Computation time (in seconds) for several implementations of the evaluated clustering algorithms for datasets of 8 to 50 classes.}}
+\label{tab:resultSpeed-8}
+\begin{tabular}{lcccc}
+  & \multicolumn{2}{c}{Matlab} & \multicolumn{2}{c}{C} \\
+  & \DIFaddFL{spectral clustering }& \DIFaddFL{kk-means }& \DIFaddFL{kk-means }& \DIFaddFL{k-averages }\\
+\hline
+\DIFaddFL{50words }& \DIFaddFL{0.89 }& \DIFaddFL{0.19 }& \DIFaddFL{0.05 }& \textbf{\DIFaddFL{0.03}} \\
+\DIFaddFL{Adiac }& \DIFaddFL{0.49 }& \DIFaddFL{0.16 }& \DIFaddFL{0.05 }& \textbf{\DIFaddFL{0.03}} \\
+\DIFaddFL{Cricket\_X }& \DIFaddFL{0.24 }& \DIFaddFL{0.10 }& \DIFaddFL{0.05 }& \textbf{\DIFaddFL{0.02}} \\
+\DIFaddFL{Cricket\_Y }& \DIFaddFL{0.22 }& \DIFaddFL{0.09 }& \DIFaddFL{0.05 }& \textbf{\DIFaddFL{0.02}} \\
+\DIFaddFL{Cricket\_Z }& \DIFaddFL{0.22 }& \DIFaddFL{0.09 }& \DIFaddFL{0.04 }& \textbf{\DIFaddFL{0.02}} \\
+\DIFaddFL{FaceAll }& \DIFaddFL{2.08 }& \DIFaddFL{0.78 }& \DIFaddFL{0.40 }& \textbf{\DIFaddFL{0.11}} \\
+\DIFaddFL{FacesUCR }& \DIFaddFL{2.21 }& \DIFaddFL{0.75 }& \DIFaddFL{0.41 }& \textbf{\DIFaddFL{0.12}} \\
+\DIFaddFL{MALLAT }& \DIFaddFL{2.23 }& \DIFaddFL{0.47 }& \DIFaddFL{0.29 }& \textbf{\DIFaddFL{0.12}} \\
+\DIFaddFL{MedicalImages }& \DIFaddFL{0.42 }& \DIFaddFL{0.24 }& \DIFaddFL{0.12 }& \textbf{\DIFaddFL{0.04}} \\
+\DIFaddFL{SwedishLeaf }& \DIFaddFL{0.56 }& \DIFaddFL{0.22 }& \DIFaddFL{0.11 }& \textbf{\DIFaddFL{0.04}} \\
+\DIFaddFL{WordsSynonyms }& \DIFaddFL{0.44 }& \DIFaddFL{0.16 }& \DIFaddFL{0.08 }& \textbf{\DIFaddFL{0.03}} \\
+\DIFaddFL{uWaveGestureLibrary\_X }& \DIFaddFL{8.60 }& \DIFaddFL{5.15 }& \DIFaddFL{3.82 }& \textbf{\DIFaddFL{0.44}} \\
+\DIFaddFL{uWaveGestureLibrary\_Y }& \DIFaddFL{8.94 }& \DIFaddFL{4.48 }& \DIFaddFL{2.65 }& \textbf{\DIFaddFL{0.45}} \\
+\DIFaddFL{uWaveGestureLibrary\_Z }& \DIFaddFL{8.53 }& \DIFaddFL{4.00 }& \DIFaddFL{2.89 }& \textbf{\DIFaddFL{0.47}} \\
+\end{tabular}
+\end{center}
+\end{table}
+
+
+\subsection{\DIFadd{Overall results}}
+
+\DIFadd{To conclude on the performance of the evaluated algorithms on real datasets, Table \ref{tab:resultAverage} displays the NMI and computation time averaged over the 47 datasets. The k-averages method marginally improve the clustering accuracy compared to the kernel k-means approach by using less time to compute}\DIFaddend .
+
+\DIFaddbegin \begin{table}
+\begin{center}
+\caption{\DIFaddFL{Performances averaged over the 47 datasets. The NMI is expressed in percents and the computation time in seconds.}}
+\label{tab:resultAverage}
+\begin{tabular}{lcccc}
+  & \multicolumn{2}{c}{Matlab} & \multicolumn{2}{c}{C} \\
+  & \DIFaddFL{spectral clustering }& \DIFaddFL{kk-means }& \DIFaddFL{kk-means }& \DIFaddFL{k-averages }\\
+\hline
+\DIFaddFL{nmi (\%) }& \DIFaddFL{22.1 }& \DIFaddFL{36.6 }& \DIFaddFL{36.6 }& \textbf{\DIFaddFL{36.8}} \\
+\DIFaddFL{computation time }& \DIFaddFL{2.678 }& \DIFaddFL{0.723 }& \DIFaddFL{0.590 }& \textbf{\DIFaddFL{0.096}} \\
+\end{tabular}
+\end{center}
+\end{table}
+
+\DIFaddend \section{Conclusion}
+
+We have presented k-averages, an iterative flat clustering algorithm that operates on arbitrary similarity matrices by explicitly and directly aiming to optimize the average intra-class similarity. Having established the mathematical foundation of our proposal, including guaranteed convergence, we have thoroughly compared it with \DIFdelbegin \DIFdel{the }\DIFdelend widely used standard \DIFdelbegin \DIFdel{method, }\DIFdelend \DIFaddbegin \DIFadd{methods: the }\DIFaddend kernel k-means \DIFdelbegin \DIFdel{, showing that our }\DIFdelend \DIFaddbegin \DIFadd{and the spectral clustering techniques. We show that the k-averages }\DIFaddend algorithm converges much faster (20 times faster under ordinary conditions) and \DIFdelbegin \DIFdel{leading }\DIFdelend \DIFaddbegin \DIFadd{leads }\DIFaddend to equivalent or better clustering results for the task of clustering both synthetic data and \DIFdelbegin \DIFdel{times series }\DIFdelend \DIFaddbegin \DIFadd{realistic times series taken }\DIFaddend from a wide variety of sources, while also being more \DIFaddbegin \DIFadd{computationally efficient and more }\DIFaddend sparing in memory use.
+
+\DIFdelbegin \DIFdel{The linear updates and compensated memory access of the proposed k-average method also provide great potentials for online clustering methods, where time-series data arrive incrementally into the system, and where classes and clusters should be most often reallocated. Explicit reallocation considerations proposed in this paper pave the way for robust online clustering methods that shall be further pursued.
+}\DIFdelend %DIF > The linear updates and compensated memory access of the proposed k-average method also provide great potentials for online clustering methods, where time-series data arrive incrementally into the system, and where classes and clusters should be most often reallocated. Explicit reallocation considerations proposed in this paper pave the way for robust online clustering methods that shall be further pursued.
+
+%Implementations of k-averages in Matlab and C are freely available as mature code ready for general use, at <url>. That repository also contains the reference C implementation of kernel k-means which we have used for the experiments reported in this article.
+
+
+\section{Acknowledgments}
+We would like to acknowledge support for this project
+from ANR project Houle (grant ANR-11-JS03-005-01) \DIFaddbegin \DIFadd{and ANR project Cense (grant ANR-16-CE22-0012)}\DIFaddend .
+
+\bibliographystyle{aps-nameyear}
+\bibliography{bib}
+
+
+
+
+%
+%\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/rossignol}}]{Mathias Rossignol}
+%
+%Biography text here.
+%\end{IEEEbiography}
+%
+
+%\begin{IEEEbiography}[{\includegraphics[width=1in,height=1in]{figures/rossignol}}]{Mathias Rossignol} is a researcher at Ircam, an institute for computer science, acoustics and music in Paris. He obtained his PhD in computer science (computational linguistics) at the Rennes I University in 2005, then worked several years in Vietnam developing expertise on speech processing for Asian languages, before evolving towards more general sound and music processing. His research focuses on machine learning algorithms applied to musical and environmental audio analysis, and sound production.
+%\end{IEEEbiography}
+%
+%\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/lagrange}}]{Mathieu Lagrange} is a CNRS research scientist at Irccyn, a French laboratory dedicated to cybernetics. He obtained his PhD in computer science at the University of Bordeaux in 2004, and visited several institutions, both in Canada (University of Victoria, McGill University) and in France (Telecom ParisTech, Ircam). His research focuses on machine learning algorithms applied to musical and environmental audio analysis.
+%\end{IEEEbiography}
+%
+%\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]
+%{figures/cont}}]{Arshia Cont}
+%Arshia Cont is a research scientist at Ircam, a center dedicated to fostering arts and science collaboration in Paris. He obtained his PhD in computer music at UCSD in 2008, awarded the best computer science PhD by the French Academy of Science in 2009. His research focuses on artificial intelligence with applications in music composition and performance. He is the leader of the award winning software Antescofo and enjoyed collaborations with composers such as Pierre Boulez, Jonathan Harvey and Marco Stroppa. He has appeared as computer musician in various performances involving live electronic music with ensembles such as LA Philharmonics, Berlin Philharmonics, BBC Orchestra, Chicago Symphony. Since 2012, he is the scientific leader of the MuTant research team at Ircam and Inria and also the director of Research/Creativity Interfaces Department at Ircam, coordinating artistic and scientific activities in the institution.
+%\end{IEEEbiography}
+
+
+
+
+\appendix
+
+\section{Description of the datasets}
+\label{sec:appendix}
+
+\begin{table} [h!]
+\begin{center}
+\caption{Description of the time series datasets used for evaluation.}
+\label{didtNoda1}
+\small
+ \setlength{\tabcolsep}{.16667em}
+\DIFdelbeginFL %DIFDELCMD < \begin{tabular}{lccc}
+%DIFDELCMD < %%%
+\DIFdelendFL \DIFaddbeginFL \begin{tabular}{lcc}
+\DIFaddendFL name & \DIFdelbeginFL \DIFdelFL{id }%DIFDELCMD < & %%%
+\DIFdelendFL number of classes & number of samples \\
+\hline
+50words & \DIFdelbeginFL \DIFdelFL{1 }%DIFDELCMD < & %%%
+\DIFdelendFL 50 &  905 \\
+Adiac & \DIFdelbeginFL \DIFdelFL{2 }%DIFDELCMD < & %%%
+\DIFdelendFL 37 &  781 \\
+Beef &  \DIFdelbeginFL \DIFdelFL{3 }%DIFDELCMD < &  %%%
+\DIFdelendFL 5 &   60 \\
+CBF  &  \DIFdelbeginFL \DIFdelFL{4 }%DIFDELCMD < &  %%%
+\DIFdelendFL 3 &  930 \\
+ChlorineConcentration  &  \DIFdelbeginFL \DIFdelFL{5 }%DIFDELCMD < &  %%%
+\DIFdelendFL 3 & 4307 \\
+CinC\_ECG\_torso  &  \DIFdelbeginFL \DIFdelFL{6 }%DIFDELCMD < &  %%%
+\DIFdelendFL 4 & 1420 \\
+Coffee  &  \DIFdelbeginFL \DIFdelFL{7 }%DIFDELCMD < &  %%%
+\DIFdelendFL 2 &   56 \\
+Cricket\_X  & \DIFdelbeginFL \DIFdelFL{8 }%DIFDELCMD < & %%%
+\DIFdelendFL 12 &  780 \\
+Cricket\_Y  & \DIFdelbeginFL \DIFdelFL{9 }%DIFDELCMD < & %%%
+\DIFdelendFL 12 &  780 \\
+Cricket\_Z  & \DIFdelbeginFL \DIFdelFL{10 }%DIFDELCMD < & %%%
+\DIFdelendFL 12 &  780 \\
+DiatomSizeReduction  &  \DIFdelbeginFL \DIFdelFL{11 }%DIFDELCMD < &  %%%
+\DIFdelendFL 4 &  322 \\
+ECG200  &  \DIFdelbeginFL \DIFdelFL{12 }%DIFDELCMD < &  %%%
+\DIFdelendFL 2 &  200 \\
+ECGFiveDays  &  \DIFdelbeginFL \DIFdelFL{13 }%DIFDELCMD < &  %%%
+\DIFdelendFL 2 &  884 \\
+FaceAll &  14 & \DIFdelbeginFL \DIFdelFL{14 }%DIFDELCMD < & %%%
+\DIFdelendFL 2250 \\
+FaceFour &   \DIFdelbeginFL \DIFdelFL{15 }%DIFDELCMD < &  %%%
+\DIFdelendFL 4 &  112 \\
+FacesUCR &  \DIFdelbeginFL \DIFdelFL{16 }%DIFDELCMD < & %%%
+\DIFdelendFL 14 & 2250 \\
+Gun\_Point &   \DIFdelbeginFL \DIFdelFL{17 }%DIFDELCMD < &  %%%
+\DIFdelendFL 2 &  200 \\
+Haptics &   \DIFdelbeginFL \DIFdelFL{18 }%DIFDELCMD < &  %%%
+\DIFdelendFL 5 &  463 \\
+InlineSkate  &  \DIFdelbeginFL \DIFdelFL{19 }%DIFDELCMD < &  %%%
+\DIFdelendFL 7 &  650 \\
+ItalyPowerDemand  &  \DIFdelbeginFL \DIFdelFL{20 }%DIFDELCMD < &  %%%
+\DIFdelendFL 2 & 1096 \\
+Lighting2  &  \DIFdelbeginFL \DIFdelFL{21 }%DIFDELCMD < &  %%%
+\DIFdelendFL 2 &  121 \\
+Lighting7  &  \DIFdelbeginFL \DIFdelFL{22 }%DIFDELCMD < &  %%%
+\DIFdelendFL 7 &  143 \\
+MALLAT  &  \DIFdelbeginFL \DIFdelFL{23 }%DIFDELCMD < &  %%%
+\DIFdelendFL 8 & 2400 \\
+MedicalImages  & \DIFdelbeginFL \DIFdelFL{24 }%DIFDELCMD < & %%%
+\DIFdelendFL 10 & 1141 \\
+MoteStrain  &  \DIFdelbeginFL \DIFdelFL{25 }%DIFDELCMD < &  %%%
+\DIFdelendFL 2 & 1272 \\
+OSULeaf &   \DIFdelbeginFL \DIFdelFL{26 }%DIFDELCMD < &  %%%
+\DIFdelendFL 6 &  442 \\
+OliveOil &   \DIFdelbeginFL \DIFdelFL{27 }%DIFDELCMD < &  %%%
+\DIFdelendFL 4 &   60 \\
+SonyAIBORobotSurface &   \DIFdelbeginFL \DIFdelFL{28 }%DIFDELCMD < &  %%%
+\DIFdelendFL 2 &  621 \\
+SonyAIBORobotSurfaceII &   \DIFdelbeginFL \DIFdelFL{29 }%DIFDELCMD < &  %%%
+\DIFdelendFL 2 &  980 \\
+StarLightCurves  &  \DIFdelbeginFL \DIFdelFL{30 }%DIFDELCMD < &  %%%
+\DIFdelendFL 3 & 9236 \\
+SwedishLeaf & \DIFdelbeginFL \DIFdelFL{31 }%DIFDELCMD < & %%%
+\DIFdelendFL 15 & 1125 \\
+Symbols  &  \DIFdelbeginFL \DIFdelFL{32 }%DIFDELCMD < &  %%%
+\DIFdelendFL 6 & 1020 \\
+Trace &   \DIFdelbeginFL \DIFdelFL{33 }%DIFDELCMD < &  %%%
+\DIFdelendFL 4 &  200 \\
+TwoLeadECG  &  \DIFdelbeginFL \DIFdelFL{34 }%DIFDELCMD < &  %%%
+\DIFdelendFL 2 & 1162 \\
+Two\_Patterns  &  \DIFdelbeginFL \DIFdelFL{35 }%DIFDELCMD < &  %%%
+\DIFdelendFL 4 & 5000 \\
+WordsSynonyms  & \DIFdelbeginFL \DIFdelFL{36 }%DIFDELCMD < & %%%
+\DIFdelendFL 25 &  905 \\
+fish  &  \DIFdelbeginFL \DIFdelFL{37 }%DIFDELCMD < &  %%%
+\DIFdelendFL 7 &  350 \\
+synthetic\_control  &  \DIFdelbeginFL \DIFdelFL{38 }%DIFDELCMD < &  %%%
+\DIFdelendFL 6 &  600 \\
+uWaveGestureLibrary\_X  &  \DIFdelbeginFL \DIFdelFL{39 }%DIFDELCMD < &  %%%
+\DIFdelendFL 8 & 4478 \\
+uWaveGestureLibrary\_Y  &  \DIFdelbeginFL \DIFdelFL{40 }%DIFDELCMD < &  %%%
+\DIFdelendFL 8 & 4478 \\
+uWaveGestureLibrary\_Z  &  \DIFdelbeginFL \DIFdelFL{41 }%DIFDELCMD < &  %%%
+\DIFdelendFL 8 & 4478 \\
+wafer  &  \DIFdelbeginFL \DIFdelFL{42 }%DIFDELCMD < &  %%%
+\DIFdelendFL 2 & 7164 \\
+yoga  \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelFL{43 }\DIFdelendFL &  2 & 3300 \\
+\end{tabular}
+\end{center}
+\end{table}
+
+
+
+
+\end{document}

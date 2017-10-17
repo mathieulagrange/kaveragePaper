@@ -8,14 +8,21 @@
 
 As a preamble, we would like to thank the editor and the reviewer for their comments and suggestions. Following these comments, we made several changes to the article, which are summarized here. The next sections list our answers to each of the reviewer’s comments, with references to the revised manuscript (page, column, and paragraph) where appropriate.
 
-
-\section{Tasks}
+\section{Answers to Academic Editor}
 
 \begin{enumerate}
 
-\item write rebuttal letter
-\item diff pdf
-\item manuscript pdf
+\item \emph{The manuscript requires to address all the points raised in the reviewers' reports, mainly technical issues about the proposed technique, but also English writing mistakes which make it difficult to understand the paper.}
+
+$\rightarrow$ We made our best to fix all the issues raised by the reviewers and to improve the readability of the paper.
+
+
+\item \emph{
+We are quite skeptical about the real significance of the contribution, since most of the ideas have already been accounted for in the (old) literature.}
+
+$\rightarrow$ Our contribution lies in the uses of two concepts which have been long standing. We completely agree on that point. Though, we are unaware of previous contributions explicitly presenting the algorithm we propose together with detailed complexity analysis, memory requirements, experimentations, etc.
+
+Many people from the machine learning community uses the kernel kmeans on arbitrary similarity matrices, eventhough the convergence is in this case not guaranteed. We believe, that our proposal is, in the case of arbitrary similarity matrices considered as input, a good alternative that provides guaranteed convergence, similar clustering performance, this for lower cpu and memory requirements.
 
 \end{enumerate}
 
@@ -88,11 +95,11 @@ $\rightarrow$ Several typos have been corrected and the whole manuscript have be
 
 \item \emph{in (1), the notation used for vector multiplication (inner and outer products) is incorrect.}
 
-$\rightarrow$
+$\rightarrow$ Equation 1 have been rewritten. Vector orientation and notation are also better introduced in the preceding paragraph.
 
 \item \emph{On page 7, the statement that $\mathcal{Q}$ is strictly equivalent to the average point to centroid similarity' is not true in general, but only in case when the similarity can be interpreted as an inner product. If this is not the case, I suppose a proof to back this statement up is necessary.}
 
-$\rightarrow$ We removed this sentence as it would indeed require more detailed explanations that are out of the scope of this section.
+$\rightarrow$ We removed this sentence as it would indeed require more detailed explanations that we believe are out of the scope of this section.
 
 \item \emph{$\delta_o$ in (9) is not introduced.}
 
