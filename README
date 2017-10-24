@@ -2,7 +2,7 @@ Welcome to the repository hosting the experiment and supporting documentation of
 
 In order to reproduce the results, please run the command mkaTimeSeries('do', 0, 'report', 'rcv') in a Matlab prompt under the directory experiments/mkaTimeseries using a recent version of the Matlab environment.
 
-You will need to have beforehand the data available in the inputPath, see the config file of the expLanes project.
+You will need to have beforehand uncompressed the datasets available in the datasets directory. The datasets have been donwloaded from the UCR Time Series Classification Archive (version 2015) available here: http://www.cs.ucr.edu/~eamonn/time_series_data
 
 More informations about the expLanes framework can be found at: http://mathieulagrange.github.io/expLanes
 

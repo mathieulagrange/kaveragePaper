@@ -1,8 +1,8 @@
 %DIF 1a1
 %DIF LATEXDIFF DIFFERENCE FILE
-%DIF DEL kaverages_paperV1.tex   Thu Oct  5 10:35:22 2017
-%DIF ADD kaverages_paper.tex     Tue Oct 17 15:27:45 2017
- %DIF >
+%DIF DEL kaverages_paperV1.tex   Tue Oct 24 10:40:47 2017
+%DIF ADD kaverages_paper.tex     Tue Oct 24 11:30:01 2017
+ %DIF > 
 %DIF -------
 \documentclass[natbib,smallextended]{svjour3}
 \usepackage{amsmath,amssymb}
@@ -45,11 +45,50 @@
 \providecommand{\DIFaddendFL}{} %DIF PREAMBLE
 \providecommand{\DIFdelbeginFL}{} %DIF PREAMBLE
 \providecommand{\DIFdelendFL}{} %DIF PREAMBLE
-%DIF END PREAMBLE EXTENSION ADDED BY LATEXDIFF
-%DIF PREAMBLE EXTENSION ADDED BY LATEXDIFF
 %DIF HYPERREF PREAMBLE %DIF PREAMBLE
 \providecommand{\DIFadd}[1]{\texorpdfstring{\DIFaddtex{#1}}{#1}} %DIF PREAMBLE
 \providecommand{\DIFdel}[1]{\texorpdfstring{\DIFdeltex{#1}}{}} %DIF PREAMBLE
+\newcommand{\DIFscaledelfig}{0.5}
+%DIF HIGHLIGHTGRAPHICS PREAMBLE %DIF PREAMBLE
+\RequirePackage{settobox} %DIF PREAMBLE
+\RequirePackage{letltxmacro} %DIF PREAMBLE
+\newsavebox{\DIFdelgraphicsbox} %DIF PREAMBLE
+\newlength{\DIFdelgraphicswidth} %DIF PREAMBLE
+\newlength{\DIFdelgraphicsheight} %DIF PREAMBLE
+% store original definition of \includegraphics %DIF PREAMBLE
+\LetLtxMacro{\DIFOincludegraphics}{\includegraphics} %DIF PREAMBLE
+\newcommand{\DIFaddincludegraphics}[2][]{{\color{blue}\fbox{\DIFOincludegraphics[#1]{#2}}}} %DIF PREAMBLE
+\newcommand{\DIFdelincludegraphics}[2][]{% %DIF PREAMBLE
+\sbox{\DIFdelgraphicsbox}{\DIFOincludegraphics[#1]{#2}}% %DIF PREAMBLE
+\settoboxwidth{\DIFdelgraphicswidth}{\DIFdelgraphicsbox} %DIF PREAMBLE
+\settoboxtotalheight{\DIFdelgraphicsheight}{\DIFdelgraphicsbox} %DIF PREAMBLE
+\scalebox{\DIFscaledelfig}{% %DIF PREAMBLE
+\parbox[b]{\DIFdelgraphicswidth}{\usebox{\DIFdelgraphicsbox}\\[-\baselineskip] \rule{\DIFdelgraphicswidth}{0em}}\llap{\resizebox{\DIFdelgraphicswidth}{\DIFdelgraphicsheight}{% %DIF PREAMBLE
+\setlength{\unitlength}{\DIFdelgraphicswidth}% %DIF PREAMBLE
+\begin{picture}(1,1)% %DIF PREAMBLE
+\thicklines\linethickness{2pt} %DIF PREAMBLE
+{\color[rgb]{1,0,0}\put(0,0){\framebox(1,1){}}}% %DIF PREAMBLE
+{\color[rgb]{1,0,0}\put(0,0){\line( 1,1){1}}}% %DIF PREAMBLE
+{\color[rgb]{1,0,0}\put(0,1){\line(1,-1){1}}}% %DIF PREAMBLE
+\end{picture}% %DIF PREAMBLE
+}\hspace*{3pt}}} %DIF PREAMBLE
+} %DIF PREAMBLE
+\LetLtxMacro{\DIFOaddbegin}{\DIFaddbegin} %DIF PREAMBLE
+\LetLtxMacro{\DIFOaddend}{\DIFaddend} %DIF PREAMBLE
+\LetLtxMacro{\DIFOdelbegin}{\DIFdelbegin} %DIF PREAMBLE
+\LetLtxMacro{\DIFOdelend}{\DIFdelend} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFaddbegin}{\DIFOaddbegin \let\includegraphics\DIFaddincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFaddend}{\DIFOaddend \let\includegraphics\DIFOincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFdelbegin}{\DIFOdelbegin \let\includegraphics\DIFdelincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFdelend}{\DIFOaddend \let\includegraphics\DIFOincludegraphics} %DIF PREAMBLE
+\LetLtxMacro{\DIFOaddbeginFL}{\DIFaddbeginFL} %DIF PREAMBLE
+\LetLtxMacro{\DIFOaddendFL}{\DIFaddendFL} %DIF PREAMBLE
+\LetLtxMacro{\DIFOdelbeginFL}{\DIFdelbeginFL} %DIF PREAMBLE
+\LetLtxMacro{\DIFOdelendFL}{\DIFdelendFL} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFaddbeginFL}{\DIFOaddbeginFL \let\includegraphics\DIFaddincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFaddendFL}{\DIFOaddendFL \let\includegraphics\DIFOincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFdelbeginFL}{\DIFOdelbeginFL \let\includegraphics\DIFdelincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFdelendFL}{\DIFOaddendFL \let\includegraphics\DIFOincludegraphics} %DIF PREAMBLE
 %DIF END PREAMBLE EXTENSION ADDED BY LATEXDIFF
 
 \begin{document}
@@ -146,18 +185,18 @@ Despite such improvements, kernel k-means cannot be easily applied to large scal
 
 We show in this paper that by using a semantically equivalent variant of the average intra-cluster similarity presented in \citep[Chapter 10.7]{Duda01}, it becomes possible to perform a computationally efficient greedy optimization \citep[Chapter 10.8]{Duda01} with guaranteed convergence \DIFaddbegin \DIFadd{for arbitrary similarity measures}\DIFaddend . Although both of those techniques are well known, combining them is non trivial, and \DIFdelbegin \DIFdel{allows us to propose a novel hard }\DIFdelend \DIFaddbegin \DIFadd{lead to a }\DIFaddend clustering algorithm, which we call \DIFdelbegin \emph{\DIFdel{k-averages}}%DIFAUXCMD
 \DIFdel{, }\DIFdelend \DIFaddbegin \DIFadd{k-averages }\DIFaddend with the following properties:
- \begin{itemize}
+\begin{itemize}
 \item input data can be arbitrary symmetric similarity matrices,
 \item it has fast and guaranteed convergence, with a number of object to clusters reallocations \DIFaddbegin \DIFadd{experimentally found to be }\DIFaddend roughly equal to the number of objects,
 \item it provides good scalability thanks to a reduced need for memory access, and
 \item on a collection of synthetic and natural test data, its results are equivalent to those of kernel k-means, and obtained in a fraction of its computing time, particularly when paged memory is required.
- \end{itemize}
+\end{itemize}
 
 \DIFaddbegin \DIFadd{To summarize, the main contribution of the paper is to present a clustering algorithm:
-} \begin{itemize}
+}\begin{itemize}
   \item  \DIFadd{that can handle arbitrary affinity matrices, }\textit{\DIFadd{i.e.}} \DIFadd{semi-positiveness is not a mandatory requirement for guaranteed convergence
   }\item \DIFadd{thanks to a carefully designed strategy to update the membership of objects to cluster, the algorithm is fast and memory efficient.
-} \end{itemize}
+}\end{itemize}
 
 \DIFaddend The remaining of the paper is organized as follows: Section~\ref{sec:kkmeans} presents the kernel k-means objective function and the basic algorithm that minimizes this function, and Section~\ref{sec:kaverages} introduces the concepts behind the k-averages algorithm,
 %before giving a detailed description of it in Section~\ref{sec:algo}.
@@ -173,7 +212,7 @@ In the case of kernel k-means, the kernel trick \DIFdelbegin \DIFdel{consists in
 \subsection{Kernel k-means objective function}
 
 In this section and the following, we shall adopt the following convention: $N$ is the number of objects to cluster and $C$ the number of clusters; $N_c$ is the number of objects in cluster $c$, and $\mu_c$ is the centroid of that cluster. $z_{cn}$ is the membership function, whose value is $1$ if object $o_n$ is in class $c$, $0$ otherwise. \DIFaddbegin \DIFadd{In the folowing equations, $\mu_c$ and $o_n$ are assumed to be column vectors of equal dimension.
-}\DIFaddend
+}\DIFaddend 
 
 Starting from the objective function minimized by the k-means algorithm, expressing the sum of squared distances of points to the centroids of their respective clusters:
 
@@ -195,19 +234,18 @@ S = \sum_{c=1}^{C} \sum_{n=1}^{N} z_{cn} Y_{cn}
 
 where
 \begin{align}
-\DIFdelbegin \begin{split}
-Y_{cn} & =  \left(o_n-\mu_c\right)\left(o_n-\mu_c\right)^\top \\
-       & =  o_no_n - 2 o_n\mu_c + \mu_c\mu_c \\
-      & =  o_no_n - 2 o_n\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i +
-       	 \left(\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i\right)^2 \\ %.\left(\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i\right) \\
-      & =  o_no_n - \frac{2}{N_c} \sum_{i=1}^{N} z_{ci} o_no_i +
-       	 \frac{1}{N_c^2} \sum_{i=1}^{N} \sum_{j=1}^{N} z_{ki} z_{kj} o_io_j \\
-      & =  \mathcal{K}_{nn} - \frac{2}{N_c} \sum_{i=1}^{N} z_{ci} \mathcal{K}_{ni} +
-         \frac{1}{N_c^2} \sum_{i=1}^{N} \sum_{j=1}^{N} z_{ki} z_{kj} \mathcal{K}_{ij} %DIFDELCMD < \label{eq:yki}%%%
- \end{split}
+\DIFdelbegin %DIFDELCMD < \begin{split}
+%DIFDELCMD < Y_{cn} & =  \left(o_n-\mu_c\right)\left(o_n-\mu_c\right)^\top \\
+%DIFDELCMD <        & =  o_no_n - 2 o_n\mu_c + \mu_c\mu_c \\
+%DIFDELCMD <        & =  o_no_n - 2 o_n\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i +
+%DIFDELCMD <        	 \left(\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i\right)^2 \\ %.\left(\frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i\right) \\
+%DIFDELCMD <        & =  o_no_n - \frac{2}{N_c} \sum_{i=1}^{N} z_{ci} o_no_i +
+%DIFDELCMD <        	 \frac{1}{N_c^2} \sum_{i=1}^{N} \sum_{j=1}^{N} z_{ki} z_{kj} o_io_j \\
+%DIFDELCMD <        & =  \mathcal{K}_{nn} - \frac{2}{N_c} \sum_{i=1}^{N} z_{ci} \mathcal{K}_{ni} +
+%DIFDELCMD <          \frac{1}{N_c^2} \sum_{i=1}^{N} \sum_{j=1}^{N} z_{ki} z_{kj} \mathcal{K}_{ij} %DIFDELCMD < \label{eq:yki}%%%
+%DIFDELCMD < \end{split}
 %DIFDELCMD < %%%
-\DIFdelend \\
- \DIFaddbegin  \begin{split}
+\DIFdelend \DIFaddbegin \begin{split}
 Y_{cn} & =  \left(o_n-\mu_c\right)^\top\left(o_n-\mu_c\right) \\
        & =  o_no_n - 2 o_n^\top \mu_c + \mu_c^\top \mu_c \\
        & =  o_n^\top o_n - 2 o_n^\top \frac{1}{N_c} \sum_{i=1}^{N} z_{ci} o_i +
@@ -304,10 +342,10 @@ Let us call the \gl{quality} of a class the average intra-class object-to-object
 \]
 
 %DIF > Indeed, we never refer to a geometrical interpretation of the data. However, it should be noted that since in k-means (and kernel k-means) the centroid of a class is defined as an average of all points in that class, $\mathcal{Q}$ is strictly equivalent to the average point to centroid similarity.
-\DIFaddbegin
+\DIFaddbegin 
 
 \DIFaddend In our framework, we do not explicitly refer to class centroids, preferring to directly consider averages of similarity values between individuals within clusters. \DIFdelbegin \DIFdel{Indeed, we never refer to a geometrical interpretation of the data. However, it should be noted that since in k-means (and kernel k-means) the centroid of a class is defined as an average of all points in that class, $\mathcal{Q}$ is strictly equivalent to the average point to centroid similarity.
-}%DIFDELCMD <
+}%DIFDELCMD < 
 
 %DIFDELCMD < %%%
 \DIFdelend Using the notations above, we define our objective function as the average class quality, normalized with class sizes:
@@ -461,7 +499,7 @@ As can be seen, computing this impact is a fixed-cost operation. We can therefor
 \section{K-averages algorithm}
 \label{sec:algo}
 
-Our approach does not allow us to benefit, like kernel k-means, from the convergence guarantee brought by the geometric foundation of k-means. In consequence, we cannot apply a \gl{batch} approach where at each iteration all elements are moved to their new class, and all distances (or similarities) are computed at once. \DIFdelbegin \DIFdel{Therefore, for each considered object, after finding its ideal new class}\DIFdelend \DIFaddbegin \DIFadd{To guarantee convergence}\DIFaddend , we must update the class properties for the two modified classes (source and destination), as well as recompute the average class-object similarities for them \DIFaddbegin \DIFadd{for each considered object, after finding its ideal new class}\DIFaddend . This is the principle of the \gl{greedy} k-means algorithm \citep[Chapter10.8]{Duda01}, but whereas for k-means that approach increases complexity (and even more so for kernel k-means), in this case it \DIFdelbegin \DIFdel{allows for }\DIFdelend \DIFaddbegin \DIFadd{leads to a }\DIFaddend much improved computational performance.
+Our approach does not allow us to benefit, like kernel k-means, from the convergence guarantee brought by the geometric foundation of k-means. In consequence, we cannot apply a \gl{batch} approach where at each iteration all elements are moved to their new class, and all distances (or similarities) are computed at once. \DIFdelbegin \DIFdel{Therefore, for each considered object, after finding its ideal new class, }\DIFdelend \DIFaddbegin \DIFadd{To guarantee convergence, }\DIFaddend we must update the class properties for the two modified classes (source and destination), as well as recompute the average class-object similarities for them \DIFaddbegin \DIFadd{for each considered object, after finding its ideal new class}\DIFaddend . This is the principle of the \gl{greedy} k-means algorithm \citep[Chapter10.8]{Duda01}, but whereas for k-means that approach increases complexity (and even more so for kernel k-means), in this case it \DIFdelbegin \DIFdel{allows for }\DIFdelend \DIFaddbegin \DIFadd{leads to a }\DIFaddend much improved computational performance.
 
 Indeed, at a first glance, dynamically updating objectives as a result of object reallocation might seem to have negative performance impact. However, our simple non-quadratic updates \DIFdelbegin \DIFdel{makes }\DIFdelend \DIFaddbegin \DIFadd{make }\DIFaddend such dynamic changes easily tractable. New class qualities are thus given by Equations~\ref{eq:newQual_remove} and \ref{eq:newQual_add}, and new object-class similarities can be computed by:
 
@@ -563,15 +601,15 @@ Algorithm~\ref{algo:kkmeans} thus becomes Algorithm~\ref{algo:kkmeans_optim}, wh
 \subsubsection{K-averages}
 
 For the k-averages method presented as Algorithm~\ref{algo:kaverages}, the complexity of each iteration is
- \begin{itemize}
+\begin{itemize}
 \item $O(NC)$ corresponding to the best class search at line~\ref{algline:kaverages_search}
 \item  $O(NM)$ corresponding to the object-to-class similarity update at line~\ref{algline:kaverages_recompute}, where $M$ is the number of objects moved at a given iteration.
- \end{itemize}
+\end{itemize}
 
 In the worst case scenario, $M = N$, and the complexity for one iteration of the algorithm remains the same as for the optimized kernel k-means algorithm, $O(N^2)$. In practice, however, as can be seen on Figure~\ref{fig:moved}, the number of objects moving from one class to another decreases sharply after the first iteration, meaning that the complexity of one iteration becomes quickly much lower than $O(N^2)$. Thus, while the first iteration of k-averages has a similar complexity with kernel k-means, the overall cost of a typical run of the algorithm (from 10 to 50 iterations) is much lower.
 
 
-To go further in this analysis, we display on Figure~\ref{fig:totalMoved}  the total number of object reallocation over a full run of the k-averages algorithm \DIFaddbegin \DIFadd{for several datatsets. The datasets used to create this figure are the real-life time series data that we employ for experimental validation evaluated under the Dynamic Time Warping (DTW) similarity measure, }\textit{\DIFadd{cf.}} \DIFadd{Section~\ref{sec:experiments}}\DIFaddend . As can be seen, the correlation is \DIFdelbegin \DIFdel{clearly }\DIFdelend \DIFaddbegin \DIFadd{roughly }\DIFaddend linear with the number of objects to cluster. In fact, the number of reallocations is roughly equal to the number of objects to cluster, which allows us to reach for k-averages a (statistical) total complexity of $O(N^2)$, instead of $O(N^2)$ per iteration.
+To go further in this analysis, we display on Figure~\ref{fig:totalMoved}  the total number of object reallocation over a full run of the k-averages algorithm \DIFdelbegin \DIFdel{. }\DIFdelend \DIFaddbegin \DIFadd{for several datatsets. The datasets used to create this figure are the real-life time series data that we employ for experimental validation evaluated under the Dynamic Time Warping (DTW) similarity measure, }\textit{\DIFadd{cf.}} \DIFadd{Section~\ref{sec:experiments}. }\DIFaddend As can be seen, the correlation is \DIFdelbegin \DIFdel{clearly }\DIFdelend \DIFaddbegin \DIFadd{roughly }\DIFaddend linear with the number of objects to cluster. In fact, the number of reallocations is roughly equal to the number of objects to cluster, which allows us to reach for k-averages a (statistical) total complexity of $O(N^2)$, instead of $O(N^2)$ per iteration.
 
 \begin{figure}
 \center
@@ -605,7 +643,9 @@ The figures presented in this section were obtained on synthetic datasets, creat
 
 \DIFaddbegin \subsection{\DIFadd{Reproducibility}}
 
-\DIFadd{In order to ease reproducibility of the results, the data is taken from a public repository of several benchmark datasets used in academia}\footnote{\DIFadd{Available at: }\url{www.cs.ucr.edu/~eamonn/time_series_data}} \DIFadd{and the code of the proposed method}\footnote{\DIFadd{The C and Matlab implementations can be found at}\\ \url{https://bitbucket.org/mlagrange/kaverages}\DIFadd{.}} \DIFadd{as well as the experimental code used for generated the figures is publicly available}\footnote{\DIFadd{Available at: }\url{https://bitbucket.org/MathiasR/papier_kaverages}}\DIFadd{.
+\DIFadd{In order to ease reproducibility of the results, the data is taken from a public repository of several benchmark datasets used in academia \mbox{%DIFAUXCMD
+\cite{UCRArchive} }%DIFAUXCMD
+and the code of the proposed method as well as the experimental code used for generated the figures is publicly available}\footnote{\DIFadd{Available at: }\url{https://github.com/mathieulagrange/kaveragePaper}}\DIFadd{.
 }
 
 
@@ -667,7 +707,7 @@ To compare quality of clusterings obtained by the considered algorithms, we cons
 \DIFdelend . Thus, while all the experiments presented here are performed on time series (chosen for being a good example of a data type requiring similarity-based clustering, as opposed to a simple Euclidean approach), the great variety in the sources and semantics of said series (bio-informatics, linguistics, astronomy, gesture modeling, chemistry\ldots{}) gives this validation a wide foundation. Statistics about the morphology of those datasets are summarized in Table~\ref{tab:dbs}. \DIFdelbegin \DIFdel{In the results described in the next sections, datasets are refered by a numerical id for the sake of brevity; the correspondence between those ids and the actual names of the datasets is shown on Table \ref{didtNoda1}.
 }\DIFdelend \DIFaddbegin \DIFadd{Individual details can be found in Appendix \ref{sec:appendix}.
 %DIF > In the results described in the next sections, datasets are refered by a numerical id for the sake of brevity; the correspondence between those ids and the actual names of the datasets is shown on Table \ref{didtNoda1}.
-}\DIFaddend
+}\DIFaddend 
 
 \begin{table}
 \center
@@ -697,7 +737,9 @@ as it is found to be the best performing in terms of average NMI over all the da
 For each dataset, since we perform clustering, and not supervised learning, the training and testing data are joined \DIFaddbegin \DIFadd{together}\DIFaddend . DTW similarities are computed using the implementation provided by Prof. Ellis \footnote{Available at: \url{http://www.ee.columbia.edu/~dpwe/resources/matlab/dtw}} with default parameters.
 
 As in our previous experiments with synthetic data, we choose here the normalized mutual information \DIFdelbegin \DIFdel{as }\DIFdelend \DIFaddbegin \DIFadd{(NMI) as the }\DIFaddend measure of clustering quality; clustering is done by requesting a number of clusters equal to the actual number of classes in the dataset, and repeated 200 times with varying initial conditions, each algorithm being run with the exact same initial assignments. \DIFdelbegin \DIFdel{Of }\DIFdelend \DIFaddbegin \DIFadd{For }\DIFaddend the 200 clusterings thus produced, we \DIFdelbegin \DIFdel{keep the one that shows the best convergence (}\emph{\DIFdel{i.e.}} %DIFAUXCMD
-\DIFdel{has the maximum final value of its objective function, as reported by the algorithm) and }\DIFdelend compute the NMI \DIFdelbegin \DIFdel{of that result with }\DIFdelend \DIFaddbegin \DIFadd{between them and }\DIFaddend the ground truth \DIFaddbegin \DIFadd{clustering. Average and standard deviation statistics are then computed}\DIFaddend .
+\DIFdel{has the maximum final value of its objective function, as reported by the algorithm) and }\DIFdelend compute the NMI \DIFdelbegin \DIFdel{of that result with }\DIFdelend \DIFaddbegin \DIFadd{between them and }\DIFaddend the ground truth \DIFdelbegin \DIFdel{.
+}\DIFdelend \DIFaddbegin \DIFadd{clustering. Average and standard deviation statistics are then computed.
+}\DIFaddend 
 
 \subsection{\DIFdelbegin \DIFdel{Results}\DIFdelend \DIFaddbegin \DIFadd{Clustering performance}\DIFaddend }
 
@@ -710,61 +752,63 @@ As in our previous experiments with synthetic data, we choose here the normalize
 \DIFdelbeginFL %DIFDELCMD < \begin{tabular}{rrrccc}
 %DIFDELCMD < %%%
 %DIF <  & nb. & nb. &  & kernel &  \\
-\DIFdelFL{id }%DIFDELCMD < & %%%
-\DIFdelFL{classes }%DIFDELCMD < & %%%
-\DIFdelFL{objects }\DIFdelendFL \DIFaddbeginFL \begin{tabular}{lccc}
- \DIFaddendFL & \DIFaddbeginFL \DIFaddFL{spectral clustering }\DIFaddendFL & kernel k-means & k-averages \\
+\DIFdelFL{id }\DIFdelendFL \DIFaddbeginFL \begin{tabular}{lccc}
+ \DIFaddendFL & \DIFdelbeginFL \DIFdelFL{classes }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{spectral clustering }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{objects }%DIFDELCMD < & & %%%
+\DIFdelendFL kernel k-means & k-averages \\
 %DIF < &  &  & (NMI $\times 0.01$) & (NMI $\times 0.01$) & (NMI $\times 0.01$) \\
 \hline
-\DIFdelbeginFL \DIFdelFL{7 }%DIFDELCMD < & %%%
-\DIFdelFL{2 }%DIFDELCMD < &   %%%
-\DIFdelFL{56 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Coffee }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{3.4 $\pm$0.0 }\DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{4.0}} %DIFAUXCMD
-\DIFdelendFL \DIFaddbeginFL \DIFaddFL{6.9 $\pm$4.1 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{4.0}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{7.8 $\pm$3.6}\DIFaddendFL } \\
-\DIFdelbeginFL \DIFdelFL{12 }%DIFDELCMD < & %%%
-\DIFdelFL{2 }%DIFDELCMD < &  %%%
-\DIFdelFL{200 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{ECG200 }\DIFaddendFL &  \DIFaddbeginFL \DIFaddFL{9.9 $\pm$0.0 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{14.6}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{14.8 $\pm$1.0}\DIFaddendFL } & 14.6 \DIFaddbeginFL \DIFaddFL{$\pm$0.0 }\DIFaddendFL \\
-\DIFdelbeginFL \DIFdelFL{13 }%DIFDELCMD < & %%%
-\DIFdelFL{2 }%DIFDELCMD < &  %%%
-\DIFdelFL{884 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{ECGFiveDays }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{0.1 $\pm$0.0 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{2.5}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{3.3 $\pm$0.3}\DIFaddendFL } & 2.5 \DIFaddbeginFL \DIFaddFL{$\pm$0.0 }\DIFaddendFL \\
-\DIFdelbeginFL \DIFdelFL{17 }%DIFDELCMD < & %%%
-\DIFdelFL{2 }%DIFDELCMD < &  %%%
-\DIFdelFL{200 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Gun\_Point }\DIFaddendFL & \DIFaddbeginFL \textbf{\DIFaddFL{14.8 $\pm$1.3}} \DIFaddendFL &  \DIFdelbeginFL \textbf{\DIFdelFL{0.0}} %DIFAUXCMD
-\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.0 $\pm$0.0 }\DIFaddendFL &  \DIFdelbeginFL \textbf{\DIFdelFL{0.0}} %DIFAUXCMD
+\DIFdelbeginFL \DIFdelFL{7 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Coffee }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{2 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{3.4 $\pm$0.0 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{56 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{6.9 $\pm$4.1 }\DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelendFL \textbf{\DIFdelbeginFL \DIFdelFL{4.0}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{7.8 $\pm$3.6}\DIFaddendFL } \DIFdelbeginFL %DIFDELCMD < & %%%
+\textbf{\DIFdelFL{4.0}} %DIFAUXCMD
+\DIFdelendFL \\
+\DIFdelbeginFL \DIFdelFL{12 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{ECG200 }\DIFaddendFL &  \DIFdelbeginFL \DIFdelFL{2 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{9.9 $\pm$0.0 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{200 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{14.8 $\pm$1.0}} \DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\textbf{\DIFdelFL{14.6}} %DIFAUXCMD
+%DIFDELCMD < & %%%
+\DIFdelendFL 14.6 \DIFaddbeginFL \DIFaddFL{$\pm$0.0 }\DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{13 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{ECGFiveDays }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{2 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.1 $\pm$0.0 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{884 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{3.3 $\pm$0.3}} \DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\textbf{\DIFdelFL{2.5}} %DIFAUXCMD
+%DIFDELCMD < & %%%
+\DIFdelendFL 2.5 \DIFaddbeginFL \DIFaddFL{$\pm$0.0 }\DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{17 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Gun\_Point }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{2 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{14.8 $\pm$1.3}} \DIFaddendFL &  \DIFdelbeginFL \DIFdelFL{200 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.0 $\pm$0.0 }\DIFaddendFL &  \DIFdelbeginFL %DIFDELCMD < & %%%
+\textbf{\DIFdelFL{0.0}} %DIFAUXCMD
+%DIFDELCMD < & %%%
+\textbf{\DIFdelFL{0.0}} %DIFAUXCMD
 \DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.0 $\pm$0.0 }\DIFaddendFL \\
-\DIFdelbeginFL \DIFdelFL{20 }%DIFDELCMD < & %%%
-\DIFdelFL{2 }%DIFDELCMD < & %%%
-\DIFdelFL{1096 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{ItalyPowerDemand }\DIFaddendFL & \DIFaddbeginFL \textbf{\DIFaddFL{1.1}} \DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{0.9}} %DIFAUXCMD
-\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.9 }\DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{0.9}} %DIFAUXCMD
+\DIFdelbeginFL \DIFdelFL{20 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{ItalyPowerDemand }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{2 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{1.1}} \DIFaddendFL & \DIFdelbeginFL \DIFdelFL{1096 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.9 }\DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\textbf{\DIFdelFL{0.9}} %DIFAUXCMD
+%DIFDELCMD < & %%%
+\textbf{\DIFdelFL{0.9}} %DIFAUXCMD
 \DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.9 }\DIFaddendFL \\
-\DIFdelbeginFL \DIFdelFL{21 }%DIFDELCMD < & %%%
-\DIFdelFL{2 }%DIFDELCMD < &  %%%
-\DIFdelFL{121 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Lighting2 }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{4.1 $\pm$0.3 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{11.1}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{4.9 $\pm$3.7}\DIFaddendFL } & \DIFdelbeginFL \textbf{\DIFdelFL{11.1}} %DIFAUXCMD
+\DIFdelbeginFL \DIFdelFL{21 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Lighting2 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{2 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{4.1 $\pm$0.3 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{121 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{4.9 $\pm$3.7}} \DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\textbf{\DIFdelFL{11.1}} %DIFAUXCMD
+%DIFDELCMD < & %%%
+\textbf{\DIFdelFL{11.1}} %DIFAUXCMD
 \DIFdelendFL \DIFaddbeginFL \DIFaddFL{4.3 $\pm$4.2 }\DIFaddendFL \\
-\DIFdelbeginFL \DIFdelFL{25 }%DIFDELCMD < & %%%
-\DIFdelFL{2 }%DIFDELCMD < & %%%
-\DIFdelFL{1272 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{MoteStrain }\DIFaddendFL &  \DIFaddbeginFL \DIFaddFL{0.0 $\pm$0.0 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{49.3}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{48.9 $\pm$0.6}\DIFaddendFL } & \DIFdelbeginFL \DIFdelFL{48.2 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{48.8 $\pm$0.6 }\DIFaddendFL \\
-\DIFdelbeginFL \DIFdelFL{28 }%DIFDELCMD < & %%%
-\DIFdelFL{2 }%DIFDELCMD < &  %%%
-\DIFdelFL{621 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{SonyAIBORobotSurface }\DIFaddendFL &   \DIFaddbeginFL \DIFaddFL{3.4 $\pm$0.0 }\DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{56.2}} %DIFAUXCMD
-\DIFdelendFL \DIFaddbeginFL \DIFaddFL{45.0 $\pm$20.7 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{56.2}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{45.1 $\pm$20.5}\DIFaddendFL } \\
-\DIFdelbeginFL \DIFdelFL{29 }%DIFDELCMD < & %%%
-\DIFdelFL{2 }%DIFDELCMD < &  %%%
-\DIFdelFL{980 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{SonyAIBORobotSurfaceII }\DIFaddendFL &  \DIFaddbeginFL \DIFaddFL{2.5 $\pm$0.0 }\DIFaddendFL & \textbf{21.4 \DIFaddbeginFL \DIFaddFL{$\pm$0.0}\DIFaddendFL } & \textbf{21.4 \DIFaddbeginFL \DIFaddFL{$\pm$0.0}\DIFaddendFL } \\
-\DIFdelbeginFL \DIFdelFL{34 }%DIFDELCMD < & %%%
-\DIFdelFL{2 }%DIFDELCMD < & %%%
-\DIFdelFL{1162 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{TwoLeadECG }\DIFaddendFL & \DIFaddbeginFL \textbf{\DIFaddFL{1.4 $\pm$0.0}} \DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{0.0}} %DIFAUXCMD
-\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.1 $\pm$0.6 }\DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{0.0}} %DIFAUXCMD
+\DIFdelbeginFL \DIFdelFL{25 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{MoteStrain }\DIFaddendFL &  \DIFdelbeginFL \DIFdelFL{2 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.0 $\pm$0.0 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{1272 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{48.9 $\pm$0.6}} \DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\textbf{\DIFdelFL{49.3}} %DIFAUXCMD
+%DIFDELCMD < & %%%
+\DIFdelFL{48.2 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{48.8 $\pm$0.6 }\DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{28 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{SonyAIBORobotSurface }\DIFaddendFL &   \DIFdelbeginFL \DIFdelFL{2 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{3.4 $\pm$0.0 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{621 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{45.0 $\pm$20.7 }\DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelendFL \textbf{\DIFdelbeginFL \DIFdelFL{56.2}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{45.1 $\pm$20.5}\DIFaddendFL } \DIFdelbeginFL %DIFDELCMD < & %%%
+\textbf{\DIFdelFL{56.2}} %DIFAUXCMD
+\DIFdelendFL \\
+\DIFdelbeginFL \DIFdelFL{29 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{SonyAIBORobotSurfaceII }\DIFaddendFL &  \DIFdelbeginFL \DIFdelFL{2 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{2.5 $\pm$0.0 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{980 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{21.4 $\pm$0.0}} \DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelendFL \textbf{21.4 \DIFaddbeginFL \DIFaddFL{$\pm$0.0}\DIFaddendFL } \DIFdelbeginFL %DIFDELCMD < & %%%
+\textbf{\DIFdelFL{21.4}} %DIFAUXCMD
+\DIFdelendFL \\
+\DIFdelbeginFL \DIFdelFL{34 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{TwoLeadECG }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{2 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{1.4 $\pm$0.0}} \DIFaddendFL & \DIFdelbeginFL \DIFdelFL{1162 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.1 $\pm$0.6 }\DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\textbf{\DIFdelFL{0.0}} %DIFAUXCMD
+%DIFDELCMD < & %%%
+\textbf{\DIFdelFL{0.0}} %DIFAUXCMD
 \DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.0 $\pm$0.2 }\DIFaddendFL \\
-\DIFdelbeginFL \DIFdelFL{42 }%DIFDELCMD < & %%%
-\DIFdelFL{2 }%DIFDELCMD < & %%%
-\DIFdelFL{7164 }%DIFDELCMD < &  %%%
-\DIFdelendFL \DIFaddbeginFL \DIFaddFL{wafer }\DIFaddendFL & \textbf{0.0} & \DIFdelbeginFL \textbf{\DIFdelFL{0.0}} %DIFAUXCMD
-%DIFDELCMD < \\
-%DIFDELCMD < %%%
-\DIFdelFL{43 }%DIFDELCMD < & %%%
-\DIFdelFL{2 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.0 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{3300 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.0 }\\
-\DIFaddFL{yoga }\DIFaddendFL & \DIFaddbeginFL \textbf{\DIFaddFL{0.5 $\pm$0.0}} \DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{0.3}} %DIFAUXCMD
-\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.2 $\pm$0.1 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{0.0 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.2 $\pm$0.1 }\DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{42 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{wafer }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{2 }%DIFDELCMD < & %%%
+\DIFdelFL{7164 }%DIFDELCMD < &  & %%%
+\DIFdelendFL \textbf{0.0} & \DIFdelbeginFL \textbf{\DIFdelFL{0.0}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.0 }& \DIFaddFL{0.0 }\DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{43 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{yoga }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{2 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{0.5 $\pm$0.0}} \DIFaddendFL & \DIFdelbeginFL \DIFdelFL{3300 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.2 $\pm$0.1 }\DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\textbf{\DIFdelFL{0.3}} %DIFAUXCMD
+%DIFDELCMD < & %%%
+\DIFdelFL{0.0 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.2 $\pm$0.1 }\DIFaddendFL \\
 \end{tabular}
 \end{center}
 \end{table}
@@ -772,7 +816,7 @@ As in our previous experiments with synthetic data, we choose here the normalize
 For ease of readability and comparison, the presented results are split into 3 tables. Table~\ref{tab:results-2} lists the results obtained on bi-class datasets, \textit{i.e.} the datasets annotated in terms of presence or absence of a given property; Table~\ref{tab:results-37} concerns the datasets with a small number of classes (from 3 to 7); and Table~\ref{tab:results-8} focuses the datasets with a larger number of classes (from 8 to 50).
 
 For each experiment, the result of the best performing method is marked in bold. \DIFaddbegin \DIFadd{The Matlab and C implementations of the kernel k-means algorithm give exactly the same results in terms of NMI, thus only one column is used to display their performance.
-}\DIFaddend
+}\DIFaddend 
 
  %% 3-7 classes
 
@@ -783,72 +827,70 @@ For each experiment, the result of the best performing method is marked in bold.
 \DIFdelbeginFL %DIFDELCMD < \begin{tabular}{rrrccc}
 %DIFDELCMD < %%%
 %DIF <  & nb. & nb. &  & kernel &  \\
-\DIFdelFL{id }%DIFDELCMD < & %%%
-\DIFdelFL{classes }%DIFDELCMD < & %%%
-\DIFdelFL{objects }\DIFdelendFL \DIFaddbeginFL \begin{tabular}{lccc}
- \DIFaddendFL & \DIFaddbeginFL \DIFaddFL{spectral clustering }\DIFaddendFL & kernel k-means & k-averages \\
+\DIFdelFL{id }\DIFdelendFL \DIFaddbeginFL \begin{tabular}{lccc}
+ \DIFaddendFL & \DIFdelbeginFL \DIFdelFL{classes }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{spectral clustering }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{objects }%DIFDELCMD < & & %%%
+\DIFdelendFL kernel k-means & k-averages \\
 %DIF < &  &  & (NMI $\times 0.01$) & (NMI $\times 0.01$) & (NMI $\times 0.01$) \\
 \hline
-\DIFdelbeginFL \DIFdelFL{3 }%DIFDELCMD < & %%%
-\DIFdelFL{5 }%DIFDELCMD < &   %%%
-\DIFdelFL{60 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Beef }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{25.7 $\pm$2.4 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{35.1 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{35.5 $\pm$2.8}} \DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{38.3}} %DIFAUXCMD
+\DIFdelbeginFL \DIFdelFL{3 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Beef }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{5 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{25.7 $\pm$2.4 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{60 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{35.5 $\pm$2.8}} \DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelFL{35.1 }%DIFDELCMD < & %%%
+\textbf{\DIFdelFL{38.3}} %DIFAUXCMD
 \DIFdelendFL \DIFaddbeginFL \DIFaddFL{34.5 $\pm$2.6 }\DIFaddendFL \\
-\DIFdelbeginFL \DIFdelFL{4 }%DIFDELCMD < & %%%
-\DIFdelFL{3 }%DIFDELCMD < &  %%%
-\DIFdelFL{930 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{CBF }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{11.1 $\pm$0.2 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{34.2 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{41.0 $\pm$8.4 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{54.8}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{41.0 $\pm$7.0}\DIFaddendFL } \\
-\DIFdelbeginFL \DIFdelFL{5 }%DIFDELCMD < & %%%
-\DIFdelFL{3 }%DIFDELCMD < & %%%
-\DIFdelFL{4307 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{ChlorineConcentration }\DIFaddendFL & \DIFaddbeginFL \textbf{\DIFaddFL{3.9 $\pm$0.0}} \DIFaddendFL & \DIFaddbeginFL \DIFaddFL{0.2 $\pm$}\DIFaddendFL 0.1 & \DIFdelbeginFL \textbf{\DIFdelFL{0.4}} %DIFAUXCMD
+\DIFdelbeginFL \DIFdelFL{4 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{CBF }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{3 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{11.1 $\pm$0.2 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{930 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{41.0 $\pm$8.4 }\DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelFL{34.2 }%DIFDELCMD < & %%%
+\DIFdelendFL \textbf{\DIFdelbeginFL \DIFdelFL{54.8}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{41.0 $\pm$7.0}\DIFaddendFL } \\
+\DIFdelbeginFL \DIFdelFL{5 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{ChlorineConcentration }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{3 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{3.9 $\pm$0.0}} \DIFaddendFL & \DIFdelbeginFL \DIFdelFL{4307 }%DIFDELCMD < &  & %%%
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.2 $\pm$}\DIFaddendFL 0.1 & \DIFdelbeginFL \textbf{\DIFdelFL{0.4}} %DIFAUXCMD
 \DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.2 $\pm$0.1 }\DIFaddendFL \\
-\DIFdelbeginFL \DIFdelFL{6 }%DIFDELCMD < & %%%
-\DIFdelFL{4 }%DIFDELCMD < & %%%
-\DIFdelFL{1420 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{CinC\_ECG\_torso }\DIFaddendFL & \DIFaddbeginFL \textbf{\DIFaddFL{37.9 $\pm$0.5}} \DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{25.2}} %DIFAUXCMD
-\DIFdelendFL \DIFaddbeginFL \DIFaddFL{24.2 $\pm$1.5 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{22.5 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{24.6 $\pm$1.6 }\DIFaddendFL \\
-\DIFdelbeginFL \DIFdelFL{11 }%DIFDELCMD < & %%%
-\DIFdelFL{4 }%DIFDELCMD < &  %%%
-\DIFdelFL{322 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{DiatomSizeReduction }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{45.3 $\pm$4.2 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{85.0}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{79.8 $\pm$6.3}\DIFaddendFL } & \DIFdelbeginFL \DIFdelFL{83.2 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{77.3 $\pm$4.5 }\DIFaddendFL \\
-\DIFdelbeginFL \DIFdelFL{15 }%DIFDELCMD < & %%%
-\DIFdelFL{4 }%DIFDELCMD < &  %%%
-\DIFdelFL{112 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{FaceFour }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{49.8 $\pm$4.6 }\DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{75.4}} %DIFAUXCMD
-\DIFdelendFL \DIFaddbeginFL \DIFaddFL{72.2 $\pm$8.4 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{69.5 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{74.9 $\pm$6.3}} \DIFaddendFL \\
-\DIFdelbeginFL \DIFdelFL{18 }%DIFDELCMD < & %%%
-\DIFdelFL{5 }%DIFDELCMD < &  %%%
-\DIFdelFL{463 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Haptics }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{3.0 $\pm$0.5 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{8.7 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{9.7 $\pm$1.3}} \DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{9.2}} %DIFAUXCMD
+\DIFdelbeginFL \DIFdelFL{6 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{CinC\_ECG\_torso }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{4 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{37.9 $\pm$0.5}} \DIFaddendFL & \DIFdelbeginFL \DIFdelFL{1420 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{24.2 $\pm$1.5 }\DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\textbf{\DIFdelFL{25.2}} %DIFAUXCMD
+%DIFDELCMD < & %%%
+\DIFdelFL{22.5 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{24.6 $\pm$1.6 }\DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{11 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{DiatomSizeReduction }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{4 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{45.3 $\pm$4.2 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{322 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{79.8 $\pm$6.3}} \DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\textbf{\DIFdelFL{85.0}} %DIFAUXCMD
+%DIFDELCMD < & %%%
+\DIFdelFL{83.2 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{77.3 $\pm$4.5 }\DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{15 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{FaceFour }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{4 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{49.8 $\pm$4.6 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{112 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{72.2 $\pm$8.4 }\DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelendFL \textbf{\DIFdelbeginFL \DIFdelFL{75.4}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{74.9 $\pm$6.3}\DIFaddendFL } \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelFL{69.5 }\DIFdelendFL \\
+\DIFdelbeginFL \DIFdelFL{18 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Haptics }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{5 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{3.0 $\pm$0.5 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{463 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{9.7 $\pm$1.3}} \DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelFL{8.7 }%DIFDELCMD < & %%%
+\textbf{\DIFdelFL{9.2}} %DIFAUXCMD
 \DIFdelendFL \DIFaddbeginFL \DIFaddFL{9.4 $\pm$1.2 }\DIFaddendFL \\
-\DIFdelbeginFL \DIFdelFL{19 }%DIFDELCMD < & %%%
-\DIFdelFL{7 }%DIFDELCMD < &  %%%
-\DIFdelFL{650 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{InlineSkate }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{4.6 $\pm$0.5 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{7.3 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{6.3 $\pm$0.7 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{7.3}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{6.4 $\pm$0.7}\DIFaddendFL } \\
-\DIFdelbeginFL \DIFdelFL{22 }%DIFDELCMD < & %%%
-\DIFdelFL{7 }%DIFDELCMD < &  %%%
-\DIFdelFL{143 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Lighting7 }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{27.6 $\pm$2.7 }\DIFaddendFL & 51.0 \DIFaddbeginFL \DIFaddFL{$\pm$3.1 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{52.6}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{51.3 $\pm$1.5}\DIFaddendFL } \\
-\DIFdelbeginFL \DIFdelFL{26 }%DIFDELCMD < & %%%
-\DIFdelFL{6 }%DIFDELCMD < &  %%%
-\DIFdelFL{442 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{OSULeaf }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{22.9 $\pm$0.8 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{26.3 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{22.9 $\pm$2.2 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{27.2}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{23.0 $\pm$2.5}\DIFaddendFL } \\
-\DIFdelbeginFL \DIFdelFL{27 }%DIFDELCMD < & %%%
-\DIFdelFL{4 }%DIFDELCMD < &   %%%
-\DIFdelFL{60 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{OliveOil }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{10.6 $\pm$2.2 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{27.8 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{32.4 $\pm$8.6}} \DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{28.3}} %DIFAUXCMD
+\DIFdelbeginFL \DIFdelFL{19 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{InlineSkate }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{7 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{4.6 $\pm$0.5 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{650 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{6.3 $\pm$0.7 }\DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelFL{7.3 }%DIFDELCMD < & %%%
+\DIFdelendFL \textbf{\DIFdelbeginFL \DIFdelFL{7.3}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{6.4 $\pm$0.7}\DIFaddendFL } \\
+\DIFdelbeginFL \DIFdelFL{22 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Lighting7 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{7 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{27.6 $\pm$2.7 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{143 }%DIFDELCMD < &  & %%%
+\DIFdelendFL 51.0 \DIFaddbeginFL \DIFaddFL{$\pm$3.1 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{52.6}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{51.3 $\pm$1.5}\DIFaddendFL } \\
+\DIFdelbeginFL \DIFdelFL{26 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{OSULeaf }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{6 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{22.9 $\pm$0.8 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{442 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{22.9 $\pm$2.2 }\DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelFL{26.3 }%DIFDELCMD < & %%%
+\DIFdelendFL \textbf{\DIFdelbeginFL \DIFdelFL{27.2}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{23.0 $\pm$2.5}\DIFaddendFL } \\
+\DIFdelbeginFL \DIFdelFL{27 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{OliveOil }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{4 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{10.6 $\pm$2.2 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{60 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{32.4 $\pm$8.6}} \DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelFL{27.8 }%DIFDELCMD < & %%%
+\textbf{\DIFdelFL{28.3}} %DIFAUXCMD
 \DIFdelendFL \DIFaddbeginFL \DIFaddFL{30.6 $\pm$7.8 }\DIFaddendFL \\
-\DIFdelbeginFL \DIFdelFL{30 }%DIFDELCMD < & %%%
-\DIFdelFL{3 }%DIFDELCMD < & %%%
-\DIFdelFL{9236 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{StarLightCurves }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{54.3 $\pm$0.0 }\DIFaddendFL & \textbf{60.3 \DIFaddbeginFL \DIFaddFL{$\pm$0.4}\DIFaddendFL } & \DIFdelbeginFL \textbf{\DIFdelFL{60.3}} %DIFAUXCMD
+\DIFdelbeginFL \DIFdelFL{30 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{StarLightCurves }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{3 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{54.3 $\pm$0.0 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{9236 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{60.3 $\pm$0.4}} \DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\textbf{\DIFdelFL{60.3}} %DIFAUXCMD
+%DIFDELCMD < & %%%
+\textbf{\DIFdelFL{60.3}} %DIFAUXCMD
 \DIFdelendFL \DIFaddbeginFL \DIFaddFL{60.3 $\pm$0.0 }\DIFaddendFL \\
-\DIFdelbeginFL \DIFdelFL{32 }%DIFDELCMD < & %%%
-\DIFdelFL{6 }%DIFDELCMD < & %%%
-\DIFdelFL{1020 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Symbols }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{72.0 $\pm$1.7 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{79.5 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{79.1 $\pm$3.8 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{81.1}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{79.5 $\pm$1.6}\DIFaddendFL } \\
-\DIFdelbeginFL \DIFdelFL{33 }%DIFDELCMD < & %%%
-\DIFdelFL{4 }%DIFDELCMD < &  %%%
-\DIFdelFL{200 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Trace }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{13.7 $\pm$4.4 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{50.5 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{54.5 $\pm$5.1}} \DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{68.5}} %DIFAUXCMD
+\DIFdelbeginFL \DIFdelFL{32 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Symbols }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{6 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{72.0 $\pm$1.7 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{1020 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{79.1 $\pm$3.8 }\DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelFL{79.5 }%DIFDELCMD < & %%%
+\DIFdelendFL \textbf{\DIFdelbeginFL \DIFdelFL{81.1}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{79.5 $\pm$1.6}\DIFaddendFL } \\
+\DIFdelbeginFL \DIFdelFL{33 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Trace }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{4 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{13.7 $\pm$4.4 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{200 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{54.5 $\pm$5.1}} \DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelFL{50.5 }%DIFDELCMD < & %%%
+\textbf{\DIFdelFL{68.5}} %DIFAUXCMD
 \DIFdelendFL \DIFaddbeginFL \DIFaddFL{54.3 $\pm$6.3 }\DIFaddendFL \\
-\DIFdelbeginFL \DIFdelFL{35 }%DIFDELCMD < & %%%
-\DIFdelFL{4 }%DIFDELCMD < & %%%
-\DIFdelFL{5000 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Two\_Patterns }\DIFaddendFL &   \DIFaddbeginFL \DIFaddFL{0.2 $\pm$0.0 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{21.6}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{10.1 $\pm$10.0}\DIFaddendFL } &   \DIFdelbeginFL \DIFdelFL{14.7 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{8.8 $\pm$9.9 }\DIFaddendFL \\
-\DIFdelbeginFL \DIFdelFL{37 }%DIFDELCMD < & %%%
-\DIFdelFL{7 }%DIFDELCMD < &  %%%
-\DIFdelFL{350 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{fish }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{18.5 $\pm$1.5 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{33.7 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{34.9 $\pm$1.4 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{36.9}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{35.3 $\pm$1.0}\DIFaddendFL } \\
-\DIFdelbeginFL \DIFdelFL{38 }%DIFDELCMD < & %%%
-\DIFdelFL{6 }%DIFDELCMD < &  %%%
-\DIFdelFL{600 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{synthetic\_control }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{63.0 $\pm$0.7 }\DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{96.4}} %DIFAUXCMD
-\DIFdelendFL \DIFaddbeginFL \DIFaddFL{85.3 $\pm$4.9 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{88.8 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{89.5 $\pm$0.8}} \DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{35 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Two\_Patterns }\DIFaddendFL &   \DIFdelbeginFL \DIFdelFL{4 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{0.2 $\pm$0.0 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{5000 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{10.1 $\pm$10.0}} \DIFaddendFL &   \DIFdelbeginFL %DIFDELCMD < & %%%
+\textbf{\DIFdelFL{21.6}} %DIFAUXCMD
+%DIFDELCMD < & %%%
+\DIFdelFL{14.7 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{8.8 $\pm$9.9 }\DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{37 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{fish }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{7 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{18.5 $\pm$1.5 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{350 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{34.9 $\pm$1.4 }\DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelFL{33.7 }%DIFDELCMD < & %%%
+\DIFdelendFL \textbf{\DIFdelbeginFL \DIFdelFL{36.9}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{35.3 $\pm$1.0}\DIFaddendFL } \\
+\DIFdelbeginFL \DIFdelFL{38 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{synthetic\_control }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{6 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{63.0 $\pm$0.7 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{600 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{85.3 $\pm$4.9 }\DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelendFL \textbf{\DIFdelbeginFL \DIFdelFL{96.4}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{89.5 $\pm$0.8}\DIFaddendFL } \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelFL{88.8 }\DIFdelendFL \\
 \end{tabular}
 \end{center}
 \end{table}
@@ -863,70 +905,62 @@ For each experiment, the result of the best performing method is marked in bold.
 \DIFdelbeginFL %DIFDELCMD < \begin{tabular}{rrrccc}
 %DIFDELCMD < %%%
 %DIF <  & nb. & nb. &  & kernel &  \\
-\DIFdelFL{id }%DIFDELCMD < & %%%
-\DIFdelFL{classes }%DIFDELCMD < & %%%
-\DIFdelFL{objects }\DIFdelendFL \DIFaddbeginFL \begin{tabular}{lccc}
- \DIFaddendFL & \DIFaddbeginFL \DIFaddFL{spectral clustering }\DIFaddendFL & kernel k-means & k-averages \\
+\DIFdelFL{id }\DIFdelendFL \DIFaddbeginFL \begin{tabular}{lccc}
+ \DIFaddendFL & \DIFdelbeginFL \DIFdelFL{classes }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{spectral clustering }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{objects }%DIFDELCMD < & & %%%
+\DIFdelendFL kernel k-means & k-averages \\
 %DIF < &  &  & (NMI $\times 0.01$) & (NMI $\times 0.01$) & (NMI $\times 0.01$) \\
 \hline
-\DIFdelbeginFL \DIFdelFL{1 }%DIFDELCMD < & %%%
-\DIFdelFL{50 }%DIFDELCMD < &  %%%
-\DIFdelFL{905 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{50words }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{46.9 $\pm$1.0 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{70.2 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{69.6 $\pm$0.8 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{71.0}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{71.7 $\pm$0.6}\DIFaddendFL } \\
-\DIFdelbeginFL \DIFdelFL{2 }%DIFDELCMD < & %%%
-\DIFdelFL{37 }%DIFDELCMD < &  %%%
-\DIFdelFL{781 }%DIFDELCMD < &  %%%
-\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Adiac }\DIFaddendFL & 55.0 \DIFaddbeginFL \DIFaddFL{$\pm$1.0 }\DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{58.2}} %DIFAUXCMD
-%DIFDELCMD < \\
-%DIFDELCMD <  %%%
-\DIFdelFL{8 }%DIFDELCMD < & %%%
-\DIFdelFL{12 }%DIFDELCMD < &  %%%
-\DIFdelFL{780 }%DIFDELCMD < &  & %%%
-\textbf{\DIFdelFL{28.6}} %DIFAUXCMD
-\DIFdelendFL \DIFaddbeginFL \DIFaddFL{55.7 $\pm$1.0 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{26.2 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{58.9 $\pm$0.6}} \DIFaddendFL \\
-\DIFdelbeginFL \DIFdelFL{9 }%DIFDELCMD < & %%%
-\DIFdelFL{12 }%DIFDELCMD < &  %%%
-\DIFdelFL{780 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Cricket\_X }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{19.2 $\pm$1.1 }\DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{33.8}} %DIFAUXCMD
-\DIFdelendFL \DIFaddbeginFL \DIFaddFL{26.1 $\pm$1.8 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{33.4 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{26.8 $\pm$1.2}} \DIFaddendFL \\
-\DIFdelbeginFL \DIFdelFL{10 }%DIFDELCMD < & %%%
-\DIFdelFL{12 }%DIFDELCMD < &  %%%
-\DIFdelFL{780 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Cricket\_Y }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{22.8 $\pm$1.3 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{25.6 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{33.0 $\pm$1.5 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{26.2}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{33.5 $\pm$1.2}\DIFaddendFL } \\
-\DIFdelbeginFL \DIFdelFL{14 }%DIFDELCMD < & %%%
-\DIFdelFL{14 }%DIFDELCMD < & %%%
-\DIFdelFL{2250 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Cricket\_Z }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{19.2 $\pm$1.3 }\DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{72.8}} %DIFAUXCMD
-\DIFdelendFL \DIFaddbeginFL \DIFaddFL{25.5 $\pm$2.2 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{64.3 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{27.3 $\pm$1.3}} \DIFaddendFL \\
-\DIFdelbeginFL \DIFdelFL{16 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{FaceAll }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{14 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{36.4 $\pm$1.2 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{2250 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{70.7 $\pm$2.0}} \DIFaddendFL & \DIFaddbeginFL \DIFaddFL{68.2 $\pm$2.3 }\\
-\DIFaddFL{FacesUCR }\DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{72.1}} %DIFAUXCMD
-\DIFdelendFL \DIFaddbeginFL \DIFaddFL{36.2 $\pm$1.3 }\DIFaddendFL & 70.4 \DIFdelbeginFL %DIFDELCMD < \\
-%DIFDELCMD < %%%
-\DIFdelFL{23 }%DIFDELCMD < &  %%%
-\DIFdelFL{8 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{$\pm$2.0 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{2400 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{71.5 $\pm$1.6}} \\
-\DIFaddFL{MALLAT }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{44.5 $\pm$2.0 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{97.4}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{90.3 $\pm$4.6}\DIFaddendFL } & \DIFdelbeginFL \DIFdelFL{87.0 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{89.2 $\pm$3.5 }\DIFaddendFL \\
-\DIFdelbeginFL \DIFdelFL{24 }%DIFDELCMD < & %%%
-\DIFdelFL{10 }%DIFDELCMD < & %%%
-\DIFdelFL{1141 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{MedicalImages }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{19.2 $\pm$1.3 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{28.3 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{29.7 $\pm$1.7 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{29.8}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{30.4 $\pm$1.6}\DIFaddendFL } \\
-\DIFdelbeginFL \DIFdelFL{31 }%DIFDELCMD < & %%%
-\DIFdelFL{15 }%DIFDELCMD < & %%%
-\DIFdelFL{1125 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{SwedishLeaf }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{48.7 $\pm$1.4 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{69.2 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{70.3 $\pm$1.9 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{70.2}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{70.8 $\pm$1.4}\DIFaddendFL } \\
-\DIFdelbeginFL \DIFdelFL{36 }%DIFDELCMD < & %%%
-\DIFdelFL{25 }%DIFDELCMD < &  %%%
-\DIFdelFL{905 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{WordsSynonyms }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{31.9 $\pm$1.0 }\DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{52.5}} %DIFAUXCMD
-\DIFdelendFL \DIFaddbeginFL \DIFaddFL{50.9 $\pm$1.2 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{51.2 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{52.1 $\pm$0.8}} \DIFaddendFL \\
-\DIFdelbeginFL \DIFdelFL{39 }%DIFDELCMD < &  %%%
-\DIFdelFL{8 }%DIFDELCMD < & %%%
-\DIFdelFL{4478 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{uWaveGestureLibrary\_X }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{24.4 $\pm$0.6 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{46.4 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{46.0 $\pm$1.2 }\DIFaddendFL & \textbf{\DIFdelbeginFL \DIFdelFL{46.9}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{46.2 $\pm$0.5}\DIFaddendFL } \\
-\DIFdelbeginFL \DIFdelFL{40 }%DIFDELCMD < &  %%%
-\DIFdelFL{8 }%DIFDELCMD < & %%%
-\DIFdelFL{4478 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{uWaveGestureLibrary\_Y }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{16.2 $\pm$0.3 }\DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{45.2}} %DIFAUXCMD
-\DIFdelendFL \DIFaddbeginFL \DIFaddFL{44.9 $\pm$0.4 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{44.2 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{45.0 $\pm$0.2}} \DIFaddendFL \\
-\DIFdelbeginFL \DIFdelFL{41 }%DIFDELCMD < &  %%%
-\DIFdelFL{8 }%DIFDELCMD < & %%%
-\DIFdelFL{4478 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{uWaveGestureLibrary\_Z }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{23.2 $\pm$0.6 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{42.7 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{42.9 $\pm$0.7}} \DIFaddendFL & \DIFdelbeginFL \textbf{\DIFdelFL{42.8}} %DIFAUXCMD
+\DIFdelbeginFL \DIFdelFL{1 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{50words }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{50 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{46.9 $\pm$1.0 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{905 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{69.6 $\pm$0.8 }\DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelFL{70.2 }%DIFDELCMD < & %%%
+\DIFdelendFL \textbf{\DIFdelbeginFL \DIFdelFL{71.0}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{71.7 $\pm$0.6}\DIFaddendFL } \\
+\DIFdelbeginFL \DIFdelFL{2 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Adiac }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{37 }%DIFDELCMD < &  %%%
+\DIFdelFL{781 }%DIFDELCMD < &  & %%%
+\DIFdelendFL 55.0 \DIFaddbeginFL \DIFaddFL{$\pm$1.0 }\DIFaddendFL & \DIFaddbeginFL \DIFaddFL{55.7 $\pm$1.0 }& \DIFaddendFL \textbf{\DIFdelbeginFL \DIFdelFL{58.2}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{58.9 $\pm$0.6}\DIFaddendFL } \\
+\DIFdelbeginFL \DIFdelFL{8 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Cricket\_X }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{12 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{19.2 $\pm$1.1 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{780 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{26.1 $\pm$1.8 }\DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelendFL \textbf{\DIFdelbeginFL \DIFdelFL{28.6}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{26.8 $\pm$1.2}\DIFaddendFL } \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelFL{26.2 }\DIFdelendFL \\
+\DIFdelbeginFL \DIFdelFL{9 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Cricket\_Y }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{12 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{22.8 $\pm$1.3 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{780 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{33.0 $\pm$1.5 }\DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelendFL \textbf{\DIFdelbeginFL \DIFdelFL{33.8}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{33.5 $\pm$1.2}\DIFaddendFL } \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelFL{33.4 }\DIFdelendFL \\
+\DIFdelbeginFL \DIFdelFL{10 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Cricket\_Z }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{12 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{19.2 $\pm$1.3 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{780 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{25.5 $\pm$2.2 }\DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelFL{25.6 }%DIFDELCMD < & %%%
+\DIFdelendFL \textbf{\DIFdelbeginFL \DIFdelFL{26.2}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{27.3 $\pm$1.3}\DIFaddendFL } \\
+\DIFdelbeginFL \DIFdelFL{14 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{FaceAll }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{14 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{36.4 $\pm$1.2 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{2250 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{70.7 $\pm$2.0}} \DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\textbf{\DIFdelFL{72.8}} %DIFAUXCMD
+%DIFDELCMD < & %%%
+\DIFdelFL{64.3 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{68.2 $\pm$2.3 }\DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{16 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{FacesUCR }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{14 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{36.2 $\pm$1.3 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{2250 }%DIFDELCMD < &  & %%%
+\textbf{\DIFdelFL{72.1}} %DIFAUXCMD
+%DIFDELCMD < & %%%
+\DIFdelendFL 70.4 \DIFaddbeginFL \DIFaddFL{$\pm$2.0 }& \textbf{\DIFaddFL{71.5 $\pm$1.6}} \DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{23 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{MALLAT }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{8 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{44.5 $\pm$2.0 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{2400 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{90.3 $\pm$4.6}} \DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\textbf{\DIFdelFL{97.4}} %DIFAUXCMD
+%DIFDELCMD < & %%%
+\DIFdelFL{87.0 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{89.2 $\pm$3.5 }\DIFaddendFL \\
+\DIFdelbeginFL \DIFdelFL{24 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{MedicalImages }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{10 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{19.2 $\pm$1.3 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{1141 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{29.7 $\pm$1.7 }\DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelFL{28.3 }%DIFDELCMD < & %%%
+\DIFdelendFL \textbf{\DIFdelbeginFL \DIFdelFL{29.8}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{30.4 $\pm$1.6}\DIFaddendFL } \\
+\DIFdelbeginFL \DIFdelFL{31 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{SwedishLeaf }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{15 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{48.7 $\pm$1.4 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{1125 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{70.3 $\pm$1.9 }\DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelFL{69.2 }%DIFDELCMD < & %%%
+\DIFdelendFL \textbf{\DIFdelbeginFL \DIFdelFL{70.2}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{70.8 $\pm$1.4}\DIFaddendFL } \\
+\DIFdelbeginFL \DIFdelFL{36 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{WordsSynonyms }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{25 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{31.9 $\pm$1.0 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{905 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{50.9 $\pm$1.2 }\DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelendFL \textbf{\DIFdelbeginFL \DIFdelFL{52.5}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{52.1 $\pm$0.8}\DIFaddendFL } \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelFL{51.2 }\DIFdelendFL \\
+\DIFdelbeginFL \DIFdelFL{39 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{uWaveGestureLibrary\_X }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{8 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{24.4 $\pm$0.6 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{4478 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{46.0 $\pm$1.2 }\DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelFL{46.4 }%DIFDELCMD < & %%%
+\DIFdelendFL \textbf{\DIFdelbeginFL \DIFdelFL{46.9}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{46.2 $\pm$0.5}\DIFaddendFL } \\
+\DIFdelbeginFL \DIFdelFL{40 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{uWaveGestureLibrary\_Y }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{8 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{16.2 $\pm$0.3 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{4478 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{44.9 $\pm$0.4 }\DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelendFL \textbf{\DIFdelbeginFL \DIFdelFL{45.2}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{45.0 $\pm$0.2}\DIFaddendFL } \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelFL{44.2 }\DIFdelendFL \\
+\DIFdelbeginFL \DIFdelFL{41 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{uWaveGestureLibrary\_Z }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{8 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{23.2 $\pm$0.6 }\DIFaddendFL & \DIFdelbeginFL \DIFdelFL{4478 }\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{42.9 $\pm$0.7}} \DIFaddendFL & \DIFdelbeginFL %DIFDELCMD < & %%%
+\DIFdelFL{42.7 }%DIFDELCMD < & %%%
+\textbf{\DIFdelFL{42.8}} %DIFAUXCMD
 \DIFdelendFL \DIFaddbeginFL \DIFaddFL{42.6 $\pm$0.5 }\DIFaddendFL \\
 \end{tabular}
 \end{center}
 \end{table}
 
-A first \DIFdelbegin \DIFdel{constatation is that }\DIFdelend \DIFaddbegin \DIFadd{observation is that the spectral clustering algorithm only performs favorably for 2 of the 43 dataset. Also, }\DIFaddend most of the bi-class problems (Table~\ref{tab:results-2}) do not seem to lend themselves well to this kind of approach: kernel k-means and k-averages produce quasi-identical results, poor in most cases. Concerning the medium numbers of classes (Table~\ref{tab:results-37}), k-averages \DIFdelbegin \DIFdel{outperforms kernel k-means }\DIFdelend \DIFaddbegin \DIFadd{performs best for 8 datasets out of 17. For the larger numbers of classes (Table~\ref{tab:results-8}), k-averages performs best }\DIFaddend for 11 datasets out of \DIFdelbegin \DIFdel{17, while }\DIFdelend \DIFaddbegin \DIFadd{14.
+A first \DIFdelbegin \DIFdel{constatation is that }\DIFdelend \DIFaddbegin \DIFadd{observation is that the spectral clustering algorithm only performs favorably for 2 of the 43 dataset. Also, }\DIFaddend most of the bi-class problems (Table~\ref{tab:results-2}) do not seem to lend themselves well to this kind of approach: kernel k-means and k-averages produce quasi-identical results, poor in most cases. Concerning the medium numbers of classes (Table~\ref{tab:results-37}), k-averages \DIFdelbegin \DIFdel{outperforms kernel k-means for }\DIFdelend \DIFaddbegin \DIFadd{performs best for 8 datasets out of 17. For the larger numbers of classes (Table~\ref{tab:results-8}), k-averages performs best for }\DIFaddend 11 datasets out of \DIFdelbegin \DIFdel{17, while }\DIFdelend \DIFaddbegin \DIFadd{14.
 }
 
 \DIFadd{Considering the standard deviation over the several runs of the algorithm with different initialization is helpful to study the sensitivity of the algorithm to its initialization and thus its tendency to be stuck into local minima. For most datasets, the standard deviation of the k-averages algorithm is smaller than the one of the }\DIFaddend kernel k-means \DIFdelbegin \DIFdel{leads for only 5. For the larger numbers of classes, the results are spread evenly, each method outperforming the other in 7 cases}\DIFdelend \DIFaddbegin \DIFadd{one and thus seems experimentally more robust.
