@@ -1,3 +1,4 @@
+
 \documentclass[natbib,smallextended]{svjour3}
 \usepackage{amsmath,amssymb}
 \usepackage{color}
@@ -189,7 +190,7 @@ Since the sum of $K_{nn}$ over all points remains constant, and the sum of squar
 
 \subsection{Algorithm}
 
-Finding the configuration that globally minimizes S (eq.~\ref{eq:S}) is an NP-complete problem. However, several approaches allow finding an acceptable approximation. We shall only focus here on the fastest and most popular, an iterative assignment\,/\,update procedure commonly referred to as the \gl{k-means algorithm} \citep{macQueenBsmsp67}, or as a discrete version of Lloyd's algorithm, detailed in Algorithm~\ref{algo:kkmeans}.
+Finding the configuration that globally minimizes S (eq~\ref{eq:S}) is an NP-complete problem. However, several approaches allow finding an acceptable approximation. We shall only focus here on the fastest and most popular, an iterative assignment\,/\,update procedure commonly referred to as the \gl{k-means algorithm} \citep{macQueenBsmsp67}, or as a discrete version of Lloyd's algorithm, detailed in Algorithm~\ref{algo:kkmeans}.
 
 \begin{algorithm}
 	\label{algo:kkmeans}
@@ -202,7 +203,7 @@ Finding the configuration that globally minimizes S (eq.~\ref{eq:S}) is an NP-co
 	\While {$L$ is modified} {
 		\For {$n \leftarrow 1$ to $N$} {
 			\For {$c \leftarrow 1$ to $C$} {
-				Compute $Y_{cn}$ following eq.~\ref{eq:yki} \label{algline:kkmeans_cplx1}
+				Compute $Y_{cn}$ following eq~\ref{eq:yki} \label{algline:kkmeans_cplx1}
 				(note: $z_{cn} = (L_n == c)\,?\,1\;:\;0$)
 			}
 			$L_n = \textrm{argmin}_c (Y_{cn})$\;
@@ -248,19 +249,17 @@ If $o \in c$, then necessarily $\exists i \mid o = o_i$
 \end{equation}
 
 Let us call the \gl{quality} of a class the average intra-class object-to-object similarity, and write it $\mathcal{Q}$:
-\begin{equation}
-	\mathcal{Q}\left(c\right) = \frac{1}{N_c} \sum_{i=1}^{n_c} s\left(o_i, c\right)
-    \label{eq:class_qual_base}
-\end{equation}
+\[
+\mathcal{Q}\left(c\right) = \frac{1}{N_c} \sum_{i=1}^{n_c} s\left(o_i, c\right)
+\]
 
 %Indeed, we never refer to a geometrical interpretation of the data. However, it should be noted that since in k-means (and kernel k-means) the centroid of a class is defined as an average of all points in that class, $\mathcal{Q}$ is strictly equivalent to the average point to centroid similarity.
 
 In our framework, we do not explicitly refer to class centroids, preferring to directly consider averages of similarity values between individuals within clusters. Using the notations above, we define our objective function as the average class quality, normalized with class sizes:
 
-\begin{equation}
-  \mathcal{O} = \frac{1}{N} \sum_{i=1}^{C} N_i \mathcal{Q}(c_i)
-  \label{eq:objective_function}
-\end{equation}
+\[
+O_2 = \frac{1}{N} \sum_{i=1}^{C} N_i \mathcal{Q}(c_i)
+\]
 
 Since, informally, our goal is to bring together objects that share high similarity, a first idea would be to simply repeatedly move each object to the class with whose members it has the highest average similarity. This is what we call the \gl{naive k-averages} algorithm.
 
@@ -276,7 +275,7 @@ Algorithm~\ref{algo:naive-kaverages} presents a method that simply moves each ob
 	\BlankLine
 	\textbf{Initialization:}
 		Fill L with random values in $[1..C]$\;
-		Compute initial object-class similarities $S$ following eq.~\ref{eq:soc_inclass} or eq.~\ref{eq:soc_notinclass}\;
+		Compute initial object-class similarities $S$ following eq~\ref{eq:soc_inclass} or eq~\ref{eq:soc_notinclass}\;
 	\BlankLine
 	\While {$L$ is modified} {
 		\For {$i \leftarrow 1$ to $N$} {
@@ -298,7 +297,7 @@ To ensure convergence, we need to compute the impact on the objective function o
 
 \subsection{Impact of object reallocation on class quality}
 
-Considering a class $c$, let us develop the expression of $\mathcal{Q}(c)$ into a more useful form. Since all objects are in $c$, we use the formula in (eq.~\ref{eq:soc_inclass}) to get:
+Considering a class $c$, let us develop the expression of $\mathcal{Q}(c)$ into a more useful form. Since all objects are in $c$, we use the formula in (\ref{eq:soc_inclass}) to get:
 
 \begin{equation*}
   \begin{aligned}
@@ -387,12 +386,11 @@ Assuming that $o \notin c$, we can similarly to what has been done previously (n
 %\end{equation}
 
 \subsection{Impact of object reallocation on the global objective function}
-\label{sec:delta_definition}
 
 When moving an object $o$ from class $c_s$ (\gl{source}), to whom it belongs, to a
 distinct class $c_t$ (\gl{target}), $(N_s-1)$ objects are affected
 by the variation in (\ref{deltaRemove}), and $N_t$ are affected
-by that in (\ref{deltaAdd}); in addition, one object $o$ moves from a class whose quality is $\mathcal{Q}(c_s)$ to one whose quality is $\mathcal{Q}\left(c_t \cup o\right)$, as expressed by eq.~\ref{eq:newQual_add}, which leads to an impact of moving object $o$ from class $c_s$ to class $c_t$ wich can be computed as follows:
+by that in (\ref{deltaAdd}); in addition, one object $o$ moves from a class whose quality is $\mathcal{Q}(c_s)$ to one whose quality is $\mathcal{Q}\left(c_t \cup o\right)$, as expressed by equation~\ref{eq:newQual_add}, which leads to an impact of moving object $o$ from class $c_s$ to class $c_t$ wich can be computed as follows:
 
 \begin{align}
 \begin{split}
@@ -408,39 +406,9 @@ As can be seen, computing this impact is a fixed-cost operation. We can therefor
 \section{K-averages algorithm}
 \label{sec:algo}
 
-\begin{algorithm}[h!]
-	\label{algo:kaverages}
-	\SetAlgoLined
-	\KwData{number of objects $N$, number of classes $C$, similarity matrix $\mathcal{S}$}
-	\KwResult{label vector $L$ defining a partition of the objects into $C$ classes}
-	\BlankLine
-	\textbf{Initialization:}
-		Fill L with random values in $[1..C]$\;
-		Compute initial object-class similarities $S$ following eq.~\ref{eq:soc_inclass} or eq.~\ref{eq:soc_notinclass}\;
-		Compute initial class qualities $\mathcal{Q}$ following eq.~\ref{eq:classQuality}\;
-	\BlankLine
-	\While {$L$ is modified} {
-		\For {$i \leftarrow 1$ to $N$} {
-			previousClass $\leftarrow L_i$\;
-			nextClass $\leftarrow \mathrm{argmax}_k\,\delta_i(\mathrm{previousClass}, k)$ \label{algline:kaverages_search}
-			(following the definition of $\delta$ in eq.~\ref{eq:impact_classnorm})\; % eq.~\ref{eq:impact_objnorm} or
-			\If {nextClass $\ne$ previousClass} {
-				$L_i \leftarrow \mathrm{nextClass}$\;
-				Update $\mathcal{Q}_\mathrm{previousClass}$ following eq.~\ref{eq:newQual_remove}\;
-				Update $\mathcal{Q}_\mathrm{nextClass}$ following eq.~\ref{eq:newQual_add}\;
-				\For {$j \leftarrow 1$ to $N$}{
-					Update $S(j,nextClass)$ and $S(j,previousClass)$ \label{algline:kaverages_recompute} \\ following eq.~\ref{eq:newSimilNewC}\;
-				}
-			}
-		}
-	}
-	\BlankLine
-	\caption{The K-averages algorithm.}
-\end{algorithm}
-
 Our approach does not allow us to benefit, like kernel k-means, from the convergence guarantee brought by the geometric foundation of k-means. In consequence, we cannot apply a \gl{batch} approach where at each iteration all elements are moved to their new class, and all distances (or similarities) are computed at once. To guarantee convergence, we must update the class properties for the two modified classes (source and destination), as well as recompute the average class-object similarities for them for each considered object, after finding its ideal new class. This is the principle of the \gl{greedy} k-means algorithm \citep[Chapter10.8]{Duda01}, but whereas for k-means that approach increases complexity (and even more so for kernel k-means), in this case it leads to a much improved computational performance.
 
-Indeed, at a first glance, dynamically updating objectives as a result of object reallocation might seem to have negative performance impact. However, our simple non-quadratic updates make such dynamic changes easily tractable. New class qualities are thus given by eqs.~\ref{eq:newQual_remove} and \ref{eq:newQual_add}, and new object-class similarities can be computed by:
+Indeed, at a first glance, dynamically updating objectives as a result of object reallocation might seem to have negative performance impact. However, our simple non-quadratic updates make such dynamic changes easily tractable. New class qualities are thus given by Equations~\ref{eq:newQual_remove} and \ref{eq:newQual_add}, and new object-class similarities can be computed by:
 
 %% Rewritten above.. feel free to modify!!! (Arshia)
 %Although this seems at first like systematically updating everything at each object re-allocation should have a huge performance impact, our reliance on simple averages without any quadratic terms makes it possible to have very simple update formulas: new class qualities are given by Equations~\ref{eq:newQual_remove} and \ref{eq:newQual_add}, and new object-class similarities can be computed by:
@@ -457,20 +425,36 @@ Indeed, at a first glance, dynamically updating objectives as a result of object
 
 The full description of k-averages is given in Algorithm~\ref{algo:kaverages}.
 
-\section{Convergence}
-\label{sec:convergence}
+\begin{algorithm}
+	\label{algo:kaverages}
+	\SetAlgoLined
+	\KwData{number of objects $N$, number of classes $C$, similarity matrix $\mathcal{S}$}
+	\KwResult{label vector $L$ defining a partition of the objects into $C$ classes}
+	\BlankLine
+	\textbf{Initialization:}
+		Fill L with random values in $[1..C]$\;
+		Compute initial object-class similarities $S$ following eq~\ref{eq:soc_inclass} or eq~\ref{eq:soc_notinclass}\;
+		Compute initial class qualities $\mathcal{Q}$ following eq~\ref{eq:classQuality}\;
+	\BlankLine
+	\While {$L$ is modified} {
+		\For {$i \leftarrow 1$ to $N$} {
+			previousClass $\leftarrow L_i$\;
+			nextClass $\leftarrow \mathrm{argmin}_k\,\delta_i(\mathrm{previousClass}, k)$ \label{algline:kaverages_search}
+			(following the definition of $\delta$ in  \ref{eq:impact_classnorm})\; % eq~\ref{eq:impact_objnorm} or
+			\If {nextClass $\ne$ previousClass} {
+				$L_i \leftarrow \mathrm{nextClass}$\;
+				Update $\mathcal{Q}_\mathrm{previousClass}$ following eq~\ref{eq:newQual_remove}\;
+				Update $\mathcal{Q}_\mathrm{nextClass}$ following eq~\ref{eq:newQual_add}\;
+				\For {$j \leftarrow 1$ to $N$}{
+					Update $S(j,nextClass)$ and $S(j,previousClass)$ \label{algline:kaverages_recompute} \\ following eq~\ref{eq:newSimilNewC}\;
+				}
+			}
+		}
+	}
+	\BlankLine
+	\caption{The K-averages algorithm.}
+\end{algorithm}
 
-The kernel k-means algorithm ensures convergence if the similarity matrix is semi-definite positive. The k-averages algorithm relaxes this constraint by only requiring symmetricity of the similarity matrix to ensure convergence.
-
-An algorithm is guaranteed to converge if its successive iterations can be tied to a strictly monotonous and bounded quantity. For the k-averages algorithm, this quantity is the objective function itself, as we now show.
-
-Thanks to the rewriting of the class quality function done in eq.~\ref{eq:classQuality}, which only requires the similarity matrix to be symmetrical, we can directly define the allocation decision criterion $\delta$ (eq.~\ref{eq:impact_classnorm}) to be the change in the global objective function $\mathcal{O}$ (eq.~\ref{eq:objective_function}) implied by reallocating an object to a new class. It follows that, as long as reallocations are only performed when $\delta > 0$, $\mathcal{O}$ is strictly increasing throughout the execution of the algorithm.
-
-Moreover, $\mathcal{O}$, defined as a weighted average of the average intra-class similarities for the produced clusters, can be proven to never exceed the maximal similarity between two objects.
-
-Indeed, the average similarity of an object to other members of its class, expressed as $s(o,c)$ in eq.~\ref{eq:soc_notinclass}, is an average of similarities, and therefore lower than or equal to their maximum value. Similarly, the quality $\mathcal{Q}$ of a class, defined as the average of object to class similarities (eq.~\ref{eq:class_qual_base}), is inferior to the maximum value of $s(o,c)$, and therefore to the maximum similarity between objects. Finally, $\mathcal{O}$, a weighted average of $\mathcal{Q}$ values, is, once again, inferior to their maximum value.
-
-The objective function $\mathcal{O}$ is thus upper-bounded, and increases at each iteration of the outer loop of Algorithm~\ref{algo:kaverages}; which guarantees its convergence.
 
 \section{Complexity analysis}
 \label{sec:complexity}
@@ -481,9 +465,9 @@ In this section, we study the complexity of the two approaches presented above, 
 
 \subsubsection{Kernel k-means}
 
-As can be seen in Algorithm~\ref{algo:kkmeans}, the operation on line~\ref{algline:kkmeans_cplx1} is the most costly part of the algorithm: for each object $n$ and class $c$, at each iteration, it is necessary to compute $Y_{cn}$ from eq.~\ref{eq:yki}\cad{}an $O(N^2)$ operation in itself, per object. The impossibility of simply computing the distances to a known centroid as done in the k-means algorithm leads to a much higher complexity for the kernel k-means algorithm, globally $O(N^3)$ per iteration, independent of how many objects are moved for that iteration.
+As can be seen in Algorithm~\ref{algo:kkmeans}, the operation on line~\ref{algline:kkmeans_cplx1} is the most costly part of the algorithm: for each object $n$ and class $c$, at each iteration, it is necessary to compute $Y_{cn}$ from Equation~\ref{eq:yki}\cad{}an $O(N^2)$ operation in itself, per object. The impossibility of simply computing the distances to a known centroid as done in the k-means algorithm leads to a much higher complexity for the kernel k-means algorithm, globally $O(N^3)$ per iteration, independent of how many objects are moved for that iteration.
 
-It is however possible to improve the performance of kernel k-means by noting than in eq.~\ref{eq:yki}, the third term of the equation, which has the highest complexity, is only dependent on class definitions and not on the considered object. We can therefore rewrite eq.~\ref{eq:yki} as:
+It is however possible to improve the performance of kernel k-means by noting than in Equation~\ref{eq:yki}, the third term of the equation, which has the highest complexity, is only dependent on class definitions and not on the considered object. We can therefore rewrite Equation~\ref{eq:yki} as:
 
 \begin{eqnarray}
 Y_{cn} & = & \mathcal{K}_{nn} - \frac{2}{N_c} \sum_{i=1}^{N} z_{ci} \mathcal{K}_{ni} + M_c \label{eq:yki_improved}
@@ -506,11 +490,11 @@ Algorithm~\ref{algo:kkmeans} thus becomes Algorithm~\ref{algo:kkmeans_optim}, wh
 	\BlankLine
 	\While {$L$ is modified} {
 	    \For {$c \leftarrow 1$ to $C$} {
-	        Compute $M_c$ following eq.~\ref{eq:mc} \label{algline:kkmeans_imp_mc}
+	        Compute $M_c$ following eq~\ref{eq:mc} \label{algline:kkmeans_imp_mc}
 	    }
 		\For {$n \leftarrow 1$ to $N$} {
 			\For {$c \leftarrow 1$ to $C$} {
-				Compute $Y_{cn}$ following eq.~\ref{eq:yki_improved} \label{algline:kkmeans_imp_cplx1}
+				Compute $Y_{cn}$ following eq~\ref{eq:yki_improved} \label{algline:kkmeans_imp_cplx1}
 				(note: $z_{cn} = (L_n == c)\,?\,1\;:\;0$)
 			}
 			$L_n = \textrm{argmin}_c (Y_{cn})$\;
@@ -851,7 +835,7 @@ We have presented k-averages, an iterative flat clustering algorithm that operat
 
 
 \section{Acknowledgments}
-The authors would like to acknowledge support for this project
+We would like to acknowledge support for this project
 from ANR project Houle (grant ANR-11-JS03-005-01) and ANR project Cense (grant ANR-16-CE22-0012).
 
 \bibliographystyle{aps-nameyear}
