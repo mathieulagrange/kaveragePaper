@@ -1,21 +1,33 @@
 \documentclass[10pt]{article}
 
-\title{Reply to reviewer concerning submission PONE-D-17-23730: "Efficient similarity-based data clustering by optimal object to cluster reallocation"}
+\title{Cover letter of submission PONE-D-17-23730: "Efficient similarity-based data clustering by optimal object to cluster reallocation"}
 
 \begin{document}
 
 \maketitle
 
-\section{Answer to Reviewer II}
+\section{Suitability of the manuscript for publication in PLoS ONE}
 
-\begin{enumerate}
+The paper presents original work about a clustering method that can be considered to mine a wide range of data. The paper focuses on time series performance analysis. Results and availability of processing and experimental code can thus be of high interest.
 
-\item \emph{My concern still is the convergence in the general case, i.e., for arbitrary similarity measures. I still do not see how Sections 3.3 and 3.4 provide guarantees that the algorithms will converge. Can there be a similarity measure such that the k-average method does not oscillate and will always lead to a local maximum.\\
-It does not seem to be obvious in the general case, therefore a formal proof would be an invaluable addition to the clarity of the paper.}
+\section{Addition to the scientific literature}
 
-$\rightarrow$ A new section (Section 5 in the manuscript) is added to the manuscript specifically dedicated to the proof of convergence for the k-averages algorithm. We made our best to have the key points rooting the convergence more explicit.
+The contribution relates to the research about the use of non-metric similarities that are widely used in time series analysis but also in genomic data mining. Use of the classic k-means algorithms is not feasible, and it is thus common to consider the kernel k-means method that, without special care regarding the semi positiveness of the input matrix is not guaranteed to converge.
 
-\end{enumerate}
+The proposed k-averages algorithm is proven to converge for non-metric similarities and demonstrated to reduce the need for memory access and lower complexity with similar clustering performance when compared to the kernel k-means algorithm.
 
+\section{Relation of the paper to previously published work}
+
+This contribution follows works of Brian Kulis \& al in \cite{Kulis2008, Dhillon:2007:WGC:1313055.1313291}. The authors consider the kernel k-means for clustering arbitrary similarity matrices. Regularization methods have been proposed in \cite{Roth:2003:OCP:960254.960291} in order to ensure semi positiveness of the input matrix and thus guaranty clustering convergence but that also affects the performance of the algorithm and the quality of the clustering.
+
+\section{Scientists that will be most interested in your study}
+
+The experiments described in this paper will be of interest for scientist in the machine learning and data mining community.
+
+Thanks to the high performance c implementation providing, any scientist with need for efficient clustering of non metric similarity matrices will be interested in this contribution.
+
+
+\bibliographystyle{abbrv}
+\bibliography{bib}
 
 \end{document}
