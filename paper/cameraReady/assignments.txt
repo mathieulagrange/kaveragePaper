@@ -1,0 +1,73 @@
+1. Please ensure that the author list and affiliations are correct on the title page of your manuscript, and that your author contributions, competing interests, and financial disclosure are correct as listed below. All of these sections will be indexed in PubMed and published by PLOS ONE as you have written them. Please email plosone@plos.org if any changes to this content need to be made.
+
+
+Mathieu Lagrange
+Conceptualization
+Data curation
+Funding acquisition
+Investigation
+Methodology
+Project administration
+Resources
+Validation
+Visualization
+Writing – original draft
+Writing – review & editing
+
+Mathias Rossignol
+Conceptualization
+Methodology
+Software
+Validation
+Writing – review & editing
+
+Arshia Cont
+Conceptualization
+Visualization
+Writing – review & editing
+
+Please see here for the full list and definition of contributor roles: http://journals.plos.org/plosone/s/authorship#loc-author-contributions
+
+Competing Interests: The authors have declared that no competing interests exist
+
+Financial Disclosure: This work was supported by Agence Nationale de la Recherche (FR grants ANR-11-JS03-005-01 and ANR-16-CE22-0012 to ML.
+
+2. Please confirm that all information in your Funding Information is also present in your Financial Disclosure. Only the Financial Disclosure section will be published alongside your article to describe your funding.
+
+Funding Information:
+Agence Nationale de la Recherche (FR)-ANR-11-JS03-005-01-Dr Mathieu Lagrange
+Agence Nationale de la Recherche (FR)-ANR-16-CE22-0012-Dr Mathieu Lagrange
+
+3. We note that your manuscript contains author contributions that differ from those listed in the submission form. The contributions listed in this email above are the version that will be typeset; if they are incorrect, please email plosone@plos.org to let us know. Please delete “‡This author contributed to the writing of the manuscript.” from your manuscript before resubmitting.
+
+ok
+
+4. We are unable to typeset footnotes. Please remove footnotes and incorporate them directly into the text.
+
+ok
+
+5. The items in your References list are not formatted properly according to PLOS style. Specifically, please ensure that a maximum of six authors are listed before "et al." When updating your References list, please update your bibliography using the plos2015.bst file available at http://journals.plos.org/plosone/s/latex#loc-plos-template.  For further information, see our guidelines for references: http://journals.plos.org/plosone/s/submission-guidelines#loc-references.
+
+ok
+
+6. We note that your manuscript contains an appendix with Tables. These cannot be typeset as an appendix; please remove this section from your manuscript and upload the appendix as a separate Supporting Information file.
+
+ok
+
+7. The in-text citations in your manuscript are not in ascending numerical order, such as citation 22 on page 13. Please reorder your References section, or modify the manuscript text so that the citations are in ascending numerical order upon first mention.
+
+ok
+
+8. Supporting Information captions should be included at the end of the manuscript, in a section titled "Supporting Information" that should be placed after the References section. Please add captions for figures.zip to your manuscript.
+
+Please note that within your manuscript, the labels of all Supporting Information files must be in the format "S# Type” (e.g., “S1 Fig” or "S1 Table." Multiple SI figures should be cited as "S# and S# Figs"). Please see these examples for more guidance: http://journals.plos.org/plosone/s/file?id=wjVg/PLOSOne_formatting_sample_main_body.pdf
+
+ok
+
+9. Please remove the figures from your manuscript file and upload them as separate figure files in TIF or EPS format. Generally, you can remove the figures while retaining the caption information by commenting out the \includegraphics command. See http://journals.plos.org/plosone/s/latex#loc-figures for our LaTeX figure guidelines and http://journals.plos.org/plosone/s/figures for the general PLOS ONE guidelines.
+
+ok
+
+10. Currently, your in-text figure citations do not meet PLOS formatting guidelines. Please ensure that all citations of figures are in the format "Fig #" or "Figs # and #" (e.g., “Fig 3” or "Figs 1 and 2"). Figure guidelines can be found at http://journals.plos.org/plosone/s/figures
+
+ok
