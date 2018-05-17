@@ -193,9 +193,9 @@
 \newline
 % Insert author names, affiliations and corresponding author email (do not include titles, positions, or degrees).
 \\
-Mathias Rossignol\textsuperscript{1\Yinyang},
-Mathieu Lagrange\textsuperscript{2*\Yinyang},
-Arshia Cont\textsuperscript{1\ddag} % \textcurrency
+Mathias Rossignol\textsuperscript{1},
+Mathieu Lagrange\textsuperscript{2*},
+Arshia Cont\textsuperscript{1} % \textcurrency
 \\
 \bigskip
 \textbf{1} Ircam, CNRS, Paris, France
@@ -209,7 +209,7 @@ Arshia Cont\textsuperscript{1\ddag} % \textcurrency
 % Remove or comment out the author notes below if they aren't used.
 %
 % Primary Equal Contribution Note
-\Yinyang These authors contributed equally to this work.
+%\Yinyang These authors contributed equally to this work.
 
 % Additional Equal Contribution Note
 % Also use this double-dagger symbol for special authorship notes, such as senior authorship.
@@ -691,14 +691,14 @@ To go further in this analysis, we display on Fig~\ref{fig:totalMoved}  the tota
 
 \begin{figure}
 \center
-%\includegraphics[width = .65\textwidth]{../figures/iterMove.png}
+%\includegraphics[width = .65\textwidth]{1.eps}
 \caption{Number of moved objects per iteration when clustering a variety of datasets with the k-averages algorithm, normalized by the total number of objects to cluster. The datasets used to create this figure are the real-life time series data that we employ for experimental validation evaluated under the Dynamic Time Warping (DTW) similarity measure, \textit{cf.} Section~\ref{sec:experiments}.}
 \label{fig:moved}
 \end{figure}
 
 \begin{figure}
 \center
-%\includegraphics[width = .65\textwidth]{../figures/sampleMove.png}
+%\includegraphics[width = .65\textwidth]{2.eps}
 \caption{Total number of object reallocations over a run of the k-averages algorithm, plotted against the number of objects to be clustered. The datasets used to create this figure are the real-life time series data that we employ for experimental validation, \textit{cf.} Section~\ref{sec:experiments}.}
 \label{fig:totalMoved}
 \end{figure}
@@ -738,7 +738,7 @@ In this paper, for simplicity sake, only the NMI is considered for validations. 
 
 \begin{figure}
 \center
-%\includegraphics[width=.7\textwidth]{../figures/synthetic.pdf}
+%\includegraphics[width=.7\textwidth]{../figures/3.tif}
 \caption{NMI of kernel k-means (*) and k-averages (o) clustering relative to ground truth as a function of the \gl{spread} of those classes for synthetic data sets of 5 and 40 classes, displayed in dashed and solid lines, respectively.}
 \label{fig:synth_perf}
 \end{figure}
@@ -755,7 +755,7 @@ Fig~\ref{fig:timing} shows the average time spent by kernel k-means and k-averag
 
 \begin{figure}
 \center
-%\includegraphics[width= .7\textwidth]{../figures/simpleSwap.png}
+%\includegraphics[width= .7\textwidth]{../figures/4.tif}
 \caption{Average computation time of the kernel k-means (*) and kaverages (o) algorithms on computers with 2 GB (solid line) and 32 GB (dashed line) of RAM, respectively. The \gl{running time} axis follows a logarithmic scale.}
 \label{fig:timing}
 \end{figure}
@@ -1264,9 +1264,9 @@ from ANR project Houle (grant ANR-11-JS03-005-01) and ANR project Cense (grant A
   \end{thebibliography}
 
 
-\appendix
+%\appendix
 
-\section{Description of the datasets}
-\label{sec:appendix}
+%\section{Description of the datasets}
+%\label{sec:appendix}
 
 \end{document}
