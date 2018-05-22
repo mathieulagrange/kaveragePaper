@@ -689,16 +689,17 @@ In the worst case scenario, $M = N$, and the complexity for one iteration of the
 
 To go further in this analysis, we display on Fig~\ref{fig:totalMoved}  the total number of object reallocation over a full run of the k-averages algorithm for several datatsets. The datasets used to create this figure are the real-life time series data that we employ for experimental validation evaluated under the Dynamic Time Warping (DTW) similarity measure, \textit{cf.} Section~\ref{sec:experiments}. As can be seen, the correlation is roughly linear with the number of objects to cluster. In fact, the number of reallocations is roughly equal to the number of objects to cluster, which allows us to reach for k-averages a (statistical) total complexity of $O(N^2)$, instead of $O(N^2)$ per iteration.
 
-\begin{figure}
+
+\begin{figure}[h]
 \center
-%\includegraphics[width = .65\textwidth]{1.eps}
+%\includegraphics[width = .65\textwidth]{figures/1.eps}
 \caption{Number of moved objects per iteration when clustering a variety of datasets with the k-averages algorithm, normalized by the total number of objects to cluster. The datasets used to create this figure are the real-life time series data that we employ for experimental validation evaluated under the Dynamic Time Warping (DTW) similarity measure, \textit{cf.} Section~\ref{sec:experiments}.}
 \label{fig:moved}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[h]
 \center
-%\includegraphics[width = .65\textwidth]{2.eps}
+%\includegraphics[width = .65\textwidth]{figures/2.eps}
 \caption{Total number of object reallocations over a run of the k-averages algorithm, plotted against the number of objects to be clustered. The datasets used to create this figure are the real-life time series data that we employ for experimental validation, \textit{cf.} Section~\ref{sec:experiments}.}
 \label{fig:totalMoved}
 \end{figure}
@@ -736,33 +737,36 @@ where $I(X;Y)=H(X)−H(X|Y)$ is the mutual information between the random variab
 
 In this paper, for simplicity sake, only the NMI is considered for validations. However, we found that most statements hereafter in terms of performance ranking of the different algorithms still hold while considering the accuracy metric as reference.
 
-\begin{figure}
-\center
-%\includegraphics[width=.7\textwidth]{../figures/3.tif}
-\caption{NMI of kernel k-means (*) and k-averages (o) clustering relative to ground truth as a function of the \gl{spread} of those classes for synthetic data sets of 5 and 40 classes, displayed in dashed and solid lines, respectively.}
-\label{fig:synth_perf}
-\end{figure}
-
 Fig~\ref{fig:synth_perf} presents the quality of clusterings obtained using kernel k-means and k-averages on two series of datasets: one featuring 5 classes, the other 40 classes. On the x-axis is the variance of the Gaussian distribution used to generate the point cloud for each class: the higher that value, the more the classes are spread out and overlap each other, thus making the clustering harder.
 
 The question of choosing the proper number of clusters for a given dataset without \textit{a priori} is a well known and hard problem, and beyond the scope of this article. Therefore, for the purpose of evaluation, clustering is done by requesting a number of clusters equal to the actual number of classes in the dataset. In order to obtain stable and reliable figures, clustering is repeated 500 times with varying initial conditions, \textit{i.e.} the initial assignment of points to clusters is randomly determined, and only the average performance is given. For fairness of comparison, each algorithm is run with the exact same initial assignments.
 
 As can be seen on the figure, in the case of a 5-class problem, k-averages outperforms kernel k-means in the \gl{easy} cases (low class spread), before converging to equivalent results. For the more complex 40-class datasets, k-averages consistently yields a better result than kernel k-means, especially for higher values of the variance. The lower values of NMI for 5-class experiments is in fact an artifact introduced by the normalization of NMI, and is not important here; we only focus, for each series of experiments, on the relative performances of kernel k-means and k-averages.
 
+
+\begin{figure}[h]
+\center
+%\includegraphics[width=.7\textwidth]{figures/3.tif}
+\caption{NMI of kernel k-means (*) and k-averages (o) clustering relative to ground truth as a function of the \gl{spread} of those classes for synthetic data sets of 5 and 40 classes, displayed in dashed and solid lines, respectively.}
+\label{fig:synth_perf}
+\end{figure}
+
+
 \subsection{Time efficiency}
 
 Fig~\ref{fig:timing} shows the average time spent by kernel k-means and k-averages to cluster synthetic datasets or varying sizes. As previously, initial conditions on each run are identical for both algorithms. The reported run time is the one measured on a 64 bits Intel$^\circledR$ Core\texttrademark   \, i7 runnning at 3.6 GHz with 32 Gb of RAM and standard Hard Disk Drive (HDD)  operated by standard Linux distribution. For results with 2 GB of RAM, the same machine is used with a memory limitation specified to the kernel at boot time.
 
-\begin{figure}
-\center
-%\includegraphics[width= .7\textwidth]{../figures/4.tif}
-\caption{Average computation time of the kernel k-means (*) and kaverages (o) algorithms on computers with 2 GB (solid line) and 32 GB (dashed line) of RAM, respectively. The \gl{running time} axis follows a logarithmic scale.}
-\label{fig:timing}
-\end{figure}
 
 These figures confirm the theoretical complexity analysis presented in Section~\ref{sec:complexity}: k-averages runs at least 20 times faster on average than kernel k-means in ordinary conditions, when  available memory is not an issue. When the matrix size exceeds what can be stored in RAM and the system has to resort to paged memory, as in the presented experiments when the matrix reaches about 1500MB, both algorithms suffer from a clear performance hit; however, kernel k-means is much more affected, and the difference becomes even more important: with a 2000MB similarity matrix on a memory-limited computer, k-averages runs about 100 times faster than kernel k-means.
 
 Having established the interest of our proposed method relative to kernel k-means on synthetic object collections, we now proceed to a thorough evaluation on real data.
+
+\begin{figure}[h]
+\center
+%\includegraphics[width= .7\textwidth]{figures/4.tif}
+\caption{Average computation time of the kernel k-means (*) and kaverages (o) algorithms on computers with 2 GB (solid line) and 32 GB (dashed line) of RAM, respectively. The \gl{running time} axis follows a logarithmic scale.}
+\label{fig:timing}
+\end{figure}
 
 \section{Experiments}
 \label{sec:experiments}
@@ -773,7 +777,8 @@ Effective clustering of time series using the DTW measure requires similarity ba
 
 \subsection{Datasets}
 
-To compare quality of clusterings obtained by the considered algorithms, we consider a large collection of 43 time series datasets made publicly available by many laboratories worldwide and compiled by Prof. Keogh. Thus, while all the experiments presented here are performed on time series (chosen for being a good example of a data type requiring similarity-based clustering, as opposed to a simple Euclidean approach), the great variety in the sources and semantics of said series (bio-informatics, linguistics, astronomy, gesture modeling, chemistry\ldots{}) gives this validation a wide foundation. Statistics about the morphology of those datasets are summarized in Table~\ref{tab:dbs}. Individual details can be found in Table~\ref{didtNoda1}.
+To compare quality of clusterings obtained by the considered algorithms, we consider a large collection of 43 time series datasets made publicly available by many laboratories worldwide and compiled by Prof. Keogh. Thus, while all the experiments presented here are performed on time series (chosen for being a good example of a data type requiring similarity-based clustering, as opposed to a simple Euclidean approach), the great variety in the sources and semantics of said series (bio-informatics, linguistics, astronomy, gesture modeling, chemistry\ldots{}) gives this validation a wide foundation. Statistics about the morphology of those datasets can be found in Table~\ref{didtNoda1} and summarized in Table~\ref{tab:dbs}.
+
 %In the results described in the next sections, datasets are refered by a numerical id for the sake of brevity; the correspondence between those ids and the actual names of the datasets is shown on Table \ref{didtNoda1}.
 
 
@@ -858,9 +863,13 @@ As in our previous experiments with synthetic data, we choose here the normalize
 
 \subsection{Clustering performance}
 
-%% BI-CLASS
 
-\begin{table}
+For ease of readability and comparison, the presented results are split into 3 tables. Table~\ref{tab:results-2} lists the results obtained on bi-class datasets, \textit{i.e.} the datasets annotated in terms of presence or absence of a given property; Table~\ref{tab:results-37} concerns the datasets with a small number of classes (from 3 to 7); and Table~\ref{tab:results-8} focuses the datasets with a larger number of classes (from 8 to 50).
+
+For each experiment, the result of the best performing method is marked in bold. The Matlab and C implementations of the kernel k-means algorithm give exactly the same results in terms of NMI, thus only one column is used to display their performance.
+
+%% BI-CLASS
+\begin{table}[ht]
 \begin{center}
 \caption{NMI (in percents) of clusterings by kernel k-means and k-averages for bi-class datasets.}
 \label{tab:results-2}
@@ -883,12 +892,7 @@ yoga & \textbf{0.5 $\pm$0.0} & 0.2 $\pm$0.1 & 0.2 $\pm$0.1 \\
 \end{center}
 \end{table}
 
-For ease of readability and comparison, the presented results are split into 3 tables. Table~\ref{tab:results-2} lists the results obtained on bi-class datasets, \textit{i.e.} the datasets annotated in terms of presence or absence of a given property; Table~\ref{tab:results-37} concerns the datasets with a small number of classes (from 3 to 7); and Table~\ref{tab:results-8} focuses the datasets with a larger number of classes (from 8 to 50).
-
-For each experiment, the result of the best performing method is marked in bold. The Matlab and C implementations of the kernel k-means algorithm give exactly the same results in terms of NMI, thus only one column is used to display their performance.
-
  %% 3-7 classes
-
 \begin{table}
 \begin{center}
 \caption{NMI (in percents) of clusterings by kernel k-means and k-averages for datasets of 3 to 7 classes.}
@@ -919,7 +923,6 @@ synthetic\_control & 63.0 $\pm$0.7 & 85.3 $\pm$4.9 & \textbf{89.5 $\pm$0.8} \\
 
 
  %% 8-50 classes
-
 \begin{table}
 \begin{center}
 \caption{NMI (in percents) of clusterings by kernel k-means and k-averages for datasets of 8 to 50 classes.}
@@ -1095,7 +1098,7 @@ from ANR project Houle (grant ANR-11-JS03-005-01) and ANR project Cense (grant A
   \newblock Pattern Recognition Letters. 2010;31:651--666.
 
   \bibitem{steinbach2000comparison}
-  Steinbach M, Karypis G, Kumar V, et~al.
+  Steinbach M, Karypis G, Kumar V.
   \newblock A comparison of document clustering techniques.
   \newblock In: KDD workshop on text mining. vol. 400. Boston; 2000. p. 525--526.
 
